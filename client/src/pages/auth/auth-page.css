@@ -1,0 +1,19 @@
+.auth-form-container {
+  display: flex;
+  flex-direction: column;
+  flex: 4;
+  align-items: center;
+  padding-top: 3rem;
+}
+
+.auth-footer {
+  flex: 0.5;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  color: var(--text-main2);
+}
+
+.signup-form-container {
+  padding-top: 0;
+}

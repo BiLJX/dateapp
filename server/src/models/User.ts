@@ -63,6 +63,10 @@ const UserSchema = new Schema<UserInterface>({
     is_admin: {
         type: Boolean,
         default: false
+    },
+    account_setuped: {
+        type: Boolean,
+        default: false
     }
 },
 {timestamps: true}

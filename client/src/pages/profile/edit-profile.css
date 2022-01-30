@@ -1,0 +1,38 @@
+#edit-profile-page {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 3% 5%;
+  --edit-profile-height: 8rem;
+}
+
+.edit-profile-pfp-container {
+  height: var(--edit-profile-height);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.edit-profile-pfp {
+  height: calc(var(--edit-profile-height) - 1rem);
+  width: calc(var(--edit-profile-height) - 1rem);
+  overflow: hidden;
+  background-color: var(--image-background);
+  border-radius: 100%;
+  position: relative;
+}
+
+.upload-pfp-icon {
+  position: absolute;
+  bottom: 0;
+  right: 2.5rem;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 2em;
+  height: 2em;
+  color: var(--text-main);
+  background-color: rgba(192, 192, 192, 0.24);
+  border-radius: 100%;
+  cursor: pointer;
+}

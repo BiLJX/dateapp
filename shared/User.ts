@@ -12,7 +12,13 @@ export interface UserInterface {
     cover_picture_url: string,
     dates: string[],
     is_admin: boolean,
-    interests: string[]
+    interests: string[],
+    account_setuped: boolean
+}
+
+
+export interface UserProfile extends UserInterface{
+    age: number
 }
 
 export interface UserEditClientData {

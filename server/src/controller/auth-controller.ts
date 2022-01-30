@@ -7,6 +7,9 @@ import admin from "firebase-admin"
 import { getAuth, signInWithEmailAndPassword } from "firebase/auth"
 import { app } from "../fire";
 import moment from "moment"
+import { parseUser } from "./user-controller";
+
+const auth = getAuth(app);
 export async function createAccount(req: Request, res: Response){
     const JSONReponse = new JSONRESPONSE(res)
     const client_data = <SignupData|undefined>req.body;
@@ -18,7 +21,7 @@ export async function createAccount(req: Request, res: Response){
         const duration = moment.duration(currentTime.diff(client_birthday))
         const years = duration.asYears()
         //validations
-        if(years<13) return JSONReponse.clientError("Sorry, only age above 13 can create account");
+        if(isNaN(years) || years<13) return JSONReponse.clientError("Sorry, only age above 13 can create account");
         if(splited_name.length === 0)return JSONReponse.clientError("please enter name");
         if(!isFullName(client_data.full_name)) return JSONReponse.clientError("invalid name");
         if(!isUserName(client_data.username)) return JSONReponse.clientError("invalid username or username is less than 3 charecter");
@@ -29,7 +32,7 @@ export async function createAccount(req: Request, res: Response){
             email: client_data.email,
             password: client_data.password
         })
-        
+
         //saving datas
         const data = {
             ...client_data,
@@ -40,7 +43,18 @@ export async function createAccount(req: Request, res: Response){
         
         const user = new User(data)
         await user.save()
-        JSONReponse.success("created account", user)
+
+        //signing user
+        const signed_user = (await signInWithEmailAndPassword(auth, client_data.email, client_data.password)).user;
+        const idToken = await signed_user.getIdToken()
+        if(!idToken) return res.status(401).end();
+        const expiresIn = 60*60*24*14*1000;
+        const sessionCookie = await admin.auth().createSessionCookie(idToken, {expiresIn});
+        const options = {maxAge: expiresIn, httpOnly: true};
+        res.cookie("session", sessionCookie, options);
+
+        //success
+        JSONReponse.success("created account", parseUser(user.toJSON()))
     } catch (error: any) {
         console.log(error)
         JSONReponse.clientError(( error._message && "Username already taken" )||error.message)
@@ -48,7 +62,7 @@ export async function createAccount(req: Request, res: Response){
 }
 
 export async function login(req: Request, res: Response){
-    const auth = getAuth(app);
+    
     const JSONReponse = new JSONRESPONSE(res)
     try{
         const { user } = await signInWithEmailAndPassword(auth, req.body.email, req.body.password);
@@ -57,10 +71,12 @@ export async function login(req: Request, res: Response){
         const expiresIn = 60*60*24*14*1000;
         const sessionCookie = await admin.auth().createSessionCookie(idToken, {expiresIn});
         const options = {maxAge: expiresIn, httpOnly: true};
+        const currentUser = (await User.findOne({uid: user.uid }))?.toJSON();
+
         res.cookie("session", sessionCookie, options);
-        JSONReponse.success("logged in");
+        JSONReponse.success("logged in", parseUser(currentUser));
     }catch(err: any){
-        JSONReponse.clientError(err.code || err.message);
+        JSONReponse.clientError("Either email or password does not match");
     }
 }
 

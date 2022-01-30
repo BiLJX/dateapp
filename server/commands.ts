@@ -7,7 +7,7 @@ const client = new MongoClient(uri, {
 client.connect().then(()=>{
     const db = client.db("Dateapp");
     db.collection("users").updateMany({}, {$unset: {
-        sex: ""
+        has_setuped: false
     }}, {upsert: true}).then(()=>console.log("aaaa")).catch(err=>console.log(err))
 }).catch(err=>console.log(err))
 

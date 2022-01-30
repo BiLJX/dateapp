@@ -1,0 +1,24 @@
+.banner {
+  position: fixed;
+  width: 100%;
+  height: 4rem;
+  top: 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  color: var(--text-main);
+  animation: openBanner 0.3s linear forwards;
+}
+
+.banner-error {
+  background: #ff0000;
+}
+
+@keyframes openBanner {
+  from {
+    transform: translateY(-4rem);
+  }
+  to {
+    transform: translateY(0rem);
+  }
+}

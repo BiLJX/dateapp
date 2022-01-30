@@ -28,7 +28,7 @@ const firebaseConfig = {
 
 admin.initializeApp({
     credential: admin.credential.cert(params),
-    storageBucket: "hangout-fb54a.appspot.com"
+    storageBucket: "dateapp-1e651.appspot.com"
 });
 
 const app = initializeApp(firebaseConfig);
