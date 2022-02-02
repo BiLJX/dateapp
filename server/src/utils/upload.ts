@@ -51,7 +51,7 @@ export async function uploadFile(file: any, dir: string, image_size?: number[]):
     if(image_size){
       buffer = await sharp(file.buffer).resize(image_size[0], image_size[1]).jpeg({quality: 90}).toBuffer()
     }else{
-      buffer = await sharp(file.buffer).resize(450, 1000).jpeg({quality: 90}).toBuffer()
+      buffer = await sharp(file.buffer).resize(843, 1500).jpeg({quality: 90}).toBuffer()
     }
     blobStream.end(buffer)
   })

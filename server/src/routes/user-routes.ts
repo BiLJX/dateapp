@@ -1,5 +1,5 @@
 import { Router } from "express";
-import { editUserProfile, getCurrentUser, getUserByUid, getUsers } from "../controller/user-controller";
+import { editUserProfile, getCurrentUser, getUserByUid, getUsers, saveUser, unsaveUser } from "../controller/user-controller";
 
 const router = Router()
 
@@ -12,5 +12,9 @@ router.get("/:uid", getUserByUid)
 //patch routes
 router.patch("/edit", editUserProfile)
 
+//put routes
+router.put("/:uid/save", saveUser)
 
+//delete routes
+router.delete("/:uid/unsave", unsaveUser)
 export default router

@@ -1,0 +1,157 @@
+/*
+* Prefixed by https://autoprefixer.github.io
+* PostCSS: v8.3.6,
+* Autoprefixer: v10.3.1
+* Browsers: last 4 version
+*/
+
+#home-page {
+  position: absolute;
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-orient: vertical;
+  -webkit-box-direction: normal;
+  -ms-flex-direction: column;
+  flex-direction: column;
+  width: 100%;
+  overflow: auto;
+  height: 91%;
+  overflow-x: hidden;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+}
+
+.profile-item {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  height: 100%;
+  width: 100%;
+  min-height: 100%;
+  background-repeat: no-repeat;
+  max-width: 450px;
+  background-size: 100%;
+}
+
+.profile-item-gradient {
+  background: -webkit-gradient(
+    linear,
+    left top,
+    left bottom,
+    color-stop(32.51%, rgba(0, 0, 0, 0)),
+    color-stop(70.96%, #121015)
+  );
+  background: -o-linear-gradient(top, rgba(0, 0, 0, 0) 32.51%, #121015 70.96%);
+  background: linear-gradient(180deg, rgba(0, 0, 0, 0) 32.51%, #121015 70.96%);
+  height: 100%;
+  width: 100%;
+  padding: 0 5% 0 5%;
+}
+
+.profile-item-info-container {
+  position: relative;
+  top: 60%;
+}
+
+.profile-item-name-container {
+  width: 100%;
+  height: 50%;
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  margin-bottom: 2%;
+}
+
+.profile-item-name {
+  color: var(--text-main);
+  font-size: 6vh;
+}
+.profile-item-description-container {
+  width: 100%;
+  height: 9vh;
+}
+.profile-item-description-container span {
+  color: var(--text-main2);
+  -webkit-line-clamp: 3;
+  line-clamp: 3;
+  font-size: 3vh;
+}
+
+.profile-item-buttons {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+}
+
+.profile-item-button-container {
+  -webkit-box-flex: 1;
+  -ms-flex: 1;
+  flex: 1;
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-pack: center;
+  -ms-flex-pack: center;
+  justify-content: center;
+  padding-top: 2%;
+}
+
+.profile-item-button {
+  cursor: pointer;
+  width: 8vh;
+  height: 8vh;
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-pack: center;
+  -ms-flex-pack: center;
+  justify-content: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  border-radius: 100%;
+}
+
+.profile-item-button svg {
+  color: var(--text-main);
+  font-weight: bold;
+  font-size: 6vh;
+}
+
+.profile-item-button-active svg {
+  color: var(--pink);
+}
+
+.profile-item-cross {
+  background-color: var(--dark-pink);
+}
+
+.profile-item-accept {
+  background-color: var(--pink);
+  width: 10vh;
+  height: 10vh;
+  font-weight: bold;
+}
+
+.profile-item-heart {
+  background-color: var(--light-pink);
+  width: 10vh;
+  height: 10vh;
+  position: relative;
+}
+
+.profile-item-button-container-heart {
+  padding-top: 0;
+}
+
+.profile-item-profile {
+  background-color: var(--blue);
+}
+
+@media (min-width: 500px) {
+}

@@ -13,12 +13,17 @@ export interface UserInterface {
     dates: string[],
     is_admin: boolean,
     interests: string[],
+    saved_users: string[]
     account_setuped: boolean
 }
 
 
 export interface UserProfile extends UserInterface{
-    age: number
+    age: number,
+    has_current_sent_date_request: boolean,
+    is_dating: boolean,
+    has_this_user_sent_date_request: boolean,
+    has_saved: boolean
 }
 
 export interface UserEditClientData {

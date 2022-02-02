@@ -10,6 +10,7 @@ import { AuthMiddleware } from "./middleware/auth-middleware"
 //routers
 import AuthRoutes from "./routes/auth-routes"
 import UserRoutes from "./routes/user-routes"
+import DateRoutes from "./routes/dates-routes"
 //side effects
 import "./fire"
 
@@ -31,7 +32,7 @@ app.use(cookieParser())
 
 app.use("/api/auth",  AuthRoutes)
 app.use("/api/user", AuthMiddleware, UserRoutes)
-
+app.use("/api/date", AuthMiddleware, DateRoutes)
 //connecting to database and starting server
 
 mongoose.connect(CONNECTION_URL).then(()=>{

@@ -1,8 +1,8 @@
 import "./banner.css"
 
-export function ErrorBanner({msg}: {msg: string}){
+export function Banner({msg, className}: {msg: string, className: string}){
     return(
-        <article className="banner banner-error">
+        <article className={"banner "+className}>
             {msg}
         </article>
     )

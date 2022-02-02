@@ -1,6 +1,6 @@
 import LoginPage from "./pages/auth/login-page"
 import AppRouter from "./router/router"
-import { ErrorBanner } from "./global-components/banners/banner"
+import { Banner } from "./global-components/banners/banner"
 import { useSelector } from "react-redux"
 import { RootState } from "./types/states"
 function App(){
@@ -9,7 +9,9 @@ function App(){
   return(
     <>
       <AppRouter />
-      {banner.error_banner && <ErrorBanner msg={banner.message || ""}/>}
+      {banner.error_banner && <Banner msg={banner.message || ""} className = "banner-error" />}
+      {banner.success_banner && <Banner msg={banner.message || "success"} className = "banner-success" />}
+    
     </>
   )
 }

@@ -54,7 +54,7 @@ export async function createAccount(req: Request, res: Response){
         res.cookie("session", sessionCookie, options);
 
         //success
-        JSONReponse.success("created account", parseUser(user.toJSON()))
+        JSONReponse.success("created account", await parseUser(user.toJSON(), user.toJSON()))
     } catch (error: any) {
         console.log(error)
         JSONReponse.clientError(( error._message && "Username already taken" )||error.message)
@@ -71,10 +71,10 @@ export async function login(req: Request, res: Response){
         const expiresIn = 60*60*24*14*1000;
         const sessionCookie = await admin.auth().createSessionCookie(idToken, {expiresIn});
         const options = {maxAge: expiresIn, httpOnly: true};
-        const currentUser = (await User.findOne({uid: user.uid }))?.toJSON();
+        const currentUser = <any>(await User.findOne({uid: user.uid }))?.toJSON();
 
         res.cookie("session", sessionCookie, options);
-        JSONReponse.success("logged in", parseUser(currentUser));
+        JSONReponse.success("logged in", await parseUser(currentUser, currentUser));
     }catch(err: any){
         JSONReponse.clientError("Either email or password does not match");
     }

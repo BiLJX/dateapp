@@ -49,13 +49,11 @@ function AllRoutes(){
     }
     return(
         <>
+            <RoutesWithHeader />
             <Routes>
                 <Route path = "/login" element = {<LoginPage/>}/>
                 <Route path = "/signup" element = { <SignUpPage /> } />
             </Routes>
-
-           <RoutesWithHeader />
-              
         </>
     )
 }

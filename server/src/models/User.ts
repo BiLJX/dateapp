@@ -48,6 +48,10 @@ const UserSchema = new Schema<UserInterface>({
         type: [String],
         default: []
     },
+    saved_users: {
+        type: [String],
+        default: []
+    },
     profile_picture_url: {
         type: String,
         default: ""

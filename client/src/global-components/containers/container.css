@@ -1,5 +1,24 @@
+/*
+* Prefixed by https://autoprefixer.github.io
+* PostCSS: v8.3.6,
+* Autoprefixer: v10.3.1
+* Browsers: last 4 version
+*/
+
+/*
+* Prefixed by https://autoprefixer.github.io
+* PostCSS: v8.3.6,
+* Autoprefixer: v10.3.1
+* Browsers: last 4 version
+*/
+
 .container-with-header {
+  display: -webkit-box;
+  display: -ms-flexbox;
   display: flex;
+  -webkit-box-orient: vertical;
+  -webkit-box-direction: normal;
+  -ms-flex-direction: column;
   flex-direction: column;
 }
 
@@ -7,8 +26,14 @@
   width: 100%;
   height: 12vh;
   background-color: var(--header-background);
+  display: -webkit-box;
+  display: -ms-flexbox;
   display: flex;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
   align-items: center;
+  -webkit-box-pack: center;
+  -ms-flex-pack: center;
   justify-content: center;
   position: sticky;
   top: 0;
@@ -28,4 +53,55 @@
   font-weight: bold;
   font-size: 1.8rem;
   cursor: pointer;
+}
+
+.container-with-header main {
+}
+
+.bottom-nav {
+  width: 100%;
+  height: 9vh;
+  position: fixed;
+  bottom: 0;
+  background-color: var(--header-background);
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  max-width: var(--max-width);
+  margin-left: auto;
+  margin-right: auto;
+  left: 0;
+  right: 0;
+}
+
+.bottom-nav-item {
+  -webkit-box-flex: 1;
+  -ms-flex: 1;
+  flex: 1;
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-pack: center;
+  -ms-flex-pack: center;
+  justify-content: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+}
+
+.bottom-nav-item svg {
+  font-size: 2rem;
+  color: var(--nav-item-color);
+}
+
+.bottom-nav-item-active svg {
+  color: var(--pink);
+}
+
+.nav-profile {
+  width: 2rem;
+  height: 2rem;
+  border-radius: 100%;
+  background-color: var(--nav-item-color);
+  overflow: hidden;
 }
