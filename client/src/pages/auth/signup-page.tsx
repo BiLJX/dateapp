@@ -62,7 +62,7 @@ function SignUpPage(){
             <AuthHeader heading="Create a new account" />
             <form className="auth-form-container signup-form-container" onSubmit={signup}>
                 <FormInput name = "email" placeholder="Email" Icon={MailOutlineIcon}/>
-                <FormInput name = "username" placeholder="Username" Icon={PersonOutlineIcon}/>
+                <FormInput name = "username" placeholder="Username (Dont include 'space' or special charecters)" Icon={PersonOutlineIcon}/>
                 <FormInput name = "full_name" placeholder="Fullname" Icon={PersonOutlineIcon}/>
                 <FormInput name = "birthday" placeholder="Birthday" Icon={DateRangeOutlinedIcon} type="date"/>
                 <FormInput name = "password" placeholder="Password" Icon={HttpsOutlinedIcon} type="password"/>

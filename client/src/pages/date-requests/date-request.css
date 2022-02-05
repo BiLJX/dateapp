@@ -1,0 +1,93 @@
+.date-request-page {
+  display: flex;
+  width: 100%;
+  align-items: center;
+  padding-top: 5%;
+  flex-direction: column;
+}
+.date-request-item {
+  display: flex;
+  background-color: var(--date-request-item-bg);
+  height: 13rem;
+  width: 90%;
+  padding: 0.5rem 1rem;
+  border-radius: 20px;
+  max-width: var(--max-width);
+  margin-bottom: 2rem;
+}
+
+.date-request-left {
+  display: flex;
+  align-items: center;
+  margin-right: 1rem;
+}
+
+.date-request-pfp {
+  background-color: var(--image-background-alt);
+  width: 4rem;
+  height: 4rem;
+  border-radius: 10px;
+  overflow: hidden;
+}
+
+.date-request-right {
+  padding: 0.5rem 0;
+}
+
+.date-request-name {
+  font-size: 1.5rem;
+  color: var(--text-main);
+  font-weight: 500;
+  margin-bottom: 3%;
+}
+
+.date-request-age {
+  color: var(--text-secondary);
+  font-weight: bold;
+  margin-bottom: 3%;
+}
+
+.date-request-description {
+  color: var(--text-main2);
+  line-clamp: 2;
+  -webkit-line-clamp: 2;
+  height: 2.5rem;
+}
+
+.date-request-buttons-container {
+  height: 5rem;
+  display: flex;
+  align-items: center;
+}
+
+.date-request-button {
+  height: 3rem;
+  width: 3rem;
+  border-radius: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  cursor: pointer;
+  color: var(--text-main);
+}
+
+.date-request-reject {
+  margin-right: 30%;
+  background-color: #fcddec;
+}
+
+.date-request-accept {
+  background-color: var(--pink);
+}
+
+.date-request-accept svg {
+  font-size: 2rem;
+  color: var(--text-main);
+  font-weight: bolder;
+}
+
+.date-request-reject svg {
+  font-size: 2rem;
+  color: var(--pink);
+  font-weight: bolder;
+}

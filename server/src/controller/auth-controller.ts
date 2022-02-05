@@ -36,9 +36,11 @@ export async function createAccount(req: Request, res: Response){
         //saving datas
         const data = {
             ...client_data,
+            username: client_data.username.trim().toLocaleLowerCase(),
+            gender: client_data.gender.trim().toLocaleLowerCase(),
             uid,
-            first_name: splited_name[0],
-            last_name: splited_name.length > 2 ? splited_name[1] + " " + splited_name[2] : splited_name[1]||"",
+            first_name: splited_name[0].trim(),
+            last_name: splited_name.length > 2 ? splited_name[1].trim() + " " + splited_name[2].trim() : splited_name[1].trim()||"",
         }
         
         const user = new User(data)
@@ -57,7 +59,7 @@ export async function createAccount(req: Request, res: Response){
         JSONReponse.success("created account", await parseUser(user.toJSON(), user.toJSON()))
     } catch (error: any) {
         console.log(error)
-        JSONReponse.clientError(( error._message && "Username already taken" )||error.message)
+        JSONReponse.clientError(( error._message && "Username already taken" ))
     }
 }
 

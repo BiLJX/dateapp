@@ -1,7 +1,6 @@
 import { UserProfile } from '@shared/User'
 import { getUsers } from 'api/user-api'
 import { Fragment, useEffect, useRef, useState } from 'react'
-import CloseIcon from '@mui/icons-material/Close';
 import createScrollSnap from 'scroll-snap'
 import PersonIcon from '@mui/icons-material/Person';
 import "./home-page.css"
@@ -10,23 +9,31 @@ import { useDispatch } from 'react-redux';
 import bannerDispatch from '../../dispatcher/banner';
 import  * as bannerActions from "../../action/banner"
 import { SaveButton, SendDateButton } from './buttons';
+import { HeartLoader } from 'global-components/loaders/loaders';
 function HomePage(){
+    const [loading, setLoading] = useState(true)
     const [feed, setFeed] = useState<UserProfile[]>([])
     const container_ref = useRef<any>(null)
-    console.log(window.innerWidth, window.innerHeight)
     async function fetchFeed(){
         const res = await getUsers()
-        if(res.success) setFeed(res.data)
+        if(res.success){
+            setFeed(res.data)
+        }
+        setLoading(false)
     }
     useEffect(()=>{
+        fetchFeed()
+    }, [])
+    useEffect(()=>{
+        
+        if(loading && !container_ref.current) return;
         createScrollSnap(container_ref.current, {
             snapDestinationY: "100%",
             duration: 300,
             threshold: 0.1
         },()=>{})
-        
-        fetchFeed()
-    }, [container_ref])
+    }, [container_ref, loading])
+    if(loading) return <HeartLoader />
     return(
         <div id="home-page" ref = {container_ref} >
             {

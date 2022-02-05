@@ -7,6 +7,8 @@ import JSONRESPONSE from "../utils/JSONReponse";
 import { parseUser } from "./user-controller";
 
 
+
+
 async function acceptUser(request_sent_by: string, request_sent_to: string){
     await DateRequest.findOneAndDelete({request_sent_by, request_sent_to});
     await User.findOneAndUpdate({uid:request_sent_by}, {$push: { dates: request_sent_to }})
@@ -20,6 +22,20 @@ async function acceptUser(request_sent_by: string, request_sent_to: string){
         date_user_uid: request_sent_by,
     })
     await Promise.allSettled([userDate1.save(), userDate2.save()]);
+}
+
+
+export async function getUserDates(req: Request, res: Response){
+    const JSONReponse = new JSONRESPONSE(res)
+    const uid = req.app.locals.uid;
+    try{
+        const dates_raw = await UserDate.find({uid}).populate("date_user_data", "uid full_name profile_picture_url").sort({createdAt: 'desc'}).exec()
+        const dates = dates_raw.map(x=>x.toJSON())
+        JSONReponse.success("success",dates)
+    }catch(err){
+        console.log(err)
+        JSONReponse.serverError()
+    }
 }
 
 export const getRequestDate = async (req: Request, res: Response) => {
@@ -104,7 +120,7 @@ export const acceptDate = async (req:  Request, res: Response) => {
     const uid = req.params.uid;
     try {
         await acceptUser(uid, currentUser.uid);
-        JSONReponse.success()
+        JSONReponse.success("accepted date")
     } catch (error) {
         console.log(error)
         JSONReponse.serverError()
@@ -118,7 +134,7 @@ export const rejectDate = async (req: Request, res: Response) => {
     const currentUser: UserInterface = req.app.locals.currentUser;
     const uid = req.params.uid;
     try{
-        await DateRequest.findOneAndDelete({request_sent_by: uid, request_sent_to: currentUser});
+        await DateRequest.findOneAndDelete({request_sent_by: uid, request_sent_to: currentUser.uid});
         JSONReponse.success()
     }catch(error){
         console.log(error)
@@ -138,7 +154,7 @@ export const unDate = async (req: Request, res: Response) => {
         const task2 = User.findOneAndUpdate({uid: currentUser.uid}, { $pull: { dates: uid } });
         const task3 = UserDate.deleteOne({uid})
         const task4 = UserDate.deleteOne({uid: currentUser.uid})
-        await Promise.allSettled([task1, task2, task3])
+        await Promise.allSettled([task1, task2, task3, task4])
         JSONReponse.success("removed from date")
     } catch (error) {
         console.log(error)

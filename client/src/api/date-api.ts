@@ -1,6 +1,8 @@
 import { UserProfile } from "@shared/User"
+import { UserDate } from "@shared/Dates"
 import axios from "./instance"
 
+/*       Date Requests         */
 
 export const getIncomingRequests = async ()=>{
     const res = await axios.get<ApiResponse<UserProfile[]>>("/api/date/requests/incoming");
@@ -22,7 +24,21 @@ export const acceptDateRequest = async (uid: string) => {
     return res.data;
 }
 
-export const deletetDateRequest = async (uid: string) => {
-    const res = await axios.post<ApiResponse<{}>>(`/api/date/request/${uid}/reject`);
+export const rejectDateRequest = async (uid: string) => {
+    const res = await axios.delete<ApiResponse<{}>>(`/api/date/request/${uid}/reject`);
     return res.data;
 }
+
+
+/*               User Dates            */
+
+export const getUserDates = async () => {
+    const res = await axios.get<ApiResponse<UserDate[]>>("/api/date/");
+    return res.data;
+}
+
+export const unDateUser = async (uid: string) => {
+    const res = await axios.delete<ApiResponse<{}>>("/api/date/remove/"+uid);
+    return res.data;
+}
+

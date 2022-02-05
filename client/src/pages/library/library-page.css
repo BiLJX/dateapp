@@ -2,6 +2,9 @@
   display: flex;
   flex-direction: column;
   padding: 3%;
+  width: 100%;
+
+  align-items: center;
 }
 
 .library-items-container {
@@ -9,6 +12,8 @@
   flex-direction: column;
   background-color: var(--library-item-background);
   border-radius: 20px;
+  max-width: var(--max-width);
+  width: 100%;
 }
 
 .library-item {
@@ -17,4 +22,30 @@
   border-bottom: 1px solid var(--border1);
   display: flex;
   padding: 2%;
+}
+
+.library-item-icon {
+  display: flex;
+  width: 10%;
+  justify-content: center;
+  align-items: center;
+}
+
+.library-item-title {
+  display: flex;
+  align-items: center;
+  width: 80%;
+  padding-left: 2%;
+}
+
+.library-item-forward {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 10%;
+}
+
+.library-item-forward svg {
+  font-size: 1rem;
+  color: var(--text-secondary);
 }

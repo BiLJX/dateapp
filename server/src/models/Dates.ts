@@ -1,8 +1,8 @@
-import { DateChat } from "@shared/Dates";
+import { UserDate } from "@shared/Dates";
 import { Schema, model } from "mongoose";
 
 
-const date = new Schema<DateChat>({
+const date = new Schema<UserDate>({
     uid: {
         type: String,
         required: true
@@ -23,6 +23,15 @@ const date = new Schema<DateChat>({
         type: String,
         default: "Tap to Chat"
     }
+}, {timestamps: true, toJSON: {
+    virtuals: true
+}})
+
+date.virtual("date_user_data", {
+    ref: "User",
+    localField: "date_user_uid",
+    foreignField: "uid",
+    justOne: true
 })
 
 const UserDate = model("user_date", date)

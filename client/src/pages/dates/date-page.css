@@ -1,0 +1,51 @@
+.date-page {
+  display: flex;
+  flex-direction: column;
+  padding: 1rem;
+  align-items: center;
+}
+
+.date-page-item {
+  display: flex;
+  height: 5rem;
+  width: 100%;
+  max-width: var(--max-width);
+}
+
+.date-page-item-left {
+  height: 100%;
+  width: 5rem;
+  display: flex;
+  align-items: center;
+}
+
+.date-page-item-pfp {
+  height: 60px;
+  width: 60px;
+  border-radius: 100%;
+  background-color: var(--image-background-alt);
+  overflow: hidden;
+}
+
+.date-page-item-right {
+  display: flex;
+  height: 100%;
+  flex-direction: column;
+  width: 70%;
+  padding-top: 1rem;
+}
+.date-page-item-name {
+  flex: 1;
+  align-items: center;
+  color: var(--text-main2);
+  font-size: 1.2rem;
+  font-weight: 600;
+  width: 100%;
+}
+.date-page-item-message {
+  flex: 1;
+  align-items: center;
+  color: var(--text-secondary);
+  font-weight: 600;
+  width: 100%;
+}

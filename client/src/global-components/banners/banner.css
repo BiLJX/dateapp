@@ -8,6 +8,7 @@
   align-items: center;
   color: var(--text-main);
   animation: openBanner 0.3s linear forwards;
+  z-index: 999;
 }
 
 .banner-error {

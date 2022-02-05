@@ -32,7 +32,7 @@ export async function getUsers(req: Request, res: Response){
     const JSONReponse = new JSONRESPONSE(res)
     const uid = req.app.locals.uid
     try{
-        const users = await User.find({account_setuped: true, dates: { $ne: uid }, uid: { $ne: uid }})
+        const users = await User.find({account_setuped: true, uid: { $ne: uid }}).sort({updatedAt: 'desc'}).exec()
         const parsed_users: UserProfile[] = await Promise.all(users.map(async x=>parseUser(x.toJSON(), req.app.locals.currentUser))) 
         JSONReponse.success("success", parsed_users)
     }catch(err){
@@ -93,28 +93,27 @@ export async function editUserProfile(req: Request, res: Response){
             if(!isUserName(username)) return JSONReponse.clientError("invalid username or username is less than 3 charecter");
             if(!isFullName(full_name)) return JSONReponse.clientError("invalid name");
             if(!isDescription(description)) return JSONReponse.clientError("description is less than 10 or more than 100 charecters")
-            
-            if(url){
-                const user = await User.findOneAndUpdate({uid}, {$set: {
-                    full_name,
-                    username,
-                    description,
-                    gender: gender.toLowerCase(),
-                    profile_picture_url: url,
-                    account_setuped: true
-                }})
-                return JSONReponse.success("success", user?.toJSON())
-            }
-            const user = await User.findOneAndUpdate({uid}, {$set: {
-                full_name,
-                username,
-                description,
+            const splited_name = full_name.split(" ")
+            const data = {
+                full_name: full_name.trim(),
+                username: username.trim(),
+                description: description.trim(),
                 gender: gender.toLowerCase(),
-            }})
-            return JSONReponse.success("success", await parseUser(user?.toJSON(), current_user))
+                account_setuped: true,
+                first_name: splited_name[0].trim(),
+                last_name: splited_name.length > 2 ? splited_name[1].trim() + " " + splited_name[2].trim() : splited_name[1].trim()||"",
+            }
+            if(url){
+                await User.findOneAndUpdate({uid}, {$set: {...data, profile_picture_url: url}})
+                const updatedUser = await User.findOne({uid})
+                return JSONReponse.success("success", await parseUser(updatedUser?.toJSON(), current_user))
+            }
+            await User.findOneAndUpdate({uid}, {$set: data})
+            const updatedUser = await User.findOne({uid})
+            return JSONReponse.success("success", await parseUser(updatedUser?.toJSON(), current_user))
         }catch(err: any){
             console.log(err)
-            JSONReponse.clientError(err.message)
+            JSONReponse.clientError("Username already taken")
         }
     })
 }

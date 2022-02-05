@@ -47,7 +47,7 @@ function BottomNav(){
             <NavLink to = "/library" className={(navData)=>"bottom-nav-item " + (navData.isActive?"bottom-nav-item-active":"")}>
                 <LibraryBooksIcon />
             </NavLink>
-            <NavLink to = "/profile" className={(navData)=>"bottom-nav-item " + (navData.isActive?"bottom-nav-item-active":"")}>
+            <NavLink to = "/profile/edit" className={(navData)=>"bottom-nav-item " + (navData.isActive?"bottom-nav-item-active":"")}>
                 <div className = "nav-profile">
                     <img className="full-img" src = {currentUser?.profile_picture_url}/>
                 </div>

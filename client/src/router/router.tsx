@@ -6,6 +6,7 @@ import LoginPage from "../pages/auth/login-page"
 import { addCurrentUser } from "../action/user"
 import SignUpPage from "../pages/auth/signup-page"
 import RoutesWithHeader from "./route-with-header"
+import { SplashSceenLoader } from "global-components/loaders/loaders"
 
 
 
@@ -45,7 +46,7 @@ function AllRoutes(){
         getUser()
     }, [])
     if(loading){
-        return <h1>LOADING...</h1>
+        return <SplashSceenLoader />
     }
     return(
         <>

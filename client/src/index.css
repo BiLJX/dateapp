@@ -30,14 +30,17 @@
   --text-secondary: var(--light-gray);
   --header-background: var(--dark-gray-alt);
   --image-background: var(--dark-gray);
+  --image-background-alt: var(--gray);
   --nav-item-color: var(--light-gray);
   --library-item-background: var(--dark-gray-alt);
+  --date-request-item-bg: var(--dark-gray);
   --border1: #4c4a50b9;
+  --message-background-alt: var(--dark-gray);
 }
 
 * {
   margin: 0;
-  font-family: "Roboto", sans-serif;
+  font-family: "Poppins", sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   -webkit-box-sizing: border-box;
@@ -45,6 +48,8 @@
 }
 body {
   background: var(--background);
+  overflow-x: hidden;
+  overflow-y: hidden;
 }
 
 input,
@@ -119,4 +124,19 @@ a {
   text-overflow: ellipsis;
   display: -webkit-box;
   -webkit-box-orient: vertical;
+}
+
+.full {
+  display: flex;
+  height: 100vh;
+  width: 100%;
+}
+
+.error-page {
+  justify-content: center;
+  align-items: center;
+}
+
+.error-page h1 {
+  color: var(--text-main);
 }

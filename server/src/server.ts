@@ -13,6 +13,7 @@ import UserRoutes from "./routes/user-routes"
 import DateRoutes from "./routes/dates-routes"
 //side effects
 import "./fire"
+import { ChatRoutes } from "./routes/chat-routes"
 
 //constants
 const CONNECTION_URL = "mongodb+srv://billjesh:Billu456@cluster0.vyegx.mongodb.net/Dateapp?retryWrites=true&w=majority"
@@ -33,6 +34,7 @@ app.use(cookieParser())
 app.use("/api/auth",  AuthRoutes)
 app.use("/api/user", AuthMiddleware, UserRoutes)
 app.use("/api/date", AuthMiddleware, DateRoutes)
+app.use("/api/chat", AuthMiddleware, ChatRoutes)
 //connecting to database and starting server
 
 mongoose.connect(CONNECTION_URL).then(()=>{

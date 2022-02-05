@@ -3,7 +3,7 @@ import { useState } from 'react'
 import FavoriteIcon from '@mui/icons-material/Favorite';
 import CloseIcon from '@mui/icons-material/Close';
 import DoneIcon from '@mui/icons-material/Done';
-import { cancelDateRequest, sendDateRequest } from '../../api/date-api';
+import { cancelDateRequest, sendDateRequest, unDateUser, acceptDateRequest } from '../../api/date-api';
 import { useDispatch } from 'react-redux';
 import bannerDispatch from '../../dispatcher/banner';
 import  * as bannerActions from "../../action/banner";
@@ -15,7 +15,7 @@ export function SendDateButton({data}: {data: UserProfile}){
     const [hasSentDate, setHasSentDate] = useState(data.has_current_sent_date_request)
     const [hasUserSentDate, setHasUserSentDate] = useState(data.has_this_user_sent_date_request)
     const [isLoading, setIsLoading] = useState(false)
-    const [returnNull, setReturnNull] = useState(false)
+    const [isDating, setIsDating] = useState(data.is_dating)
     const dispatch = useDispatch()
     const sendDate = async () => {
         setHasSentDate(true)
@@ -26,10 +26,10 @@ export function SendDateButton({data}: {data: UserProfile}){
     }
     const acceptDate = async () => {
         setIsLoading(true)
-        const res = await sendDateRequest(data.uid);
+        const res = await acceptDateRequest (data.uid);
         if(res.success){ 
             bannerDispatch(dispatch, bannerActions.success(res.msg));
-            setReturnNull(true)
+            setIsDating(true)
             return
         }
         bannerDispatch(dispatch, bannerActions.error(res.msg))
@@ -45,7 +45,27 @@ export function SendDateButton({data}: {data: UserProfile}){
         bannerDispatch(dispatch, bannerActions.error(res.msg))
         setHasSentDate(true)
     }
-    if(returnNull) return <></>
+    const unDate = async () => {
+        setIsDating(false);
+        setHasSentDate(false);
+        setHasUserSentDate(false);
+        const res = await unDateUser(data.uid);
+        if(!res.success){
+            bannerDispatch(dispatch, bannerActions.error(res.msg));
+            return setIsDating(true);
+        }
+        bannerDispatch(dispatch, bannerActions.success(res.msg));
+    }
+    if(isDating){
+        return(
+            <div className = "profile-item-button-container profile-item-button-container-heart">
+                <div className = "profile-item-button profile-item-heart" onClick = {unDate}>
+                    <CloseIcon style = {{position: "relative", bottom: "10%"}} />
+                    <span style = {{position: "absolute", color: "var(--text-main)", bottom: "12%", fontSize: "0.8rem"}}>Unmatch</span> 
+                </div>
+            </div>
+        )
+    }
     if(hasSentDate){
         return(
             <div className = "profile-item-button-container profile-item-button-container-heart">
