@@ -27,11 +27,11 @@ function HomePage(){
     useEffect(()=>{
         
         if(loading && !container_ref.current) return;
-        createScrollSnap(container_ref.current, {
-            snapDestinationY: "100%",
-            duration: 300,
-            threshold: 0.1
-        },()=>{})
+        // createScrollSnap(container_ref.current, {
+        //     snapDestinationY: "100%",
+        //     duration: 300,
+        //     threshold: 0.1
+        // },()=>{})
     }, [container_ref, loading])
     if(loading) return <HeartLoader />
     return(

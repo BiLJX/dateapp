@@ -1,6 +1,8 @@
 //apps
 import express from "express"
 import mongoose from "mongoose"
+import { Server } from "socket.io"
+import cookie from "cookie"
 //middlewares
 import bodyParser from "body-parser"
 import cors from "cors"
@@ -14,6 +16,9 @@ import DateRoutes from "./routes/dates-routes"
 //side effects
 import "./fire"
 import { ChatRoutes } from "./routes/chat-routes"
+import { ActiveUsers } from "./realtime/ActiveUsers"
+import { getUid } from "./utils/uid"
+import { Chat } from "./realtime/Chat"
 
 //constants
 const CONNECTION_URL = "mongodb+srv://billjesh:Billu456@cluster0.vyegx.mongodb.net/Dateapp?retryWrites=true&w=majority"
@@ -38,8 +43,26 @@ app.use("/api/chat", AuthMiddleware, ChatRoutes)
 //connecting to database and starting server
 
 mongoose.connect(CONNECTION_URL).then(()=>{
-    app.listen(PORT, ()=>{
+    const server = app.listen(PORT, ()=>{
         console.log("listening on port "+PORT+"...")
+    })
+    const io = new Server(server);
+    const activeUsers = new ActiveUsers()
+    const chat = new Chat(activeUsers)
+    io.on("connection", (socket)=>{
+        const cookief = socket.handshake.headers.cookie||"";
+        const cookies = cookie.parse(cookief) 
+        const token = <string>socket.handshake.query.session || cookies.session || "";
+        if(!token) return;
+        const uid = getUid(token);
+        if(!uid) return;
+        activeUsers.addUser({ uid, socket_id: socket.id })
+        chat.updateActiveUsers(activeUsers);
+        chat.dmMessage(socket);
+        socket.on("disconnect", ()=>{
+            activeUsers.removeUser(socket.id)
+            chat.updateActiveUsers(activeUsers);
+        })
     })
 }).catch(err=>{
     console.log(err)

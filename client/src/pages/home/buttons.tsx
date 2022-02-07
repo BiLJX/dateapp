@@ -26,7 +26,7 @@ export function SendDateButton({data}: {data: UserProfile}){
     }
     const acceptDate = async () => {
         setIsLoading(true)
-        const res = await acceptDateRequest (data.uid);
+        const res = await acceptDateRequest(data.uid);
         if(res.success){ 
             bannerDispatch(dispatch, bannerActions.success(res.msg));
             setIsDating(true)

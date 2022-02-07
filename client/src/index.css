@@ -36,6 +36,7 @@
   --date-request-item-bg: var(--dark-gray);
   --border1: #4c4a50b9;
   --message-background-alt: var(--dark-gray);
+  --sending: var(--light-gray);
 }
 
 * {
@@ -49,7 +50,6 @@
 body {
   background: var(--background);
   overflow-x: hidden;
-  overflow-y: hidden;
 }
 
 input,

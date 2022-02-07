@@ -1,20 +1,32 @@
 import { useEffect, useState } from "react"
 import { BrowserRouter as Router, Route, Routes, useNavigate, useLocation } from "react-router-dom"
 import { getCurrentUser } from "../api/auth-api"
-import { useDispatch } from "react-redux"
+import { useDispatch, useSelector } from "react-redux"
 import LoginPage from "../pages/auth/login-page"
 import { addCurrentUser } from "../action/user"
 import SignUpPage from "../pages/auth/signup-page"
 import RoutesWithHeader from "./route-with-header"
 import { SplashSceenLoader } from "global-components/loaders/loaders"
+import { chatContext } from "context/Realtime"
+import Chat from "realtime/Chat"
+import { io } from "socket.io-client"
+import { RootState } from "types/states"
 
-
-
+const temp: any = null
 function AppRouter(){
+    const [chat, setChat] = useState<Chat>(temp)
+    const currentUser = useSelector((state: RootState)=>state.current_user); 
+    useEffect(()=>{
+        if(currentUser){
+            setChat(new Chat(io()))
+        }
+    }, [currentUser])
     return(
-        <Router>
-           <AllRoutes />
-        </Router>
+        <chatContext.Provider value = {chat} >
+            <Router>
+                <AllRoutes />
+            </Router>
+        </chatContext.Provider>
     )
 }
 
@@ -27,9 +39,7 @@ function AllRoutes(){
     const getUser = async () => {
         try{
             const res = await getCurrentUser()
-            
             if(res.redirect && !location.pathname.includes("/signup")){
-                
                 return navigate(res.redirect_url)
             }
             if(!res.data.account_setuped && !location.pathname.includes("/signup")){

@@ -1,3 +1,5 @@
+type MessageType = "TEXT"|"PHOTO"|"VIDEO"
+
 export interface ChatData {
     has_seen: boolean,
     chat_background: string,
@@ -9,10 +11,16 @@ export interface ChatData {
 }
 
 export interface TextMessageData {
-    type: "TEXT"|"PHOTO"|"VIDEO",
-    id: string,
+    type: MessageType,
+    message_id: string,
     text: string,
     sender_uid: string,
     receiver_uid: string,
     is_sent_by_viewer: boolean
+}
+
+export interface TextMessageSocketData {
+    type: MessageType,
+    text: string,
+    receiver_uid: string,
 }

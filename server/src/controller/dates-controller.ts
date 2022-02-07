@@ -119,6 +119,7 @@ export const acceptDate = async (req:  Request, res: Response) => {
     const currentUser: UserInterface = req.app.locals.currentUser;
     const uid = req.params.uid;
     try {
+        if(!uid) return JSONReponse.clientError("something went wrong")
         await acceptUser(uid, currentUser.uid);
         JSONReponse.success("accepted date")
     } catch (error) {
@@ -149,14 +150,14 @@ export const unDate = async (req: Request, res: Response) => {
     const currentUser: UserInterface = req.app.locals.currentUser;
     const uid = req.params.uid;
     if(!currentUser.dates.includes(uid)) return JSONReponse.clientError("the user does not include in your dates")
-    try {
+    try{
         const task1 = User.findOneAndUpdate({uid}, { $pull: { dates: currentUser.uid } });
         const task2 = User.findOneAndUpdate({uid: currentUser.uid}, { $pull: { dates: uid } });
-        const task3 = UserDate.deleteOne({uid})
-        const task4 = UserDate.deleteOne({uid: currentUser.uid})
+        const task3 = UserDate.deleteOne({uid, date_user_uid: currentUser.uid })
+        const task4 = UserDate.deleteOne({uid: currentUser.uid, date_user_uid: uid})
         await Promise.allSettled([task1, task2, task3, task4])
-        JSONReponse.success("removed from date")
-    } catch (error) {
+        JSONReponse.success("removed from date");
+    } catch (error){
         console.log(error)
         JSONReponse.serverError()
     }

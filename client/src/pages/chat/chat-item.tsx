@@ -1,4 +1,5 @@
 import { ChatData, TextMessageData } from "@shared/Chat"
+import { ViewerTextMessageData } from "realtime/Chat"
 import { JsxChild } from "typescript"
 
 export function ChatItem({message_obj, user_data}: {message_obj: TextMessageData, user_data: ChatData["user_data"] }){
@@ -18,12 +19,23 @@ export function ChatItem({message_obj, user_data}: {message_obj: TextMessageData
     )
 }
 
-export function CurrentUserChatItem({message_obj}: {message_obj: TextMessageData }){
+export function CurrentUserChatItem({message_obj}: {message_obj: ViewerTextMessageData }){
+    if(message_obj.has_been_sent){
+        return(
+            <article className = "chat-item">
+                <div className = "chat-message-container chat-message-container-right">
+                    {message_obj.text}
+                </div>
+                
+            </article>
+        )
+    }
     return(
         <article className = "chat-item">
             <div className = "chat-message-container chat-message-container-right">
                 {message_obj.text}
             </div>
+            <span className = "sending"/>
         </article>
     )
 }
