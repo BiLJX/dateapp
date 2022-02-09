@@ -1,9 +1,10 @@
 import { UserDate } from "@shared/Dates";
 import { initDates } from "action/date";
 import { getUserDates } from "api/date-api";
+import { chatContext } from "context/Realtime";
 import { Header } from "global-components/containers/container-with-header";
 import { HeartLoader } from "global-components/loaders/loaders";
-import { Fragment, useEffect, useState } from "react";
+import { Fragment, useContext, useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { NavLink } from "react-router-dom";
 import { RootState } from "types/states";
@@ -45,7 +46,7 @@ export default function DatePage(){
             <div className = "date-page">
                 {dates.map((x, i)=>(
                     <Fragment key = {i}>
-                        <DateItem data= {x} />
+                        <DateItem _data= {x} />
                     </Fragment>
                 ))}
             </div>
@@ -54,7 +55,20 @@ export default function DatePage(){
     )
 }
 
-function DateItem({data}: {data: UserDate}){
+function DateItem({_data}: {_data: UserDate}){
+    const chat = useContext(chatContext)
+    const [data, setData] = useState(_data)
+    useEffect(()=>{
+        if(!chat) return;
+        chat.onMessage(message_obj=>{
+            if(message_obj.sender_uid === data.date_user_uid){
+                setData((prev)=>({ ...prev, latest_message: message_obj.text, has_read_message: false }))
+            }
+        })
+        return( ()=>{
+            chat.offMessage();
+        } )
+    }, [chat])
     return(
         <NavLink className="date-page-item" to = {"/message/"+data.date_user_data.uid}>
             <div className = "date-page-item-left">
