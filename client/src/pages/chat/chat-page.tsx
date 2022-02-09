@@ -4,10 +4,12 @@ import { getChatData, getMessages } from 'api/chat-api';
 import { Header } from 'global-components/containers/container-with-header';
 import React, { Fragment, useContext, useEffect, useRef, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
+
 import { ChatItem, CurrentUserChatItem } from './chat-item';
 import SendIcon from '@mui/icons-material/Send';
 import "./chat-page.css"
 import { chatContext } from 'context/Realtime';
+import { TailSpin } from "react-loader-spinner"
 import { ViewerTextMessageData } from 'realtime/Chat';
 function uuid(){
     return (Math.floor(Math.random() * Math.pow(10, 15))).toString(16)
@@ -18,9 +20,15 @@ export default function ChatPage(props: any){
     const [messages, setMessages] = useState<TextMessageData[]|ViewerTextMessageData[]>([])
     const [counter, setCounter] = useState(1);
     const [hasMore, setHasMore] = useState(true);
+    const [isTyping, setIsTyping] = useState(false)
     const main = useRef<HTMLDivElement>(null);
     const chat = useContext(chatContext)
-    const scrollDown = () => main.current?.scrollTo(0, main.current.scrollHeight);
+    const scrollDown = (flag: boolean = false) => {
+        if(!main.current) return;
+        const ratio = main.current.scrollTop / main.current.scrollHeight;
+        if(flag) return main.current.scrollTo(0, main.current.scrollHeight);
+        if(ratio > 0.5) return main.current.scrollTo(0, main.current.scrollHeight);
+    }
     const fetchData = async () => {
         if(!uid) return;
         const data = await getChatData(uid.trim());
@@ -50,15 +58,22 @@ export default function ChatPage(props: any){
                 const newArr = prev_state.filter((val)=>val.message_id !== message.message_id);
                 return [...newArr, data]
             })
-            scrollDown()
+            setData((prev)=>(prev && {...prev, has_seen: false}))
         })
+        
+        scrollDown(true)
     }
 
-    const getChatMessages = async (count: number = 1) => {
+    const getChatMessages = async (page: number = 1) => {
         if(!uid) return;
-        const response = await getMessages(uid, count)
+        const response = await getMessages(uid, page)
         if(response.success){
-            if(response.data.length !== 0) return setMessages((prev_state) => [...response.data.reverse(), ...prev_state]);
+            if(response.data.length >= 10) {
+                if(page === 1) chat?.seen(uid)
+                setMessages((prev_state) => [...response.data, ...prev_state]);
+                if(page > 1) main.current?.scrollTo(0, main.current.clientHeight)
+                return
+            }
             setHasMore(false)
         }
     }
@@ -73,16 +88,24 @@ export default function ChatPage(props: any){
                 if(message_obj.sender_uid === uid){
                     setMessages((prev_state)=>[...prev_state, message_obj])
                     scrollDown()
+                    chat.seen(uid)
                 }
+            })
+            chat.onSeen((seen_by)=>{
+                if(seen_by === uid) setData((prev)=>(prev && {...prev, has_seen: true}))
+            })
+            chat.isTyping(data=>{
+                if(data.sender_uid === uid) setIsTyping(data.state);
             })
         }
         return(()=>{
             chat?.offMessage()
+            chat?.offSeen()
         })
     }, [chat])
 
     useEffect(()=>{
-        scrollDown()
+        scrollDown(true)
     }, [main, data])
 
     useEffect(()=>{   
@@ -97,18 +120,20 @@ export default function ChatPage(props: any){
             <section>
                 <div className='chat-page-messages' onScroll={handleScroll} ref = {main} style={ { backgroundImage: `linear-gradient(180deg,rgba(18, 16, 21, 0.79) 0%,#121015 76.91%), url('${data.chat_background}')` } }>
                     <div className='chat-page-message-container'>
-                       {
+                        {hasMore&&<div className='chat-page-messages-loader'><TailSpin height={30} width = {30} color = "var(--text-main2)"/></div>}
+                        {
                            messages.map((x, i)=>(
                                <Fragment key = {i}>
-                                   { x.is_sent_by_viewer?<CurrentUserChatItem message_obj={x as ViewerTextMessageData} />:<ChatItem message_obj={x} user_data={ data.user_data } /> }
+                                   { x.is_sent_by_viewer?<CurrentUserChatItem message_obj={x as ViewerTextMessageData} has_seen = { messages.at(-1)?.message_id === x.message_id && data.has_seen}  />:<ChatItem message_obj={x} user_data={ data.user_data } /> }
                                </Fragment>
                            ))
-                       }
+                        }
+                        { isTyping&& <span style = {{color: "var(--text-main2)", marginLeft: "1rem"}}>typing...</span> }
                     </div>
                 </div>
             </section>
             
-           <Input send = {sendMessage} />
+           <Input send = {sendMessage} uid = {uid||""} />
         </div>           
     )
 }
@@ -133,12 +158,28 @@ function ChatHeader({data}: {data: ChatData}){
     )
 }
 
-function Input({send}: {send: (text: string)=>any}){
+function Input({send, uid}: {send: (text: string,)=>any, uid: string}){
     const [text, setText] = useState("");
+    const [typing, setTyping] = useState(false);
+    const [_timeout, set_Timeout] = useState<any>();
+    const chat = useContext(chatContext)
     const container_ref = useRef<any>(null)
+    const timeOutFunction = () => {
+        console.log("not typing")
+        setTyping(false)
+        chat?.sendTyping(uid, false);
+    }
     function handleKeyDown(e:any){
         e.target.style.height = '44px';
         e.target.style.height = e.target.scrollHeight  + "px";
+        if(!typing){
+            setTyping(true);
+            chat?.sendTyping(uid, true);
+            set_Timeout( setTimeout(timeOutFunction, 3000) );
+        }else{
+            clearTimeout(_timeout);
+            set_Timeout( setTimeout(timeOutFunction, 3000) );
+        }
     }
     function submit(){
         if(!text) return;

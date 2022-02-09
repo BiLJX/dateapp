@@ -11,20 +11,20 @@ async function updateDataBase(message_obj: TextMessageData){
     const message = new MessageModel(message_obj);
     await message.save();
     await UserDate.findOneAndUpdate({uid: message_obj.sender_uid, date_user_uid: message_obj.receiver_uid}, { $set: { latest_message: message_obj.text  } });
-    await UserDate.findOneAndUpdate({uid: message_obj.receiver_uid, date_user_uid: message_obj.sender_uid}, { $set: { latest_message: message_obj.text  } });
+    await UserDate.findOneAndUpdate({uid: message_obj.receiver_uid, date_user_uid: message_obj.sender_uid}, { $set: { latest_message: message_obj.text, has_read_message: false  } });
 }
 
 export class Chat {
     constructor(private activeUsers: ActiveUsers){}
     public dmMessage(socket: Socket){
+        //getting uid
+        const cookief = socket.handshake.headers.cookie||"";
+        const cookies = cookie.parse(cookief) 
+        const token = <string>socket.handshake.query.session || cookies.session || "";
+        const sender_uid = getUid(token);
+
         socket.on("message", async (message_obj: TextMessageSocketData)=>{
             try {
-                    //getting uid
-                const cookief = socket.handshake.headers.cookie||"";
-                const cookies = cookie.parse(cookief) 
-                const token = <string>socket.handshake.query.session || cookies.session || "";
-                const sender_uid = getUid(token);
-
                 //getting client data
                 const { text, type, receiver_uid } = message_obj;
                 const receiver_user = await getUser(receiver_uid);
@@ -48,15 +48,36 @@ export class Chat {
 
                 //send if user is active
                 await updateDataBase(message_data);
+                
                 if(receiver_socketId){
-                    socket.to(receiver_socketId).emit("message", message_data)
+                    socket.to(receiver_socketId).emit("message", message_data);
                 }
-                socket.emit("sent", { ...message_data, is_sent_by_viewer: true })
+                socket.emit("sent", { ...message_data, is_sent_by_viewer: true });
+                
             } catch (error) {
                 console.log(error)
             }
-            
         })
+        //seen
+        socket.on("seen", async (uid)=>{
+           try {
+               await UserDate.findOneAndUpdate({ uid: sender_uid, date_user_uid: uid  }, { $set: { has_read_message: true } });
+               const receiver_socketId: string|undefined = this.activeUsers.getUserByUid(uid);
+               if(receiver_socketId) socket.to(receiver_socketId).emit("seen", sender_uid);
+           } catch (error) {
+               console.log(error)
+           }
+        })
+        //typing
+        socket.on("typing", data=>{
+            try{
+                const receiver_socketId: string|undefined = this.activeUsers.getUserByUid(data.receiver_uid);
+                if(receiver_socketId) socket.to(receiver_socketId).emit("typing", { state: data.state, sender_uid });
+            }catch(err){
+                console.log(err)
+            }
+        })
+
     }
     public updateActiveUsers(activeUsers: ActiveUsers){
         this.activeUsers = activeUsers;

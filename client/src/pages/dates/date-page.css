@@ -49,3 +49,8 @@
   font-weight: 600;
   width: 100%;
 }
+
+.date-page-item-active .date-page-item-name,
+.date-page-item-active .date-page-item-message {
+  color: var(--text-main);
+}

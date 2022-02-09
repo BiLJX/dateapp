@@ -29,7 +29,7 @@ export async function getUserDates(req: Request, res: Response){
     const JSONReponse = new JSONRESPONSE(res)
     const uid = req.app.locals.uid;
     try{
-        const dates_raw = await UserDate.find({uid}).populate("date_user_data", "uid full_name profile_picture_url").sort({createdAt: 'desc'}).exec()
+        const dates_raw = await UserDate.find({uid}).sort({updatedAt: "desc"}).populate("date_user_data", "uid full_name profile_picture_url").sort({createdAt: 'desc'}).exec()
         const dates = dates_raw.map(x=>x.toJSON())
         JSONReponse.success("success",dates)
     }catch(err){

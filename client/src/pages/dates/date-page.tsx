@@ -62,7 +62,7 @@ function DateItem({data}: {data: UserDate}){
                     <img className = "full-img" src = {data.date_user_data.profile_picture_url} />
                 </div>
             </div>
-            <div className="date-page-item-right">
+            <div className={`date-page-item-right ${data.has_read_message?"":" date-page-item-active"}` }>
                 <div className = "date-page-item-name ellipsis">
                     {data.date_user_data.full_name}
                 </div>

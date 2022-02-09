@@ -30,4 +30,27 @@ export default class Chat {
             socket.off("sent")
         });
     }
+    public seen(uid: string){
+        const socket = this.socket;
+        socket.emit("seen", uid);
+    }
+    public onSeen(cb: (seen_by: string)=>any){
+        const socket = this.socket;
+        socket.on("seen", cb)
+    }
+    public offSeen(){
+        const socket = this.socket;
+        socket.off("seen")
+    }
+    public sendTyping(uid: string, state: boolean){
+        const socket = this.socket;
+        socket.emit("typing", {
+            receiver_uid: uid,
+            state
+        });
+    }
+    public isTyping(cb: (data: { sender_uid: string, state: boolean })=>any){
+        const socket = this.socket;
+        socket.on("typing", cb);
+    }
 }
