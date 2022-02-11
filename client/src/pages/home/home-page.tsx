@@ -2,7 +2,7 @@ import { UserProfile } from '@shared/User'
 import { getUsers } from 'api/user-api'
 import { Fragment, useEffect, useRef, useState } from 'react'
 import createScrollSnap from 'scroll-snap'
-import PersonIcon from '@mui/icons-material/Person';
+import PersonOutlineOutlinedIcon from '@mui/icons-material/PersonOutlineOutlined';
 import "./home-page.css"
 import { sendDateRequest } from '../../api/date-api';
 import { useDispatch } from 'react-redux';
@@ -10,6 +10,7 @@ import bannerDispatch from '../../dispatcher/banner';
 import  * as bannerActions from "../../action/banner"
 import { SaveButton, SendDateButton } from './buttons';
 import { HeartLoader } from 'global-components/loaders/loaders';
+import { NavLink } from 'react-router-dom';
 function HomePage(){
     const [loading, setLoading] = useState(true)
     const [feed, setFeed] = useState<UserProfile[]>([])
@@ -71,9 +72,9 @@ export function ProfileItem({data}: {data: UserProfile}){
                         <SaveButton data = {data}/>
                         <SendDateButton data = {data}/>
                         <div className = "profile-item-button-container">
-                            <div className = "profile-item-button profile-item-profile">
-                                <PersonIcon />
-                            </div>
+                            <NavLink to = {"/user/"+data.uid} className = "profile-item-button profile-item-profile">
+                                <PersonOutlineOutlinedIcon />
+                            </NavLink>
                         </div>
                     </div>
                 </div>

@@ -1,0 +1,107 @@
+.user-profile-page {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  padding-top: 50vh;
+}
+
+.user-profile-page-background {
+  position: fixed;
+  top: var(--header-height);
+  background-color: var(--image-background-alt);
+  width: 100vw;
+  height: 70vh;
+  flex-direction: column;
+}
+
+.user-profile-contents-container {
+  display: flex;
+  padding: 1.5rem 1rem 1rem 1rem;
+  z-index: 1;
+  background-color: var(--profile-container-bg);
+  border-radius: 50px 50px 0 0;
+  flex-direction: column;
+  position: relative;
+}
+.user-profile-contents-header {
+  width: 100%;
+  display: flex;
+}
+.user-profile-name {
+  font-size: 1.3em;
+  width: 85%;
+  padding: 0.5em;
+  color: var(--text-main);
+  line-clamp: 2;
+  -webkit-line-clamp: 2;
+  word-wrap: break-word;
+}
+.user-profile-edit {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex: 1;
+  cursor: pointer;
+}
+.user-profile-edit svg {
+  color: var(--text-main2);
+}
+.user-profile-nav {
+  display: flex;
+}
+
+.user-profile-nav-item {
+  padding: 0.8em;
+  color: var(--text-secondary);
+  font-weight: 600;
+}
+
+.user-profile-nav-item-active {
+  color: var(--light-pink);
+}
+
+.user-profile-about {
+  display: flex;
+  flex-direction: column;
+  padding: 0.5rem;
+}
+
+.user-profile-info-container {
+  display: flex;
+  flex-direction: column;
+  padding-bottom: 0.7rem;
+}
+
+.user-profile-about-headings {
+  color: var(--text-main2);
+  font-size: 1.2rem;
+}
+
+.user-profile-about-text {
+  color: var(--text-secondary);
+  font-weight: 600;
+}
+
+.user-profile-buttons-container {
+  width: 100%;
+  font-size: 1rem;
+  display: flex;
+  justify-content: space-evenly;
+  position: absolute;
+  top: -4%;
+  padding-right: 2rem;
+}
+
+.user-profile-button {
+  height: 3em;
+  width: 3em;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: var(--pink);
+  border-radius: 10px;
+}
+
+.user-profile-button svg {
+  color: var(--text-main);
+}

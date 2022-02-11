@@ -3,6 +3,7 @@ import { useState } from 'react'
 import FavoriteIcon from '@mui/icons-material/Favorite';
 import CloseIcon from '@mui/icons-material/Close';
 import DoneIcon from '@mui/icons-material/Done';
+import FavoriteBorderOutlinedIcon from '@mui/icons-material/FavoriteBorderOutlined';
 import { cancelDateRequest, sendDateRequest, unDateUser, acceptDateRequest } from '../../api/date-api';
 import { useDispatch } from 'react-redux';
 import bannerDispatch from '../../dispatcher/banner';
@@ -10,7 +11,7 @@ import  * as bannerActions from "../../action/banner";
 import BookmarkBorderIcon from '@mui/icons-material/BookmarkBorder';
 import BookmarkIcon from '@mui/icons-material/Bookmark';
 import { saveUser, unsaveUser } from 'api/user-api';
-
+import HeartBrokenOutlinedIcon from '@mui/icons-material/HeartBrokenOutlined';
 export function SendDateButton({data}: {data: UserProfile}){
     const [hasSentDate, setHasSentDate] = useState(data.has_current_sent_date_request)
     const [hasUserSentDate, setHasUserSentDate] = useState(data.has_this_user_sent_date_request)
@@ -56,25 +57,30 @@ export function SendDateButton({data}: {data: UserProfile}){
         }
         bannerDispatch(dispatch, bannerActions.success(res.msg));
     }
+
+    //if they are dating
     if(isDating){
         return(
             <div className = "profile-item-button-container profile-item-button-container-heart">
-                <div className = "profile-item-button profile-item-heart" onClick = {unDate}>
-                    <CloseIcon style = {{position: "relative", bottom: "10%"}} />
-                    <span style = {{position: "absolute", color: "var(--text-main)", bottom: "12%", fontSize: "0.8rem"}}>Unmatch</span> 
+                <div className = "profile-item-button profile-item-heart-break" onClick = {unDate}>
+                    <HeartBrokenOutlinedIcon/>
                 </div>
             </div>
         )
     }
+
+    //if viewer has sent date
     if(hasSentDate){
         return(
             <div className = "profile-item-button-container profile-item-button-container-heart">
-                <div className = "profile-item-button profile-item-heart profile-item-button-active" onClick = {cancelDate}>
+                <div className = "profile-item-button profile-item-heart" onClick = {cancelDate}>
                     <FavoriteIcon />
                 </div>
             </div>
         )
     }
+
+    //if user has sent date
     if(hasUserSentDate){
         return(
             <div className = "profile-item-button-container profile-item-button-container-heart">
@@ -87,7 +93,7 @@ export function SendDateButton({data}: {data: UserProfile}){
     return(
         <div className = "profile-item-button-container profile-item-button-container-heart">
             <div className = {`profile-item-button profile-item-heart`} onClick = {sendDate}>
-                <FavoriteIcon />
+                <FavoriteBorderOutlinedIcon />
             </div>
         </div>
     )

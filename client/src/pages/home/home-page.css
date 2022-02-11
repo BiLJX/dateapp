@@ -52,7 +52,7 @@
 
 .profile-item-info-container {
   position: relative;
-  top: 60%;
+  top: 55%;
 }
 
 .profile-item-name-container {
@@ -86,6 +86,8 @@
   display: -webkit-box;
   display: -ms-flexbox;
   display: flex;
+  padding: 0 2%;
+  margin-top: 2%;
 }
 
 .profile-item-button-container {
@@ -99,12 +101,13 @@
   -ms-flex-pack: center;
   justify-content: center;
   padding-top: 2%;
+  font-size: 1.5rem;
 }
 
 .profile-item-button {
   cursor: pointer;
-  width: 8vh;
-  height: 8vh;
+  height: 2em;
+  width: 2em;
   display: -webkit-box;
   display: -ms-flexbox;
   display: flex;
@@ -115,42 +118,52 @@
   -ms-flex-align: center;
   align-items: center;
   border-radius: 100%;
+  font-size: 1em;
+  border: 1px solid var(--text-main);
 }
 
 .profile-item-button svg {
   color: var(--text-main);
   font-weight: bold;
-  font-size: 6vh;
+  font-size: 1em;
 }
 
 .profile-item-button-active svg {
   color: var(--pink);
 }
 
-.profile-item-cross {
-  background-color: var(--dark-pink);
-}
-
 .profile-item-accept {
   background-color: var(--pink);
-  width: 10vh;
-  height: 10vh;
   font-weight: bold;
+  border: none;
 }
 
 .profile-item-heart {
   background-color: var(--light-pink);
-  width: 10vh;
-  height: 10vh;
+  border: none;
   position: relative;
+}
+
+.profile-item-heart svg {
+  font-size: 2em;
 }
 
 .profile-item-button-container-heart {
   padding-top: 0;
 }
 
-.profile-item-profile {
-  background-color: var(--blue);
+.profile-item-heart-break,
+.profile-item-heart,
+.profile-item-accept {
+  width: 3em;
+  height: 3em;
+  font-size: 0.9em;
+}
+
+.profile-item-heart-break svg,
+.profile-item-accept svg,
+.profile-item-heart svg {
+  font-size: 2em;
 }
 
 @media (min-width: 500px) {

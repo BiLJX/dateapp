@@ -22,7 +22,6 @@ export class Chat {
         const cookies = cookie.parse(cookief) 
         const token = <string>socket.handshake.query.session || cookies.session || "";
         const sender_uid = getUid(token);
-
         socket.on("message", async (message_obj: TextMessageSocketData)=>{
             try {
                 //getting client data

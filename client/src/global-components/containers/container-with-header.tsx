@@ -8,15 +8,8 @@ import "./container.css"
 import { useSelector } from "react-redux";
 import { RootState } from "types/states";
 
-interface HeaderMapping {
-    url: string
-    header_title: string,
-    go_back_buton: boolean,
-    include_header: boolean,
-    include_bottom_nav: boolean
-}
 
-function ContainerWithHeader({children}: {children?:JSX.Element}){
+function MainContainer({children}: {children?:JSX.Element}){
     return(
         <>
             <main className="main-container">
@@ -25,6 +18,14 @@ function ContainerWithHeader({children}: {children?:JSX.Element}){
             <BottomNav />
         </>
     )
+}
+
+export function ContainerWithHeader({className, children}: {className?: string, children: any}){
+       return(
+           <div className={className} style = {{ paddingTop: "var(--header-height)" }}>
+               {children}
+           </div>
+       ) 
 }
 
 function BottomNav(){
@@ -47,7 +48,7 @@ function BottomNav(){
             <NavLink to = "/library" className={(navData)=>"bottom-nav-item " + (navData.isActive?"bottom-nav-item-active":"")}>
                 <LibraryBooksIcon />
             </NavLink>
-            <NavLink to = "/profile/edit" className={(navData)=>"bottom-nav-item " + (navData.isActive?"bottom-nav-item-active":"")}>
+            <NavLink to = {"/user/"+currentUser?.uid} className={(navData)=>"bottom-nav-item " + (navData.isActive?"bottom-nav-item-active":"")}>
                 <div className = "nav-profile">
                     <img className="full-img" src = {currentUser?.profile_picture_url}/>
                 </div>
@@ -71,4 +72,4 @@ export function Header({name, goBackButton = false}: {name: string, goBackButton
     )
 }
 
-export default ContainerWithHeader
+export default MainContainer

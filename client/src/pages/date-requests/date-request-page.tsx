@@ -1,6 +1,6 @@
 import { UserProfile } from "@shared/User";
 import { acceptDateRequest, getIncomingRequests, rejectDateRequest } from "api/date-api";
-import { Header } from "global-components/containers/container-with-header";
+import { ContainerWithHeader, Header } from "global-components/containers/container-with-header";
 import { Fragment, useEffect, useState } from "react";
 import { SpinLoader } from "../../global-components/loaders/loaders"
 import CloseIcon from '@mui/icons-material/Close';
@@ -40,15 +40,17 @@ function DateRequestPage(){
     return(
         <>
             <Header name = "Date Requests" goBackButton />
-            <div className="date-request-page">
-                {
-                    requests.map((data, i)=>(
-                        <Fragment key = {i}>
-                            <DateRequestItem data = {data}/>
-                        </Fragment>
-                    ))
-                }
-            </div>
+            <ContainerWithHeader>
+                <div className="date-request-page">
+                    {
+                        requests.map((data, i)=>(
+                            <Fragment key = {i}>
+                                <DateRequestItem data = {data}/>
+                            </Fragment>
+                        ))
+                    }
+                </div>
+            </ContainerWithHeader>
         </>
       
     )

@@ -74,6 +74,7 @@ export default function ChatPage(props: any){
                 if(page > 1) main.current?.scrollTo(0, main.current.clientHeight)
                 return
             }
+            setMessages((prev_state) => [...response.data, ...prev_state]);
             setHasMore(false)
         }
     }
@@ -118,23 +119,25 @@ export default function ChatPage(props: any){
         <div className = "chat-page">
             <ChatHeader data= {data} />
             <section>
-                <div className='chat-page-messages' onScroll={handleScroll} ref = {main} style={ { backgroundImage: `linear-gradient(180deg,rgba(18, 16, 21, 0.79) 0%,#121015 76.91%), url('${data.chat_background}')` } }>
-                    <div className='chat-page-message-container'>
-                        {hasMore&&<div className='chat-page-messages-loader'><TailSpin height={30} width = {30} color = "var(--text-main2)"/></div>}
-                        {
-                           messages.map((x, i)=>(
-                               <Fragment key = {i}>
-                                   { x.is_sent_by_viewer?<CurrentUserChatItem message_obj={x as ViewerTextMessageData} has_seen = { messages.at(-1)?.message_id === x.message_id && data.has_seen}  />:<ChatItem message_obj={x} user_data={ data.user_data } /> }
-                               </Fragment>
-                           ))
-                        }
-                        { isTyping&& <span style = {{color: "var(--text-main2)", marginLeft: "1rem"}}>typing...</span> }
+                <div className='chat-page-messages'  style={ { backgroundImage: `linear-gradient(180deg,rgba(18, 16, 21, 0.79) 0%,#121015 76.91%), url('${data.chat_background}')` } }>
+                    <div onScroll={handleScroll} ref = {main} style={{display: "flex", maxHeight: "100%", flexDirection: "column", overflowY: "scroll", overflowX: "hidden"}}>
+                        <div className='chat-page-message-container'>
+                            {hasMore&&<div className='chat-page-messages-loader'><TailSpin height={30} width = {30} color = "var(--text-main2)"/></div>}
+                            {
+                            messages.map((x, i)=>(
+                                <Fragment key = {i}>
+                                    { x.is_sent_by_viewer?<CurrentUserChatItem message_obj={x as ViewerTextMessageData} has_seen = { messages[messages.length - 1]?.message_id === x.message_id && data.has_seen}  />:<ChatItem message_obj={x} user_data={ data.user_data } /> }
+                                </Fragment>
+                            ))
+                            }
+                            { isTyping&& <span style = {{color: "var(--text-main2)", marginLeft: "1rem"}}>typing...</span> }
+                        </div>
                     </div>
                 </div>
             </section>
             
            <Input send = {sendMessage} uid = {uid||""} />
-        </div>           
+        </div>          
     )
 }
 
@@ -184,6 +187,7 @@ function Input({send, uid}: {send: (text: string,)=>any, uid: string}){
     function submit(){
         if(!text) return;
         const msg = text.trim()
+        timeOutFunction()
         send(msg); 
         setText("");
         container_ref.current.style.height = '44px'

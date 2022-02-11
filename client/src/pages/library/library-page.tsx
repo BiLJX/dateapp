@@ -1,4 +1,4 @@
-import { Header } from "global-components/containers/container-with-header"
+import { ContainerWithHeader, Header } from "global-components/containers/container-with-header"
 import { NavLink } from "react-router-dom"
 import NotificationsIcon from '@mui/icons-material/Notifications';
 import ArrowForwardIosIcon from '@mui/icons-material/ArrowForwardIos';
@@ -10,14 +10,16 @@ function LibraryPage(){
     return (
         <>
             <Header name="Library" />
-            <div className="library-page">
-                <div className = "library-items-container">
-                    <LibraryItems name="Notifications" to = "/notifications" Icon={NotificationsIcon} />
-                    <LibraryItems name = "Date Requests" to = "/requests/incoming" Icon = {PersonAddAlt1Icon} />
-                    <LibraryItems name = "Sent Date Requests" to = "/requests/sent" Icon = {WatchLaterIcon} />
-                    <LibraryItems name = "Saved Users" to = "/saved" noBorder Icon = {BookmarksIcon}/>
+            <ContainerWithHeader>
+                <div className="library-page">
+                    <div className = "library-items-container">
+                        <LibraryItems name="Notifications" to = "/notifications" Icon={NotificationsIcon} />
+                        <LibraryItems name = "Date Requests" to = "/requests/incoming" Icon = {PersonAddAlt1Icon} />
+                        <LibraryItems name = "Sent Date Requests" to = "/requests/sent" Icon = {WatchLaterIcon} />
+                        <LibraryItems name = "Saved Users" to = "/saved" noBorder Icon = {BookmarksIcon}/>
+                    </div>
                 </div>
-            </div>
+            </ContainerWithHeader>
         </>
     )
 }

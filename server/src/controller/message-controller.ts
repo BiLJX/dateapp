@@ -54,7 +54,6 @@ export async function getMessages(req: Request, res: Response){
             return data;
         })
         JSONReponse.success("got messages",messages);
-        if(page === 10) await UserDate.findOneAndUpdate({uid: currentUser.uid, date_user_uid: receiver_uid }, { $set: { has_read_message: true } }); 
     }catch(err){
         console.log(err)
         JSONReponse.serverError()

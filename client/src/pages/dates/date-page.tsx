@@ -2,7 +2,7 @@ import { UserDate } from "@shared/Dates";
 import { initDates } from "action/date";
 import { getUserDates } from "api/date-api";
 import { chatContext } from "context/Realtime";
-import { Header } from "global-components/containers/container-with-header";
+import { ContainerWithHeader, Header } from "global-components/containers/container-with-header";
 import { HeartLoader } from "global-components/loaders/loaders";
 import { Fragment, useContext, useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
@@ -43,13 +43,16 @@ export default function DatePage(){
     return(
         <>
             <Header name = "Your Dates" />
-            <div className = "date-page">
-                {dates.map((x, i)=>(
-                    <Fragment key = {i}>
-                        <DateItem _data= {x} />
-                    </Fragment>
-                ))}
-            </div>
+            <ContainerWithHeader>
+                <div className = "date-page">
+                    {dates.map((x, i)=>(
+                        <Fragment key = {i}>
+                            <DateItem _data= {x} />
+                        </Fragment>
+                    ))}
+                </div>
+            </ContainerWithHeader>
+            
         </>
       
     )

@@ -27,7 +27,7 @@ export function CurrentUserChatItem({message_obj, has_seen}: {message_obj: Viewe
                     <div className = "chat-message-container chat-message-container-right">
                         {message_obj.text}
                     </div>
-                    {has_seen && <span style = {{paddingLeft: "1em", color: "var(--text-secondary)"}}>seen</span>}
+                    {has_seen && <span style = {{textAlign: "end" ,paddingRight: "1.5em", fontSize: "0.8rem" ,color: "var(--text-secondary)"}}>seen</span>}
                 </div>
             </article>
         )
