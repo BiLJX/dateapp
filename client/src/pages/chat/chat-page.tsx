@@ -28,6 +28,7 @@ export default function ChatPage(props: any){
         const ratio = main.current.scrollTop / main.current.scrollHeight;
         if(flag) return main.current.scrollTo(0, main.current.scrollHeight);
         if(ratio > 0.5) return main.current.scrollTo(0, main.current.scrollHeight);
+        
     }
     const fetchData = async () => {
         if(!uid) return;

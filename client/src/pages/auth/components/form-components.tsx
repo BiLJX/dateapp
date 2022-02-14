@@ -1,3 +1,4 @@
+import { SpinLoader } from "global-components/loaders/loaders"
 import { Fragment } from "react"
 import "./form-components.css"
 
@@ -57,7 +58,9 @@ export function FormSubmit({value, isLoading, className, disabled}: {value: stri
     
     if(isLoading){
         return(
-            <div className={"form-submit form-submit-disabled " + className}>Loading....</div>
+            <div className={"form-submit form-submit-disabled " + className}>
+                <SpinLoader size = {40} />
+            </div>
         )
     }
     return(

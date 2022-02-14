@@ -17,6 +17,7 @@
   width: 5rem;
   display: flex;
   align-items: center;
+  position: relative;
 }
 
 .date-page-item-pfp {
@@ -53,4 +54,19 @@
 .date-page-item-active .date-page-item-name,
 .date-page-item-active .date-page-item-message {
   color: var(--text-main);
+}
+
+.active-icon {
+  position: absolute;
+  height: 1rem;
+  width: 1rem;
+  background-color: #14ff00;
+  border-radius: 100%;
+  border: 1px solid var(--background);
+  bottom: 20%;
+  right: 20%;
+}
+
+.date-page-container {
+  padding-bottom: 9vh;
 }

@@ -27,11 +27,13 @@ export class Chat {
                 //getting client data
                 const { text, type, receiver_uid } = message_obj;
                 const receiver_user = await getUser(receiver_uid);
+                
 
                 //validating
                 if(!sender_uid) return;
                 if(!receiver_user) return;
-
+                const sender_user = await getUser(sender_uid);
+                if(!sender_user) return;
                 //getting active user
                 const receiver_socketId: string|undefined = this.activeUsers.getUserByUid(receiver_uid);
                 
@@ -47,12 +49,14 @@ export class Chat {
 
                 //send if user is active
                 await updateDataBase(message_data);
-                
+                message_data.author_data = {
+                    profile_pic_url: sender_user?.profile_picture_url,
+                    username: sender_user?.username
+                }
                 if(receiver_socketId){
                     socket.to(receiver_socketId).emit("message", message_data);
                 }
                 socket.emit("sent", { ...message_data, is_sent_by_viewer: true });
-                
             } catch (error) {
                 console.log(error)
             }

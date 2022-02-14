@@ -3,6 +3,7 @@ import { Request, Response } from "express";
 import { DateRequest } from "../models/DateRequest";
 import { UserDate } from "../models/Dates";
 import { User } from "../models/User";
+import { ActiveUsers } from "../realtime/ActiveUsers";
 import JSONRESPONSE from "../utils/JSONReponse";
 import { parseUser } from "./user-controller";
 
@@ -27,10 +28,15 @@ async function acceptUser(request_sent_by: string, request_sent_to: string){
 
 export async function getUserDates(req: Request, res: Response){
     const JSONReponse = new JSONRESPONSE(res)
-    const uid = req.app.locals.uid;
+    const uid = res.locals.uid;
+    const active_user_obj: ActiveUsers = req.app.locals.active_user_obj; 
+    const active_users = active_user_obj.active_users
     try{
-        const dates_raw = await UserDate.find({uid}).sort({updatedAt: "desc"}).populate("date_user_data", "uid full_name profile_picture_url").sort({createdAt: 'desc'}).exec()
-        const dates = dates_raw.map(x=>x.toJSON())
+        const dates_raw = await UserDate.find({uid}).sort({updatedAt: "desc"}).populate("date_user_data", "uid full_name profile_picture_url").sort({createdAt: 'desc'}).lean().exec()
+        const dates = dates_raw.map(x=>{
+            x.is_active = active_users.includes(x.date_user_uid);
+            return x;
+        })
         JSONReponse.success("success",dates)
     }catch(err){
         console.log(err)
@@ -40,12 +46,12 @@ export async function getUserDates(req: Request, res: Response){
 
 export const getRequestDate = async (req: Request, res: Response) => {
     const JSONReponse = new JSONRESPONSE(res)
-    const uid = req.app.locals.uid;
+    const uid = res.locals.uid;
     try{
         const requests = await DateRequest.find({request_sent_to: uid})
         const uids = requests.map(x=>x.request_sent_by);
         const users = await User.find({uid: { $in: uids }}).select({ account_setuped: 0, is_admin: 0, email: 0 }).exec();
-        const parsed_users = await Promise.all(users.map(async x=>parseUser(x.toJSON(), req.app.locals.currentUser))) 
+        const parsed_users = await Promise.all(users.map(async x=>parseUser(x.toJSON(), res.locals.currentUser))) 
         JSONReponse.success("successfully got users", parsed_users)
     }catch(err){
         console.log(err)
@@ -55,12 +61,12 @@ export const getRequestDate = async (req: Request, res: Response) => {
 
 export const pendingRequests = async (req: Request, res: Response) => {
     const JSONReponse = new JSONRESPONSE(res)
-    const uid = req.app.locals.uid;
+    const uid = res.locals.uid;
     try{
         const requests = await DateRequest.find({request_sent_by: uid})
         const uids = requests.map(x=>x.request_sent_to);
         const users = await User.find({uid: { $in: uids }}).select({ account_setuped: 0, is_admin: 0, email: 0 }).exec();
-        const parsed_users = await Promise.all(users.map(async x=>parseUser(x.toJSON(), req.app.locals.currentUser))) 
+        const parsed_users = await Promise.all(users.map(async x=>parseUser(x.toJSON(), res.locals.currentUser))) 
         JSONReponse.success("successfully got users", parsed_users)
     }catch(err){
         console.log(err)
@@ -71,8 +77,8 @@ export const pendingRequests = async (req: Request, res: Response) => {
 export const requestDate = async (req: Request, res: Response)=>{
     const JSONReponse = new JSONRESPONSE(res)
     const request_sent_to = req.params.uid;
-    const request_sent_by = req.app.locals.uid
-    const current_user: UserInterface = req.app.locals.currentUser
+    const request_sent_by = res.locals.uid
+    const current_user: UserInterface = res.locals.currentUser
     try{
         if(current_user.dates.includes(request_sent_to)) return JSONReponse.clientError("already dating")
         const hasUserSentBefore = (await DateRequest.findOne({request_sent_to, request_sent_by}))?.toJSON()
@@ -100,7 +106,7 @@ export const requestDate = async (req: Request, res: Response)=>{
 export const cancelDateRequest = async (req: Request, res: Response) => {
     const JSONReponse = new JSONRESPONSE(res)
     const request_sent_to = req.params.uid;
-    const request_sent_by = req.app.locals.uid;
+    const request_sent_by = res.locals.uid;
     try{
         await DateRequest.findOneAndDelete({request_sent_to, request_sent_by});
         JSONReponse.success("date request canceled")
@@ -116,7 +122,7 @@ export const cancelDateRequest = async (req: Request, res: Response) => {
 
 export const acceptDate = async (req:  Request, res: Response) => {
     const JSONReponse = new JSONRESPONSE(res);
-    const currentUser: UserInterface = req.app.locals.currentUser;
+    const currentUser: UserInterface = res.locals.currentUser;
     const uid = req.params.uid;
     try {
         if(!uid) return JSONReponse.clientError("something went wrong");
@@ -134,7 +140,7 @@ export const acceptDate = async (req:  Request, res: Response) => {
 
 export const rejectDate = async (req: Request, res: Response) => {
     const JSONReponse = new JSONRESPONSE(res);
-    const currentUser: UserInterface = req.app.locals.currentUser;
+    const currentUser: UserInterface = res.locals.currentUser;
     const uid = req.params.uid;
     try{
         await DateRequest.findOneAndDelete({request_sent_by: uid, request_sent_to: currentUser.uid});
@@ -149,7 +155,7 @@ export const rejectDate = async (req: Request, res: Response) => {
 
 export const unDate = async (req: Request, res: Response) => {
     const JSONReponse = new JSONRESPONSE(res);
-    const currentUser: UserInterface = req.app.locals.currentUser;
+    const currentUser: UserInterface = res.locals.currentUser;
     const uid = req.params.uid;
     if(!currentUser.dates.includes(uid)) return JSONReponse.clientError("the user does not include in your dates")
     try{

@@ -14,29 +14,45 @@ import { NavLink } from 'react-router-dom';
 function HomePage(){
     const [loading, setLoading] = useState(true)
     const [feed, setFeed] = useState<UserProfile[]>([])
+    const [hasMore, setHasMore] = useState(true);
+    const [page, setPage] = useState(1);
+    const [isFetching, setIsFetching] = useState(false)
     const container_ref = useRef<any>(null)
     async function fetchFeed(){
-        const res = await getUsers()
+        console.log("test3")
+        setIsFetching(true)
+        const res = await getUsers(page)
         if(res.success){
-            setFeed(res.data)
+            setFeed((prev)=>[...prev, ...res.data])
+            if(res.data.length < 5) setHasMore(false)
         }
-        setLoading(false)
+        setIsFetching(false)
+        loading && setLoading(false)
     }
     useEffect(()=>{
-        fetchFeed()
-    }, [])
+        console.log("test2")
+        hasMore && fetchFeed()
+    }, [page])
+    const onScroll = (e: any) => {
+        const ratio = (e.target.scrollTop / e.target.scrollHeight)*100
+        if(ratio > 60 && !isFetching){
+            
+            setPage((page)=>page+1)
+        }
+    }
     useEffect(()=>{
-        
         if(loading && !container_ref.current) return;
-        // createScrollSnap(container_ref.current, {
-        //     snapDestinationY: "100%",
-        //     duration: 300,
-        //     threshold: 0.1
-        // },()=>{})
+        
+        if(localStorage.getItem("snapScroll") === "true") 
+            createScrollSnap(container_ref.current, {
+                snapDestinationY: "100%",
+                duration: 300,
+                threshold: 0.1,
+            },()=>{})
     }, [container_ref, loading])
     if(loading) return <HeartLoader />
     return(
-        <div id="home-page" ref = {container_ref} >
+        <div id="home-page" ref = {container_ref} onScroll = {onScroll} >
             {
                 feed.map((x, i)=>(
                     <Fragment key = {i}>

@@ -46,10 +46,19 @@ export async function parseCurrentUser(_current_user: UserInterface|undefined){
 
 export async function getUsers(req: Request, res: Response){
     const JSONReponse = new JSONRESPONSE(res)
-    const uid = req.app.locals.uid
+    const uid = res.locals.uid
     try{
-        const users = await User.find({account_setuped: true, uid: { $ne: uid }}).sort({updatedAt: 'desc'}).exec()
-        const parsed_users: UserProfile[] = await Promise.all(users.map(async x=>parseUser(x.toJSON(), req.app.locals.currentUser))) 
+        const page: number = parseInt(<string>req.query.page)||1;
+        if(page<1) return JSONReponse.clientError("page cannot be leses than 1");
+        const items: number = 5;
+        const total_items = page * items;
+        const users = await User
+                            .find({account_setuped: true, uid: { $ne: uid }})
+                            .sort({updatedAt: 'desc'})
+                            .skip(total_items-items)
+                            .limit(items)
+                            .exec()
+        const parsed_users: UserProfile[] = await Promise.all(users.map(async x=>parseUser(x.toJSON(), res.locals.currentUser))) 
         JSONReponse.success("success", parsed_users)
     }catch(err){
         console.log(err)
@@ -62,7 +71,7 @@ export async function getUsers(req: Request, res: Response){
 
 export async function getCurrentUser(req: Request, res: Response){
     const JSONReponse = new JSONRESPONSE(res)
-    const user = req.app.locals.currentUser;
+    const user = res.locals.currentUser;
     JSONReponse.success("success", await parseCurrentUser(user?.toJSON()))
 }
 
@@ -76,7 +85,7 @@ export async function getUserByUid(req: Request, res: Response){
     if(!uid) return JSONReponse.notFound("User Not Found :(")
     try{
         const user = await User.findOne({uid});
-        JSONReponse.success("success", await parseUser(user?.toJSON(), req.app.locals.currentUser));
+        JSONReponse.success("success", await parseUser(user?.toJSON(), res.locals.currentUser));
     }catch(err){
         console.log(err)
         JSONReponse.serverError()
@@ -88,11 +97,11 @@ export async function getUserByUid(req: Request, res: Response){
 export async function editUserProfile(req: Request, res: Response){
     upload(req, res, async (err)=>{
         const JSONReponse = new JSONRESPONSE(res);
-        const uid = req.app.locals.uid;
+        const uid = res.locals.uid;
         const { full_name, username, description, gender }: UserEditClientData = req.body;
         const file: any = req.files
         const pfp = file[0]
-        const current_user = <UserInterface>req.app.locals.currentUser
+        const current_user = <UserInterface>res.locals.currentUser
         try{
             //validation
             let url: string|undefined;
@@ -140,7 +149,7 @@ export async function editUserProfile(req: Request, res: Response){
 
 export const saveUser = async (req: Request, res: Response) => {
     const JSONReponse = new JSONRESPONSE(res);
-    const currentUser: UserInterface = req.app.locals.currentUser;
+    const currentUser: UserInterface = res.locals.currentUser;
     const uid = req.params.uid;
     if(currentUser.saved_users.includes(uid)) return JSONReponse.clientError("you have already saved");
     try{
@@ -154,12 +163,11 @@ export const saveUser = async (req: Request, res: Response) => {
     }
 }
 
-
 //unsave user
 
 export const unsaveUser = async(req: Request, res: Response) => {
     const JSONReponse = new JSONRESPONSE(res);
-    const currentUser: UserInterface = req.app.locals.currentUser;
+    const currentUser: UserInterface = res.locals.currentUser;
     const uid = req.params.uid;
     try{
         if(!currentUser.saved_users.includes(uid)) return JSONReponse.clientError("you had not saved the user");

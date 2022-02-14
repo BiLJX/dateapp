@@ -11,6 +11,43 @@
   z-index: 999;
 }
 
+.text-message-banner {
+  justify-content: unset;
+  background-color: var(--banner-background);
+}
+
+.banner-left {
+  width: 5rem;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.banner-left-pfp {
+  width: 3rem;
+  height: 3rem;
+  border-radius: 100%;
+  background-color: var(--image-background);
+  overflow: hidden;
+}
+
+.banner-right {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+}
+
+.banner-username {
+  width: 70%;
+  color: var(--text-main);
+  font-weight: bold;
+}
+
+.banner-message {
+  width: 70%;
+  color: var(--text-main2);
+}
+
 .banner-error {
   background: #ff0000;
 }

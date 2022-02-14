@@ -1,3 +1,4 @@
+import { height } from "@mui/system"
 import { Hearts, TailSpin } from "react-loader-spinner"
 import "./loader.css"
 export function HeartLoader(){
@@ -17,10 +18,10 @@ export function SplashSceenLoader(){
     )
 }
 
-export function SpinLoader(){
+export function SpinLoader(props: any){
     return(
         <div className="loader-full">
-            <TailSpin color="var(--text-main)" height={80} width={80} />
+            <TailSpin color={props.color||"var(--text-main)"} height={props.size||80} width={props.size||80} />
         </div>
     )
 }

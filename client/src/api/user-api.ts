@@ -6,8 +6,8 @@ export async function getUserByUid(uid: string){
     return <ApiResponse<UserProfile>>res;
 }
 
-export async function getUsers(){
-    const res = (await axios.get("/api/user/")).data;
+export async function getUsers(page: number){
+    const res = (await axios.get("/api/user/?page="+page)).data;
     return <ApiResponse<UserProfile[]>>res
 }
 

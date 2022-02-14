@@ -69,6 +69,7 @@ mongoose.connect(CONNECTION_URL).then(()=>{
             chat.updateActiveUsers(activeUsers);
         })
     })
+    app.locals.active_user_obj = activeUsers;
 }).catch(err=>{
     console.log(err)
 })

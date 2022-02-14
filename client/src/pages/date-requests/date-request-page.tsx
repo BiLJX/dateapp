@@ -101,10 +101,10 @@ function DateRequestItem({data}: {data: UserProfile}){
                 <div className="date-request-description ellipsis-clamp">{data.description}</div>
                 <div className="date-request-buttons-container">
                     <div className="date-request-button date-request-reject" onClick={rejectRequest}>
-                        {isLoadingReject?"Wait":<CloseIcon />}
+                        {isLoadingReject?<SpinLoader color = "black" size = {20} />:<CloseIcon />}
                     </div>
                     <div className="date-request-button date-request-accept" onClick={acceptRequest}>
-                        {isLoadingAccept?"Wait":<DoneIcon />}
+                        {isLoadingAccept?<SpinLoader size = {20} />:<DoneIcon />}
                     </div>
                 </div>
             </div>

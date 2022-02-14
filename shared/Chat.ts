@@ -16,7 +16,11 @@ export interface TextMessageData {
     text: string,
     sender_uid: string,
     receiver_uid: string,
-    is_sent_by_viewer: boolean
+    is_sent_by_viewer: boolean,
+    author_data?: {
+        profile_pic_url: string,
+        username: string
+    }
 }
 
 export interface TextMessageSocketData {

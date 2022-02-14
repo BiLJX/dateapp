@@ -8,7 +8,7 @@ import MessageModel from "../models/Message";
 export async function getChatData(req: Request, res: Response){
     const JSONReponse = new JSONRESPONSE(res);
     const date_user_uid = req.params.uid;
-    const currentUser: UserInterface = req.app.locals.currentUser
+    const currentUser: UserInterface = res.locals.currentUser
     try {
         const date = (await UserDate.findOne({uid: currentUser.uid, date_user_uid: date_user_uid}).populate("date_user_data", "uid full_name profile_picture_url username").exec())?.toJSON();
         const has_seen = (await UserDate.findOne({uid: date_user_uid, date_user_uid: currentUser.uid}))?.toJSON().has_read_message
@@ -33,7 +33,7 @@ export async function getChatData(req: Request, res: Response){
 export async function getMessages(req: Request, res: Response){
     const JSONReponse = new JSONRESPONSE(res);
     const receiver_uid = req.params.uid;
-    const currentUser: UserInterface = req.app.locals.currentUser;
+    const currentUser: UserInterface = res.locals.currentUser;
     const page_raw = <string>req.query.page||"0";
     const page = parseInt(page_raw) && parseInt(page_raw) * 10;
     if(!page || page<10) return JSONReponse.clientError("page not provided or page is less than 10")

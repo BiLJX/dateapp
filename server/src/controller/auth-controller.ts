@@ -21,10 +21,11 @@ export async function createAccount(req: Request, res: Response){
         const duration = moment.duration(currentTime.diff(client_birthday))
         const years = duration.asYears()
         //validations
+        
         if(!isFullName(client_data.full_name)) return JSONReponse.clientError("invalid name");
         if(isNaN(years) || years<13) return JSONReponse.clientError("Sorry, only age above 13 can create account");
         if(!isUserName(client_data.username)) return JSONReponse.clientError("invalid username or username is less than 3 charecter");
-        const splited_name = client_data.full_name?.trim().split(" ")
+        const splited_name = client_data.full_name?.trim().split(" ");
         if(splited_name.length === 0)return JSONReponse.clientError("please enter name");
         
         //creating account from firebase
@@ -72,7 +73,7 @@ export async function login(req: Request, res: Response){
     
     const JSONReponse = new JSONRESPONSE(res)
     try{
-        const { user } = await signInWithEmailAndPassword(auth, req.body.email, req.body.password);
+        const { user } = await signInWithEmailAndPassword(auth, req.body?.email?.toString()?.trim(), req.body.password);
         const idToken = await user.getIdToken()
         if(!idToken) return res.status(401).end();
         const expiresIn = 60*60*24*14*1000;

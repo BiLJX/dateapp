@@ -1,6 +1,6 @@
 import { close } from "../action/banner"
 
-function bannerDispatch(dispatch: (action: ActionInterface<string>)=>void, bannerAction: ActionInterface<string>){
+function bannerDispatch(dispatch: (action: ActionInterface<any>)=>void, bannerAction: ActionInterface<any>){
     dispatch(bannerAction)
     setTimeout(()=>{
         dispatch(close())

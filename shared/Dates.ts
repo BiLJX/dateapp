@@ -12,6 +12,7 @@ export interface UserDate{
     has_read_message: boolean,
     is_fav_chat: boolean,
     latest_message: string,
+    is_active: boolean,
     date_user_data: {
         uid: string,
         full_name: string,

@@ -45,7 +45,7 @@ export default function DatePage(){
     return(
         <>
             <Header name = "Your Dates" />
-            <ContainerWithHeader>
+            <ContainerWithHeader className="date-page-container">
                 <div className = "date-page">
                     {dates.map((x, i)=>(
                         <Fragment key = {i}>
@@ -79,6 +79,7 @@ function DateItem({_data}: {_data: UserDate}){
             <div className = "date-page-item-left">
                 <div className = "date-page-item-pfp">
                     <img className = "full-img" src = {data.date_user_data.profile_picture_url} />
+                    {data.is_active && <span className="active-icon" />}
                 </div>
             </div>
             <div className={`date-page-item-right ${data.has_read_message?"":" date-page-item-active"}` }>

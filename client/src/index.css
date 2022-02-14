@@ -40,6 +40,7 @@
   --message-background-alt: var(--dark-gray);
   --sending: var(--light-gray);
   --profile-container-bg: var(--dark-gray);
+  --banner-background: var(--dark-gray);
 }
 
 * {

@@ -20,6 +20,6 @@ export class ActiveUsers {
         return this._active_users.find(x=>x.socket_id === socket_id)
     }
     get active_users(){
-        return this._active_users
+        return this._active_users.map(x=>x.uid);
     }
 }
