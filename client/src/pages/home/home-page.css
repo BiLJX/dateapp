@@ -41,10 +41,10 @@
     left top,
     left bottom,
     color-stop(32.51%, rgba(0, 0, 0, 0)),
-    color-stop(70.96%, #121015)
+    color-stop(78%, #121015)
   );
-  background: -o-linear-gradient(top, rgba(0, 0, 0, 0) 32.51%, #121015 70.96%);
-  background: linear-gradient(180deg, rgba(0, 0, 0, 0) 32.51%, #121015 70.96%);
+  background: -o-linear-gradient(top, rgba(0, 0, 0, 0) 32.51%, #121015 78%);
+  background: linear-gradient(180deg, rgba(0, 0, 0, 0) 32.51%, #121015 78%);
   height: 100%;
   width: 100%;
   padding: 0 5% 0 5%;
@@ -77,9 +77,9 @@
 }
 .profile-item-description-container span {
   color: var(--text-main2);
-  -webkit-line-clamp: 3;
-  line-clamp: 3;
-  font-size: 3vh;
+  -webkit-line-clamp: 2;
+  line-clamp: 2;
+  font-size: 2.5vh;
 }
 
 .profile-item-buttons {

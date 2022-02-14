@@ -14,9 +14,10 @@
 }
 
 .auth-page-header h2 {
-  font-size: 3rem;
+  font-size: 2.3rem;
   color: var(--text-main);
   text-align: center;
+  font-weight: bold;
 }
 
 .form-input-container {

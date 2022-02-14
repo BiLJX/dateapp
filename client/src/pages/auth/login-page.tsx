@@ -33,14 +33,14 @@ function LoginPage(){
     }
     return(
         <AuthPageContainer>
-            <AuthHeader heading="Welcome Back" />
+            <AuthHeader heading="Login To KuraKani" />
             <form className="auth-form-container" onSubmit={login}>
                 <FormInput name = "email" placeholder="Email" Icon={MailOutlineIcon}/>
                 <FormInput name = "password" placeholder="Password" Icon={HttpsOutlinedIcon} type="password"/>
                 <FormSubmit value = "LOGIN" isLoading = {isLoading}/>
             </form>
             <div className="auth-footer">
-               dont have account? <NavLink to = "/signup">signup</NavLink> 
+               dont have account?{" "}<NavLink style={{ marginLeft: "0.5rem", textDecoration: "underline" }} to = "/signup">signup</NavLink> 
             </div>
         </AuthPageContainer>
     )

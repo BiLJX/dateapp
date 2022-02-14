@@ -1,6 +1,6 @@
-import { UserProfile } from "@shared/User";
+import { CurrentUserProfile } from "@shared/User";
 
-export function addCurrentUser(user: UserProfile): ActionInterface<UserProfile>{
+export function addCurrentUser(user: CurrentUserProfile): ActionInterface<CurrentUserProfile>{
     return {
         type: "ADD_CURRENT_USER",
         payload: user

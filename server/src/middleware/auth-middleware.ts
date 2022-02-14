@@ -17,6 +17,8 @@ export async function AuthMiddleware(req: Request, res: Response, next:NextFunct
         req.app.locals.uid = uid;
         next()
     }catch(err){
+        req.app.locals.uid = null;
+        req.app.locals.currentUser = null;
         console.log(err);
         JSONResponse.notAuthorized();
     }

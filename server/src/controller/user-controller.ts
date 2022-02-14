@@ -1,4 +1,4 @@
-import { UserEditClientData, UserInterface, UserProfile } from "@shared/User";
+import { CurrentUserProfile, UserEditClientData, UserInterface, UserProfile } from "@shared/User";
 import { Request, Response } from "express";
 import moment from "moment";
 import { DateRequest } from "../models/DateRequest";
@@ -25,6 +25,22 @@ export async function parseUser(_user: any, current_user:UserInterface): Promise
     return user
 }
 
+export async function parseCurrentUser(_current_user: UserInterface|undefined){
+    if(!_current_user) return;
+    const user = <CurrentUserProfile>_current_user
+    const now = moment(new Date());
+    const birthday = moment(_current_user.birthday);
+    const years = moment.duration(now.diff(birthday)).asYears();
+    const date_requests = (await DateRequest.find({request_sent_to: user.uid}));
+    user.age = years;
+    user.library = {
+        has_date_requests: date_requests.length > 0,
+        date_requests_count: date_requests.length,
+        has_notifications: false,
+        notifications_count: 0
+    }
+    return user
+}
 
 //get users
 
@@ -47,7 +63,7 @@ export async function getUsers(req: Request, res: Response){
 export async function getCurrentUser(req: Request, res: Response){
     const JSONReponse = new JSONRESPONSE(res)
     const user = req.app.locals.currentUser;
-    JSONReponse.success("success", await parseUser(user?.toJSON(), req.app.locals.currentUser))
+    JSONReponse.success("success", await parseCurrentUser(user?.toJSON()))
 }
 
 
@@ -83,10 +99,11 @@ export async function editUserProfile(req: Request, res: Response){
             if(pfp){
                 const size = pfp.size / 1024 / 1024;
                 if(size > 60) return JSONReponse.clientError("invalid thumbnail type");
-                if (pfp.mimetype === "image/png" || pfp.mimetype === "image/jpg" || pfp.mimetype === "image/jpeg"){
+                // pfp.mimetype === "image/png" || pfp.mimetype === "image/jpg" || pfp.mimetype === "image/jpeg"
+                if (pfp.mimetype.includes("image")){
                     url = await uploadFile(pfp, `user/${uid}/pfp/`)
                 }else{
-                    return JSONReponse.clientError("invalid thumbnail type");
+                    return JSONReponse.clientError("invalid pfp type");
                 }
             }
             if(!url && !current_user.account_setuped) return JSONReponse.clientError("You need to add a profile picture")
@@ -96,24 +113,24 @@ export async function editUserProfile(req: Request, res: Response){
             const splited_name = full_name.split(" ")
             const data = {
                 full_name: full_name.trim(),
-                username: username.trim(),
+                username: username.trim().toLocaleLowerCase(),
                 description: description.trim(),
-                gender: gender.toLowerCase(),
+                gender: gender.toLowerCase().trim(),
                 account_setuped: true,
-                first_name: splited_name[0].trim(),
-                last_name: splited_name.length > 2 ? splited_name[1].trim() + " " + splited_name[2].trim() : splited_name[1].trim()||"",
+                first_name: splited_name[0]?.trim(),
+                last_name: splited_name?.length > 2 ? splited_name[1]?.trim() + " " + splited_name[2]?.trim() : splited_name[1]?.trim()||"",
             }
             if(url){
                 await User.findOneAndUpdate({uid}, {$set: {...data, profile_picture_url: url}})
                 const updatedUser = await User.findOne({uid})
-                return JSONReponse.success("success", await parseUser(updatedUser?.toJSON(), current_user))
+                return JSONReponse.success("success", await parseCurrentUser(updatedUser?.toJSON()))
             }
             await User.findOneAndUpdate({uid}, {$set: data})
             const updatedUser = await User.findOne({uid})
-            return JSONReponse.success("success", await parseUser(updatedUser?.toJSON(), current_user))
+            return JSONReponse.success("success", await parseCurrentUser(updatedUser?.toJSON()))
         }catch(err: any){
             console.log(err)
-            JSONReponse.clientError("Username already taken")
+            JSONReponse.serverError()
         }
     })
 }

@@ -8,7 +8,6 @@ const UserSchema = new Schema<UserInterface>({
     },
     username: {
         type: String,
-        unique: true,
         required: true,
         min: 3,
         max: 15

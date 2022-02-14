@@ -17,7 +17,7 @@ const upload = multer({
 }).any();
 
 
-async function getUrl(fileName: any){
+function getUrl(fileName: any){
   const file = st.bucket().file(fileName)
   const url = file.publicUrl()
   return url
@@ -33,7 +33,7 @@ async function removeFile(dir: string){
 
 
 export async function uploadFile(file: any, dir: string, image_size?: number[]): Promise<string>{
-  removeFile(dir)
+  await removeFile(dir)
   const filename = dir+uuid();
   const blob = st.bucket().file(filename);
   const blobStream = blob.createWriteStream();
@@ -44,7 +44,7 @@ export async function uploadFile(file: any, dir: string, image_size?: number[]):
     })
     blobStream.on("finish", async ()=>{
       await st.bucket().file(filename).makePublic();
-      const public_url = await getUrl(filename)
+      const public_url = getUrl(filename)
       res(public_url)
     })
     let buffer: Buffer;

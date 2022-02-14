@@ -7,6 +7,7 @@ import DatePage from "pages/dates/date-page"
 import ChatPage from "pages/chat/chat-page"
 import UserProfilePage from "pages/user/user-profile-page"
 import MainContainer from "global-components/containers/container-with-header"
+import SoonPage from "pages/soon/soon-page"
 
 
 function RoutesWithHeader(){
@@ -14,13 +15,17 @@ function RoutesWithHeader(){
         <MainContainer>
             <Routes>
                 <Route path = "/" element = {<HomePage /> } />
+                <Route path = "/search" element = {<SoonPage /> } />
+                <Route path = "/notifications" element = {<SoonPage /> } />
                 <Route path = "/dates" element = {<DatePage/>} />
                 <Route path = "/message/:uid" element = {<ChatPage />} />
                 <Route path = "/library" element = { <LibraryPage />  }/>
                 <Route path = "/user/:uid/*" element = {<UserProfilePage />} />
                 <Route path = "/requests/incoming" element = { <DateRequestPage /> } />
+                <Route path = "/requests/sent" element = {<SoonPage /> } />
                 <Route path = "/profile/edit" element = {<EditProfile />} />
                 <Route path = "/profile/setup" element = {<EditProfile isSetup />} />
+                <Route path = "/saved" element = {<SoonPage /> } />
             </Routes>
         </MainContainer>
     )

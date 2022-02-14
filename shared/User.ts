@@ -26,6 +26,15 @@ export interface UserProfile extends UserInterface{
     has_saved: boolean
 }
 
+export interface CurrentUserProfile extends UserProfile {
+    library: {
+        has_date_requests: boolean,
+        has_notifications: boolean,
+        notifications_count: number,
+        date_requests_count: number
+    }
+}
+
 export interface UserEditClientData {
     username: string,
     full_name: string,

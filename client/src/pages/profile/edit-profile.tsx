@@ -94,7 +94,7 @@ function EditProfile({isSetup = false}: {isSetup?: boolean}){
                     </div>
                     <FormInput onChange={(val)=>setUserName(val)} name = "username" placeholder="Username (Dont include 'space' or special charecters)" Icon={PersonOutlineIcon} value={username}/>
                     <FormInput onChange={(val)=>setFull_name(val)} name = "full_name" placeholder="Fullname" Icon={PersonOutlineIcon} value={full_name}/>
-                    <FormInput onChange={(val)=>setBirthDay(val)} name = "birthday" placeholder="Birthday" Icon={DateRangeOutlinedIcon} type="date" value={birthday}/>
+                    {isSetup && <FormInput onChange={(val)=>setBirthDay(val)} name = "birthday" placeholder="Birthday" Icon={DateRangeOutlinedIcon} type="date" value={birthday}/>}
                     <SelectOption onChange={(val)=>setGender(val)} data = {options} select_name="gender" Icon = {WcOutlinedIcon} value={gender}/>
                     <FormTextArea onChange={(val)=>setDescription(val)} name = "description" placeholder="Describe yourself (min-10 max-100)" Icon={PersonOutlineIcon} value = {description}/>
                     <FormSubmit isLoading={loading} value="SAVE" className="no-margin" disabled = {disabled}/>

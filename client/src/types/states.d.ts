@@ -1,9 +1,9 @@
 import { UserDate } from "@shared/Dates";
-import { UserProfile } from "@shared/User";
+import { CurrentUserProfile, UserProfile } from "@shared/User";
 
 export interface RootState {
     banner: BannerState,
-    current_user: UserProfile|null,
+    current_user: CurrentUserProfile|null,
     dates: UserDate[]
 }
 

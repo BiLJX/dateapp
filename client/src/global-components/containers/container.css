@@ -84,6 +84,7 @@
   -webkit-box-align: center;
   -ms-flex-align: center;
   align-items: center;
+  position: relative;
 }
 
 .bottom-nav-item svg {
@@ -101,4 +102,9 @@
   border-radius: 100%;
   background-color: var(--nav-item-color);
   overflow: hidden;
+}
+
+.bottom-nav-item .alert-icon {
+  top: 22%;
+  right: 30%;
 }

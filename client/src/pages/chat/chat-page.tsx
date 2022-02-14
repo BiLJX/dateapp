@@ -3,7 +3,7 @@ import { ChatData, TextMessageData } from '@shared/Chat';
 import { getChatData, getMessages } from 'api/chat-api';
 import { Header } from 'global-components/containers/container-with-header';
 import React, { Fragment, useContext, useEffect, useRef, useState } from 'react';
-import { useNavigate, useParams } from 'react-router-dom';
+import { NavLink, useNavigate, useParams } from 'react-router-dom';
 
 import { ChatItem, CurrentUserChatItem } from './chat-item';
 import SendIcon from '@mui/icons-material/Send';
@@ -98,6 +98,7 @@ export default function ChatPage(props: any){
             chat.isTyping(data=>{
                 if(data.sender_uid === uid) setIsTyping(data.state);
             })
+            chat.seen(uid||"")
         }
         return(()=>{
             chat?.offMessage()
@@ -117,7 +118,7 @@ export default function ChatPage(props: any){
     if(!data) return <Header name = "Chat" goBackButton />
     return(
         <div className = "chat-page">
-            <ChatHeader data= {data} />
+            <ChatHeader data= {data} uid = {uid||""} />
             <section>
                 <div className='chat-page-messages'  style={ { backgroundImage: `linear-gradient(180deg,rgba(18, 16, 21, 0.79) 0%,#121015 76.91%), url('${data.chat_background}')` } }>
                     <div onScroll={handleScroll} ref = {main} style={{display: "flex", maxHeight: "100%", flexDirection: "column", overflowY: "scroll", overflowX: "hidden"}}>
@@ -141,22 +142,22 @@ export default function ChatPage(props: any){
     )
 }
 
-function ChatHeader({data}: {data: ChatData}){
+function ChatHeader({data, uid}: {data: ChatData, uid: string}){
     const navigate = useNavigate()
     return(
         <header className="chat-page-header">
             <div className = "chat-page-header-back" onClick={()=>navigate(-1)}>
                 <ArrowBackIosIcon />
             </div>
-            <div className = "chat-page-header-pfp-container">
+            <NavLink to = {"/user/"+uid} className = "chat-page-header-pfp-container">
                 <div className='chat-page-header-pfp'>
                     <img className='full-img' src = {data.user_data.profile_pic_url} />
                 </div>
-            </div>
-            <div className = "chat-page-header-info-container">
+            </NavLink>
+            <NavLink to = {"/user/"+uid} className = "chat-page-header-info-container">
                 <h2 className='chat-page-header-name ellipsis'>{data.user_data.full_name}</h2>
                 <span className = "chat-page-header-username">{data.user_data.username}</span>
-            </div>
+            </NavLink>
         </header>
     )
 }

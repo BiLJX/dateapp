@@ -1,11 +1,7 @@
 {
   "compilerOptions": {
     "target": "es5",
-    "lib": [
-      "dom",
-      "dom.iterable",
-      "esnext"
-    ],
+    "lib": ["dom", "dom.iterable", "esnext"],
     "allowJs": true,
     "skipLibCheck": true,
     "esModuleInterop": true,
@@ -21,12 +17,8 @@
     "jsx": "react-jsx",
     "baseUrl": "src",
     "paths": {
-      "@shared/*": [
-        "../../shared/*"
-      ]
+      "@shared/*": ["../../shared/*"]
     }
   },
-  "include": [
-    "src"
-  ]
+  "include": ["src"]
 }

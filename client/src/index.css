@@ -11,6 +11,7 @@
   --light-pink: #dd6688;
   --gray-blue: #ccccdd;
   --blue: #6699aa;
+  --blue-disabled: #e7e8e9a2;
   --black: #121015;
   --dark-gray: #2e2c34;
   --dark-gray-alt: #1f1d24;
@@ -141,4 +142,13 @@ a {
 
 .error-page h1 {
   color: var(--text-main);
+}
+
+.alert-icon {
+  background-color: #ff3737;
+  position: absolute;
+  height: 0.6rem;
+  width: 0.6rem;
+  border-radius: 100%;
+  z-index: 100;
 }

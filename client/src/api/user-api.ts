@@ -1,5 +1,5 @@
 import axios from "./instance"
-import { UserProfile, UserEditClientData } from "@shared/User"
+import { UserProfile, UserEditClientData, CurrentUserProfile } from "@shared/User"
 
 export async function getUserByUid(uid: string){
     const res = (await axios.get("/api/user/"+uid)).data;
@@ -20,7 +20,7 @@ export async function updateProfile(data: UserEditClientData, pfp?: File){
     formdata.append("description", data.description);
     pfp && formdata.append("pfp", pfp);
     const res = (await axios.patch("/api/user/edit/", formdata)).data;
-    return <ApiResponse<UserProfile>>res
+    return <ApiResponse<CurrentUserProfile>>res
 }
 
 

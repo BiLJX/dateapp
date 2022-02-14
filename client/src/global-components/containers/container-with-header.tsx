@@ -46,6 +46,7 @@ function BottomNav(){
                 <FavoriteIcon />
             </NavLink>
             <NavLink to = "/library" className={(navData)=>"bottom-nav-item " + (navData.isActive?"bottom-nav-item-active":"")}>
+                { /*currentUser?.library?.has_date_requests || currentUser?.library.has_notifications ? <span className = "alert-icon"></span> : null*/}
                 <LibraryBooksIcon />
             </NavLink>
             <NavLink to = {"/user/"+currentUser?.uid} className={(navData)=>"bottom-nav-item " + (navData.isActive?"bottom-nav-item-active":"")}>

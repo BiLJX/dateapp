@@ -3,6 +3,7 @@ import express from "express"
 import mongoose from "mongoose"
 import { Server } from "socket.io"
 import cookie from "cookie"
+import path from "path"
 //middlewares
 import bodyParser from "body-parser"
 import cors from "cors"
@@ -33,6 +34,7 @@ const app = express()
 app.use(bodyParser.json())
 app.use(cors({credentials: true, origin: true}));
 app.use(cookieParser())
+app.use(express.static(path.join("build")))
 
 /*                routes              */
 
@@ -40,6 +42,9 @@ app.use("/api/auth",  AuthRoutes)
 app.use("/api/user", AuthMiddleware, UserRoutes)
 app.use("/api/date", AuthMiddleware, DateRoutes)
 app.use("/api/chat", AuthMiddleware, ChatRoutes)
+app.get("/*", (req, res) => {
+	res.sendFile(path.join(__dirname,"..", "build", "index.html"));
+});
 //connecting to database and starting server
 
 mongoose.connect(CONNECTION_URL).then(()=>{

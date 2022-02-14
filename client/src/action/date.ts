@@ -9,7 +9,7 @@ export function initDates(dates: UserDate[]): ActionInterface<DateActionInterfac
         payload: {
             date: dates[0],
             dates_arr: dates
-        }
+        }       
     }
 }
 

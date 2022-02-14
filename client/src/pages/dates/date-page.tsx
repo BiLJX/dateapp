@@ -11,18 +11,20 @@ import { RootState } from "types/states";
 import "./date-page.css"
 
 export default function DatePage(){
-    const dates = useSelector((state: RootState)=>state.dates)
+    const dates = useSelector((state: RootState)=>state.dates);
     const dispatch = useDispatch()
     const [isLoading, setIsLoading] = useState(dates.length === 0)
     const getData = async () => {
         const res = await getUserDates();
-        if(res.success) dispatch(initDates(res.data)) ;
+        if(res.success) {
+            dispatch(initDates([]))
+            dispatch(initDates(res.data));
+        }
         setIsLoading(false)
     }
     useEffect(()=>{
         getData()
     }, [])
-
     if(isLoading) return ( 
         <>
             <Header name = "Your Dates" />

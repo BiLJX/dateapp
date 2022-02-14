@@ -7,7 +7,7 @@ import admin from "firebase-admin"
 import { getAuth, signInWithEmailAndPassword } from "firebase/auth"
 import { app } from "../fire";
 import moment from "moment"
-import { parseUser } from "./user-controller";
+import { parseCurrentUser, parseUser } from "./user-controller";
 
 const auth = getAuth(app);
 export async function createAccount(req: Request, res: Response){
@@ -16,20 +16,20 @@ export async function createAccount(req: Request, res: Response){
     let userId: string = ""
     try {
         if(!client_data) return JSONReponse.clientError("no data found");
-        const splited_name = client_data.full_name.trim().split(" ")
         const currentTime = moment(new Date());
         const client_birthday = moment(client_data.birthday);
         const duration = moment.duration(currentTime.diff(client_birthday))
         const years = duration.asYears()
         //validations
-        if(isNaN(years) || years<13) return JSONReponse.clientError("Sorry, only age above 13 can create account");
-        if(splited_name.length === 0)return JSONReponse.clientError("please enter name");
         if(!isFullName(client_data.full_name)) return JSONReponse.clientError("invalid name");
+        if(isNaN(years) || years<13) return JSONReponse.clientError("Sorry, only age above 13 can create account");
         if(!isUserName(client_data.username)) return JSONReponse.clientError("invalid username or username is less than 3 charecter");
+        const splited_name = client_data.full_name?.trim().split(" ")
+        if(splited_name.length === 0)return JSONReponse.clientError("please enter name");
         
         //creating account from firebase
         
-       
+       client_data.email = client_data.email?.toString()?.toLocaleLowerCase()?.trim();
 
         //saving datas
         const data: any = {
@@ -41,7 +41,7 @@ export async function createAccount(req: Request, res: Response){
         }
 
         const { uid } = await admin.auth().createUser({
-            email: client_data.email,
+            email: client_data.email?.toString()?.toLocaleLowerCase()?.trim(),
             password: client_data.password
         })
         userId = uid;
@@ -60,11 +60,11 @@ export async function createAccount(req: Request, res: Response){
         res.cookie("session", sessionCookie, options);
 
         //success
-        JSONReponse.success("created account", await parseUser(user.toJSON(), user.toJSON()))
+        JSONReponse.success("created account",await parseCurrentUser(user.toJSON()))
     } catch (error: any) {
         console.log(error)
         await admin.auth().deleteUser(userId).catch(err=>console.log(err))
-        JSONReponse.clientError(( error.message || "Username already taken" ))
+        JSONReponse.clientError(( error.message || "Some Thing Went Wrong" ))
     }
 }
 
@@ -79,10 +79,10 @@ export async function login(req: Request, res: Response){
         const sessionCookie = await admin.auth().createSessionCookie(idToken, {expiresIn});
         const options = {maxAge: expiresIn, httpOnly: false};
         const currentUser = <any>(await User.findOne({uid: user.uid }))?.toJSON();
-
         res.cookie("session", sessionCookie, options);
-        JSONReponse.success("logged in", await parseUser(currentUser, currentUser));
+        JSONReponse.success("logged in", await parseCurrentUser(currentUser));
     }catch(err: any){
+        console.log(err)
         JSONReponse.clientError("Either email or password does not match");
     }
 }

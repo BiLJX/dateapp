@@ -53,7 +53,7 @@ function SignUpPage(){
             setIsLoading(false)
             return 
         }
-        dispatch(addCurrentUser(res.data))
+        dispatch(addCurrentUser(res.data));
         setIsLoading(false)
         navigate("/profile/setup")
     }
@@ -72,7 +72,7 @@ function SignUpPage(){
                 
             </form>
             <div className="auth-footer">
-               already have account? <NavLink to = "/login">login</NavLink> 
+               already have account? <NavLink style={{ marginLeft: "0.5rem", textDecoration: "underline" }} to = "/login">login</NavLink> 
             </div>
         </AuthPageContainer>
     )

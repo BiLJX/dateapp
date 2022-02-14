@@ -100,6 +100,7 @@
   align-items: center;
   background-color: var(--pink);
   border-radius: 10px;
+  cursor: pointer;
 }
 
 .user-profile-button svg {

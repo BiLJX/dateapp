@@ -10,7 +10,7 @@ import { UserDate } from "../models/Dates";
 async function updateDataBase(message_obj: TextMessageData){
     const message = new MessageModel(message_obj);
     await message.save();
-    await UserDate.findOneAndUpdate({uid: message_obj.sender_uid, date_user_uid: message_obj.receiver_uid}, { $set: { latest_message: message_obj.text  } });
+    await UserDate.findOneAndUpdate({uid: message_obj.sender_uid, date_user_uid: message_obj.receiver_uid}, { $set: { latest_message: message_obj.text, has_read_message: true  } });
     await UserDate.findOneAndUpdate({uid: message_obj.receiver_uid, date_user_uid: message_obj.sender_uid}, { $set: { latest_message: message_obj.text, has_read_message: false  } });
 }
 
