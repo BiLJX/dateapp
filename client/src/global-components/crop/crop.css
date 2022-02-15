@@ -1,0 +1,23 @@
+.crop-overlay {
+  display: flex;
+}
+
+.crop-container {
+  display: flex;
+}
+
+.crop-header {
+  z-index: 999;
+  display: flex;
+  align-items: center;
+  width: 100vw;
+  padding: 2% 5%;
+  color: var(--text-main);
+  font-size: 2rem;
+  height: 5rem;
+  justify-content: space-between;
+}
+
+.crop-header svg {
+  font-size: 2rem;
+}

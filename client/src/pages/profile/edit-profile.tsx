@@ -1,5 +1,5 @@
 import "./edit-profile.css"
-import MailOutlineIcon from '@mui/icons-material/MailOutline';
+import Crop from "global-components/crop/crop-component";
 import PersonOutlineIcon from '@mui/icons-material/PersonOutline';
 import DateRangeOutlinedIcon from '@mui/icons-material/DateRangeOutlined';
 import EditIcon from '@mui/icons-material/Edit';
@@ -43,14 +43,14 @@ function EditProfile({isSetup = false}: {isSetup?: boolean}){
     const [ gender, setGender ] = useState<any>(current_user?.gender)
     const [pfp, setPfp] = useState(current_user?.profile_picture_url)
     const [pfp_img, setPfp_img] = useState<File>()
+    const [showCropper, setShowCropper] = useState(false)
     const [loading, setLoading] = useState(false)
     const dispatch = useDispatch()
     const navigate = useNavigate()
     function handleImageChange(e: any){
         const img = e.target.files?.[0]
-        const url = URL.createObjectURL(img)
-        setPfp(url)
         setPfp_img(img)
+        setShowCropper(true)
     }
     async function handleSubmit(e: any){
         e.preventDefault()
@@ -71,8 +71,13 @@ function EditProfile({isSetup = false}: {isSetup?: boolean}){
         dispatch(addCurrentUser(res.data))
         navigate("/")
     }
+    function uploaded(url: string){
+        setPfp(url); 
+        dispatch(addCurrentUser({...current_user as any, profile_picture_url: url}))
+        setShowCropper(false);
+    }
     useEffect(()=>{
-        if(username !== current_user?.username || full_name !== current_user?.full_name || birthday !== current_user?.birthday || description !== current_user?.description || gender !== current_user?.gender || pfp !== current_user?.profile_picture_url){
+        if(username !== current_user?.username || full_name !== current_user?.full_name || birthday !== current_user?.birthday || description !== current_user?.description || gender !== current_user?.gender){
             setDisabled(false)
         }else{
             setDisabled(true)
@@ -80,13 +85,15 @@ function EditProfile({isSetup = false}: {isSetup?: boolean}){
     }, [username, full_name, birthday, description, gender, pfp])
     return(
         <>
+            {showCropper && pfp_img && <Crop type = "PFP" image={pfp_img} on_reject = {()=>setShowCropper(false)} on_complete = {uploaded} />}
+            
             { isSetup?<Header name = "Setup Profile"/>:<Header name = "Edit Profile" goBackButton/>}
             <ContainerWithHeader>
                 <form id = "edit-profile-page" onSubmit = {handleSubmit}>
                     <div className="edit-profile-pfp-container">
                     <div className="edit-profile-pfp">
                             <img alt = "PFP" className="full-img" src = {pfp}/>
-                            <input id = "upload-pfp" type = "file" onChange={handleImageChange} hidden/>
+                            <input accept = "image/*" id = "upload-pfp" type = "file" onChange={handleImageChange} hidden/>
                             <label htmlFor="upload-pfp" className="upload-pfp-icon">
                                 <EditIcon/>
                             </label>

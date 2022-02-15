@@ -32,7 +32,7 @@ async function removeFile(dir: string){
 }
 
 
-export async function uploadFile(file: any, dir: string, image_size?: number[]): Promise<string>{
+export async function uploadFile(buffer: Buffer, dir: string): Promise<string>{
   await removeFile(dir)
   const filename = dir+uuid();
   const blob = st.bucket().file(filename);
@@ -47,12 +47,6 @@ export async function uploadFile(file: any, dir: string, image_size?: number[]):
       const public_url = getUrl(filename)
       res(public_url)
     })
-    let buffer: Buffer;
-    if(image_size){
-      buffer = await sharp(file.buffer).resize(image_size[0], image_size[1]).jpeg({quality: 90}).toBuffer()
-    }else{
-      buffer = await sharp(file.buffer).resize(843, 1500).jpeg({quality: 90}).toBuffer()
-    }
     blobStream.end(buffer)
   })
 }

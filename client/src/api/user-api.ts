@@ -1,6 +1,6 @@
 import axios from "./instance"
 import { UserProfile, UserEditClientData, CurrentUserProfile } from "@shared/User"
-
+import { Area } from "react-easy-crop/types"
 export async function getUserByUid(uid: string){
     const res = (await axios.get("/api/user/"+uid)).data;
     return <ApiResponse<UserProfile>>res;
@@ -23,6 +23,16 @@ export async function updateProfile(data: UserEditClientData, pfp?: File){
     return <ApiResponse<CurrentUserProfile>>res
 }
 
+export async function updatePfp(pfp: File, area: Area){
+    const formdata = new FormData();
+    formdata.append("pfp", pfp);
+    formdata.append("x", area.x.toString());
+    formdata.append("y", area.y.toString());
+    formdata.append("width", area.width.toString());
+    formdata.append("height", area.height.toString());
+    const res = (await axios.put<ApiResponse<{url: string}>>("/api/user/edit/pfp", formdata)).data;
+    return res
+}
 
 export async function saveUser(uid: string){
     const res = await axios.put(`/api/user/${uid}/save`);
