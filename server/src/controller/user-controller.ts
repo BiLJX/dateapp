@@ -105,16 +105,6 @@ export async function editUserProfile(req: Request, res: Response){
         try{
             //validation
             let url: string|undefined;
-            if(pfp){
-                const size = pfp.size / 1024 / 1024;
-                if(size > 60) return JSONReponse.clientError("invalid thumbnail type");
-                // pfp.mimetype === "image/png" || pfp.mimetype === "image/jpg" || pfp.mimetype === "image/jpeg"
-                if (pfp.mimetype.includes("image")){
-                    // url = await uploadFile(pfp, `user/${uid}/pfp/`)
-                }else{
-                    return JSONReponse.clientError("invalid pfp type");
-                }
-            }
             if(!url && !current_user.account_setuped) return JSONReponse.clientError("You need to add a profile picture")
             if(!isUserName(username)) return JSONReponse.clientError("invalid username or username is less than 3 charecter");
             if(!isFullName(full_name)) return JSONReponse.clientError("invalid name");
@@ -129,11 +119,6 @@ export async function editUserProfile(req: Request, res: Response){
                 first_name: splited_name[0]?.trim(),
                 last_name: splited_name?.length > 2 ? splited_name[1]?.trim() + " " + splited_name[2]?.trim() : splited_name[1]?.trim()||"",
             }
-            // if(url){
-            //     await User.findOneAndUpdate({uid}, {$set: {...data, profile_picture_url: url}})
-            //     const updatedUser = await User.findOne({uid})
-            //     return JSONReponse.success("success", await parseCurrentUser(updatedUser?.toJSON()))
-            // }
             await User.findOneAndUpdate({uid}, {$set: data})
             const updatedUser = await User.findOne({uid})
             return JSONReponse.success("success", await parseCurrentUser(updatedUser?.toJSON()))

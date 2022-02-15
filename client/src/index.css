@@ -39,7 +39,7 @@
   --border1: #4c4a50b9;
   --message-background-alt: var(--dark-gray);
   --sending: var(--light-gray);
-  --profile-container-bg: var(--dark-gray);
+  --profile-container-bg: var(--dark-gray-alt);
   --banner-background: var(--dark-gray);
 }
 

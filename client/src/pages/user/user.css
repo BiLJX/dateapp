@@ -1,8 +1,12 @@
+.profile-header {
+  background-color: transparent;
+}
+
 .user-profile-page {
   position: relative;
   display: flex;
   flex-direction: column;
-  padding-top: 50vh;
+  padding-top: 100vh;
 }
 
 .user-profile-page-background {
@@ -10,8 +14,40 @@
   top: var(--header-height);
   background-color: var(--image-background-alt);
   width: 100vw;
-  height: 70vh;
+  height: 100vh;
+  background-size: auto 100%;
+  top: 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
   flex-direction: column;
+}
+
+.user-profile-name {
+  font-size: 1.3em;
+  width: 85%;
+  padding: 2em 0.5em;
+  color: var(--text-main);
+  line-clamp: 2;
+  -webkit-line-clamp: 2;
+  word-wrap: break-word;
+  text-align: center;
+}
+
+.user-profile-pfp {
+  width: 100px;
+  height: 100px;
+  border-radius: 100%;
+  background-color: var(--image-background-alt);
+  overflow: hidden;
+  border: 5px solid var(--dark-gray);
+}
+
+.user-profile-buttons-container {
+  width: 100%;
+  font-size: 1rem;
+  display: flex;
+  justify-content: space-evenly;
 }
 
 .user-profile-contents-container {
@@ -19,7 +55,6 @@
   padding: 1.5rem 1rem 1rem 1rem;
   z-index: 1;
   background-color: var(--profile-container-bg);
-  border-radius: 50px 50px 0 0;
   flex-direction: column;
   position: relative;
 }
@@ -27,15 +62,7 @@
   width: 100%;
   display: flex;
 }
-.user-profile-name {
-  font-size: 1.3em;
-  width: 85%;
-  padding: 0.5em;
-  color: var(--text-main);
-  line-clamp: 2;
-  -webkit-line-clamp: 2;
-  word-wrap: break-word;
-}
+
 .user-profile-edit {
   display: flex;
   justify-content: center;
@@ -51,13 +78,16 @@
 }
 
 .user-profile-nav-item {
-  padding: 0.8em;
+  flex: 1;
   color: var(--text-secondary);
   font-weight: 600;
+  text-align: center;
+  font-size: 1.3rem;
+  padding-bottom: 1rem;
 }
 
 .user-profile-nav-item-active {
-  color: var(--light-pink);
+  color: var(--text-main);
 }
 
 .user-profile-about {
@@ -80,16 +110,6 @@
 .user-profile-about-text {
   color: var(--text-secondary);
   font-weight: 600;
-}
-
-.user-profile-buttons-container {
-  width: 100%;
-  font-size: 1rem;
-  display: flex;
-  justify-content: space-evenly;
-  position: absolute;
-  top: -4%;
-  padding-right: 2rem;
 }
 
 .user-profile-button {

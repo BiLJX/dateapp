@@ -59,10 +59,10 @@ function BottomNav(){
 }
 
 
-export function Header({name, goBackButton = false}: {name: string, goBackButton?: boolean}){
+export function Header({className, name, goBackButton = false}: {className?: string, name: string, goBackButton?: boolean}){
     const navigate = useNavigate();
     return(
-        <header className="main-header">
+        <header className={`main-header ${className || ""}`}>
             <span>{name}</span>
             {goBackButton && (
                 <div className="back-arrow-container" onClick = {()=>navigate(-1)}>

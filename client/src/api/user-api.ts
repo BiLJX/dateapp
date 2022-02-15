@@ -34,6 +34,17 @@ export async function updatePfp(pfp: File, area: Area){
     return res
 }
 
+export async function updateCover(cover: File, area: Area){
+    const formdata = new FormData();
+    formdata.append("pfp", cover);
+    formdata.append("x", area.x.toString());
+    formdata.append("y", area.y.toString());
+    formdata.append("width", area.width.toString());
+    formdata.append("height", area.height.toString());
+    const res = (await axios.put<ApiResponse<{url: string}>>("/api/user/edit/cover", formdata)).data;
+    return res
+}
+
 export async function saveUser(uid: string){
     const res = await axios.put(`/api/user/${uid}/save`);
     return <ApiResponse<{}>>res.data

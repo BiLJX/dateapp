@@ -4,7 +4,7 @@ import CloseIcon from '@mui/icons-material/Close';
 import DoneIcon from '@mui/icons-material/Done';
 import { Area, Point } from "react-easy-crop/types";
 import "./crop.css"
-import { updatePfp } from "api/user-api";
+import { updateCover, updatePfp } from "api/user-api";
 import bannerDispatch from "dispatcher/banner";
 import { useDispatch } from "react-redux";
 import { error } from "action/banner";
@@ -12,7 +12,7 @@ import { TailSpin } from "react-loader-spinner"
 
 interface CropProps {
     image: File,
-    type: "PFP"|"POST",
+    type: "PFP"|"POST"|"COVER",
     on_complete: (url: string) => any,
     on_reject: () => any
 }
@@ -27,12 +27,22 @@ export default function Crop(props: CropProps){
     const save = async () => {
         setIsLoading(true)
         if(!cropInfo) return;
-        if(props.type === "PFP"){
-            const res = await updatePfp(props.image, cropInfo);
-            if(res.success){
-                return props.on_complete(res.data.url)
-            }
-            bannerDispatch(dispatch, error(res.msg))
+        let res: ApiResponse<{url: string}>;
+        switch(props.type){
+            case "PFP":
+                res = await updatePfp(props.image, cropInfo);
+                if(res.success){
+                    return props.on_complete(res.data.url)
+                }
+                bannerDispatch(dispatch, error(res.msg))
+                break;
+            case "COVER":
+                res = await updateCover(props.image, cropInfo);
+                if(res.success){
+                    return props.on_complete(res.data.url)
+                }
+                bannerDispatch(dispatch, error(res.msg))
+                break;
         }
         setIsLoading(false)
     }
@@ -49,7 +59,7 @@ export default function Crop(props: CropProps){
                 </header>
                 <Cropper 
                 image={image_url}
-                aspect={16/20}
+                aspect={9/16}
                 onCropChange = {setCrop}
                 crop = {crop}
                 zoom = {zoom}

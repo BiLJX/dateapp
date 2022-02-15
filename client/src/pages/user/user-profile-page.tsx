@@ -1,11 +1,13 @@
+import React from "react"
 import { UserProfile } from "@shared/User";
 import { getUserByUid } from "api/user-api";
-import { ContainerWithHeader, Header } from "global-components/containers/container-with-header";
+import { Header } from "global-components/containers/container-with-header";
 import { SpinLoader } from "../../global-components/loaders/loaders"
 import { useEffect, useState } from "react";
 import { NavLink, Route, Routes, useParams, useNavigate } from "react-router-dom";
 import { saveUser, unsaveUser } from "api/user-api"
 import EditIcon from '@mui/icons-material/Edit';
+import ImageIcon from '@mui/icons-material/Image';
 import "./user.css";
 import UserProfileAbout from "./user-profile-about";
 import UserProfilePicturesPage from "./user-profile-pictures";
@@ -17,13 +19,24 @@ import FavoriteIcon from '@mui/icons-material/Favorite';
 import HeartBrokenOutlinedIcon from '@mui/icons-material/HeartBrokenOutlined';
 import DoneIcon from '@mui/icons-material/Done';
 import * as dateApi from "../../api/date-api"
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "types/states";
+import DefaultBackground  from "./default.jpeg"
+import Crop from "global-components/crop/crop-component";
+import { addCurrentUser } from "action/user";
 
 export default function UserProfilePage(){
     const currentUser = useSelector((state: RootState)=>state.current_user);
+    const dispatch = useDispatch()
     const [user, setUser] = useState<UserProfile>();
+    const [opacity, setOpacity] = useState(1)
     const [isLoading, setIsLoading] = useState(true)
+    const [blur, setBlur] = useState(0)
+    const [cover_img_url, setCover_img_url] = useState(currentUser?.cover_picture_url ||DefaultBackground )
+    const [cover_img, setCover_img] = useState<File>();
+    const [cropper, setCropper] = useState(false)
+   
+
     const { uid } = useParams()
     const isViewersProfile = uid === currentUser?.uid;
     const getUser = async () => {
@@ -34,8 +47,30 @@ export default function UserProfilePage(){
         }
         setIsLoading(false)
     }
+    const scroll = (e: any) => {
+        const scrollHeight = document.documentElement.scrollHeight
+        const ratio = window.scrollY/scrollHeight
+        const opacity = 1-(ratio * 2)
+        const blur = ratio * 20
+        setOpacity(opacity)
+        setBlur(blur)
+    }
+
+    const onUploaded = (url: string) => {
+        setCover_img_url(url);
+        dispatch(addCurrentUser({...currentUser as any, cover_picture_url: url}))
+        setCropper(false)
+    }
+    const onCoverChange = (e: any) => {
+        setCover_img(e.target.files[0])
+        setCropper(true)
+    }
+
     useEffect(()=>{
         getUser()
+        window.removeEventListener('scroll', scroll);
+        window.addEventListener('scroll', scroll, { passive: true });
+        return () => window.removeEventListener('scroll', scroll);
     }, [])
 
     if(isLoading) return (<><Header name = "Profile" goBackButton /><SpinLoader /></>)
@@ -52,41 +87,56 @@ export default function UserProfilePage(){
     }
     return(
         <>
-            <Header name={ user.username } goBackButton />
-            <ContainerWithHeader>
-                <div className="user-profile-page">
-                    <div className="user-profile-page-background">
-                        <img className="full-img" src = {user.profile_picture_url} />
+            { cropper && <Crop image={ cover_img as File } type = "COVER" on_reject={()=>setCropper(false)} on_complete = {onUploaded} /> }
+            <Header className="profile-header" name={ user.username } goBackButton />
+            <div className="user-profile-page">
+                <div className="user-profile-page-background"style={{backgroundImage: `url("${cover_img_url}")`, opacity: opacity, filter: `blur(${blur}px)`}}>
+                    <div className = "user-profile-pfp">
+                        <img src = { user.profile_picture_url } className = "full-img" />
                     </div>
-                    <div className = "user-profile-contents-container">
-                        {!isViewersProfile&&<Buttons user = {user} />}
-                        <div className="user-profile-contents-header">
-                            <h1 className="user-profile-name ellipsis-clamp">{user.full_name} ({user.age})</h1>
-                            {isViewersProfile && <NavLink to = "/profile/edit" className = "user-profile-edit"><EditIcon /></NavLink>}
-                        </div>
-                        
-                        <div className = "user-profile-nav">
-                            <NavLink end to = "" className={(state)=>!state.isActive?"user-profile-nav-item":"user-profile-nav-item user-profile-nav-item-active"}>
-                                About
-                            </NavLink>
-                            <NavLink to = "pictures" className={(state)=>!state.isActive?"user-profile-nav-item":"user-profile-nav-item user-profile-nav-item-active"}>
-                                Pictures
-                            </NavLink>
-                        </div>
-                        <div className = "user-profile-contents-main">
-                            <Routes>
-                                <Route index={true} element = {<UserProfileAbout user = {user} />} />
-                                <Route path = "pictures" element =  {<UserProfilePicturesPage />} />
-                            </Routes>
-                        </div>
+                    <h1 className="user-profile-name ellipsis-clamp">{user.full_name} ({user.age})</h1>
+                        <Buttons onChange={onCoverChange} user = {user} isViewer = {isViewersProfile} />
+                </div>
+                <div className = "user-profile-contents-container">
+                    <div className="user-profile-contents-header">
+                       
+                    </div>
+                    
+                    <div className = "user-profile-nav">
+                        <NavLink end to = "" className={(state)=>!state.isActive?"user-profile-nav-item":"user-profile-nav-item user-profile-nav-item-active"}>
+                            About
+                        </NavLink>
+                        <NavLink to = "pictures" className={(state)=>!state.isActive?"user-profile-nav-item":"user-profile-nav-item user-profile-nav-item-active"}>
+                            Pictures
+                        </NavLink>
+                    </div>
+                    <div className = "user-profile-contents-main">
+                        <Routes>
+                            <Route index={true} element = {<UserProfileAbout user = {user} />} />
+                            <Route path = "pictures" element =  {<UserProfilePicturesPage />} />
+                        </Routes>
                     </div>
                 </div>
-            </ContainerWithHeader>
+            </div>
         </>
     )
 }
 
-function Buttons({user}: {user: UserProfile}){
+function Buttons({user, isViewer = false, onChange}: {user: UserProfile, isViewer?: boolean, onChange: (e: any)=>any}){
+    if(isViewer){
+        return(
+            <div className="user-profile-buttons-container" style = {{justifyContent: "center"}}>
+                
+                <NavLink to = "/profile/edit" className = "user-profile-button">
+                    <EditIcon />
+                </NavLink>
+                <input hidden id = "user-profile-cover-input" type = "file" accept="image/*" onChange={onChange} />
+                <label htmlFor = "user-profile-cover-input" className = "user-profile-button" style =  {{marginLeft: "10%", backgroundColor: "var(--blue)"}}>
+                    <ImageIcon />
+                </label>
+            </div>
+        )
+    }
     return(
         <div className="user-profile-buttons-container">
             <SaveButton user = {user} />
