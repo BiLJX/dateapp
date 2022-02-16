@@ -5,9 +5,13 @@ import ArrowForwardIosIcon from '@mui/icons-material/ArrowForwardIos';
 import PersonAddAlt1Icon from '@mui/icons-material/PersonAddAlt1';
 import WatchLaterIcon from '@mui/icons-material/WatchLater';
 import BookmarksIcon from '@mui/icons-material/Bookmarks';
+import PersonIcon from '@mui/icons-material/Person';
 import "./library-page.css"
 import { Switch } from "@mui/material";
+import { useSelector } from "react-redux";
+import { RootState } from "types/states";
 function LibraryPage(){
+    const user = useSelector((state: RootState)=>state.current_user)
     function toggleSnapScroll(val: boolean){
         localStorage.setItem("snapScroll", val+"")
     }
@@ -17,6 +21,7 @@ function LibraryPage(){
             <ContainerWithHeader>
                 <div className="library-page">
                     <div className = "library-items-container">
+                        <LibraryItems name="Your Profile" to = {"/user/"+user?.uid} Icon={PersonIcon} />
                         <LibraryItems name="Notifications" to = "/notifications" Icon={NotificationsIcon} />
                         <LibraryItems name = "Date Requests" to = "/requests/incoming" Icon = {PersonAddAlt1Icon} />
                         <LibraryItems name = "Sent Date Requests" to = "/requests/sent" Icon = {WatchLaterIcon} />

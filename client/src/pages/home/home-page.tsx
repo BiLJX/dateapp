@@ -11,6 +11,7 @@ import  * as bannerActions from "../../action/banner"
 import { SaveButton, SendDateButton } from './buttons';
 import { HeartLoader } from 'global-components/loaders/loaders';
 import { NavLink } from 'react-router-dom';
+import FeedAd from 'global-components/ads/FeedAd';
 function HomePage(){
     const [loading, setLoading] = useState(true)
     const [feed, setFeed] = useState<UserProfile[]>([])
@@ -19,7 +20,6 @@ function HomePage(){
     const [isFetching, setIsFetching] = useState(false)
     const container_ref = useRef<any>(null)
     async function fetchFeed(){
-        console.log("test3")
         setIsFetching(true)
         const res = await getUsers(page)
         if(res.success){
@@ -55,9 +55,11 @@ function HomePage(){
         <div id="home-page" ref = {container_ref} onScroll = {onScroll} >
             {
                 feed.map((x, i)=>(
-                    <Fragment key = {i}>
+                    <Fragment key= {i}>
                         <ProfileItem data = {x} />
+                        {(i+1) % 10 === 0 && <FeedAd />}
                     </Fragment>
+                    
                 ))
             }
         </div>

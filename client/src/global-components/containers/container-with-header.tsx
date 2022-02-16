@@ -3,7 +3,8 @@ import ArrowBackIosIcon from '@mui/icons-material/ArrowBackIos';
 import HomeIcon from '@mui/icons-material/Home';
 import SearchIcon from '@mui/icons-material/Search';
 import FavoriteIcon from '@mui/icons-material/Favorite';
-import LibraryBooksIcon from '@mui/icons-material/LibraryBooks';
+import AutoAwesomeMotionIcon from '@mui/icons-material/AutoAwesomeMotion';
+import PersonIcon from '@mui/icons-material/Person';
 import "./container.css"
 import { useSelector } from "react-redux";
 import { RootState } from "types/states";
@@ -29,7 +30,7 @@ export function ContainerWithHeader({className, children}: {className?: string, 
 }
 
 function BottomNav(){
-    const urls = ["/", "/search", "/dates", "/library", "/profile"]
+    const urls = ["/", "/search", "/dates", "/pictures", "/profile"]
     const location = useLocation();
     const currentUser = useSelector((state: RootState)=>state.current_user);
     const found = urls.find(x=>x===location.pathname);
@@ -45,14 +46,12 @@ function BottomNav(){
             <NavLink to = "/dates" className={(navData)=>"bottom-nav-item " + (navData.isActive?"bottom-nav-item-active":"")}>
                 <FavoriteIcon />
             </NavLink>
-            <NavLink to = "/library" className={(navData)=>"bottom-nav-item " + (navData.isActive?"bottom-nav-item-active":"")}>
+            <NavLink to = "/pictures" className={(navData)=>"bottom-nav-item " + (navData.isActive?"bottom-nav-item-active":"")}>
                 { /*currentUser?.library?.has_date_requests || currentUser?.library.has_notifications ? <span className = "alert-icon"></span> : null*/}
-                <LibraryBooksIcon />
+                <AutoAwesomeMotionIcon />
             </NavLink>
-            <NavLink to = {"/user/"+currentUser?.uid} className={(navData)=>"bottom-nav-item " + (navData.isActive?"bottom-nav-item-active":"")}>
-                <div className = "nav-profile">
-                    <img className="full-img" src = {currentUser?.profile_picture_url}/>
-                </div>
+            <NavLink to = {"/profile"} className={(navData)=>"bottom-nav-item " + (navData.isActive?"bottom-nav-item-active":"")}>
+                <PersonIcon />
             </NavLink>
         </nav>
     )

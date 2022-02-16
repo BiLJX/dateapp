@@ -14,9 +14,10 @@ import { AuthMiddleware } from "./middleware/auth-middleware"
 import AuthRoutes from "./routes/auth-routes"
 import UserRoutes from "./routes/user-routes"
 import DateRoutes from "./routes/dates-routes"
+import { ChatRoutes } from "./routes/chat-routes"
+import { PostRoutes } from "./routes/posts-routes"
 //side effects
 import "./fire"
-import { ChatRoutes } from "./routes/chat-routes"
 import { ActiveUsers } from "./realtime/ActiveUsers"
 import { getUid } from "./utils/uid"
 import { Chat } from "./realtime/Chat"
@@ -42,9 +43,11 @@ app.use("/api/auth",  AuthRoutes)
 app.use("/api/user", AuthMiddleware, UserRoutes)
 app.use("/api/date", AuthMiddleware, DateRoutes)
 app.use("/api/chat", AuthMiddleware, ChatRoutes)
+app.use("/api/posts", AuthMiddleware, PostRoutes)
 app.get("/*", (req, res) => {
 	res.sendFile(path.join(__dirname,"..", "build", "index.html"));
 });
+
 //connecting to database and starting server
 
 mongoose.connect(CONNECTION_URL).then(()=>{

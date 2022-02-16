@@ -6,4 +6,4 @@ export const isFullName = (full_name: string) => {
     return fn.length >= 3 && fn.length < 15 && ln.length < 15 && isName(fn) && isName(ln)
 }
 
-export const isDescription = (desc: string) => desc && desc.length>=10 && desc.length<101
+export const isDescription = (desc: string) => desc && desc.length>=10 && desc.length<301

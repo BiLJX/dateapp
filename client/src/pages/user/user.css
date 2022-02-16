@@ -15,12 +15,12 @@
   background-color: var(--image-background-alt);
   width: 100vw;
   height: 100vh;
-  background-size: auto 100%;
   top: 0;
   display: flex;
   justify-content: center;
   align-items: center;
   flex-direction: column;
+  background-size: cover;
 }
 
 .user-profile-name {
@@ -52,7 +52,7 @@
 
 .user-profile-contents-container {
   display: flex;
-  padding: 1.5rem 1rem 1rem 1rem;
+  padding: 1.5rem 0rem 1rem 0rem;
   z-index: 1;
   background-color: var(--profile-container-bg);
   flex-direction: column;
@@ -93,7 +93,7 @@
 .user-profile-about {
   display: flex;
   flex-direction: column;
-  padding: 0.5rem;
+  padding: 0.5rem 1rem;
 }
 
 .user-profile-info-container {

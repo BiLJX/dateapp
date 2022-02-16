@@ -9,6 +9,7 @@ import "./date-request.css";
 import { useDispatch } from "react-redux";
 import * as bannerActions from "../../action/banner";
 import bannerDispatch from "dispatcher/banner";
+import { NavLink } from "react-router-dom";
 
 function DateRequestPage(){
     const [requests, setRequests] = useState<UserProfile[]>([])
@@ -91,9 +92,9 @@ function DateRequestItem({data}: {data: UserProfile}){
     return(
         <div className="date-request-item">
             <div className="date-request-left">
-                <div className = "date-request-pfp">
+                <NavLink to = {"/user/"+data.uid} className = "date-request-pfp">
                     <img className="full-img" src = {data.profile_picture_url}/>
-                </div>
+                </NavLink>
             </div>
             <div className="date-request-right">
                 <div className="date-request-name">{data.first_name}</div>

@@ -6,6 +6,21 @@ import { uuid } from "./idgen"
 const storage = multer.memoryStorage() ;
 const st = admin.storage();
 
+
+interface CropInfoClient {
+  x: string,
+  y: string,
+  width: string,
+  height: string
+}
+
+interface CropInfo {
+  left: number,
+  top: number,
+  width: number,
+  height: number
+}
+
 const upload = multer({
   storage,
   fileFilter: (req, file, cb) => {
@@ -49,6 +64,23 @@ export async function uploadFile(buffer: Buffer, dir: string): Promise<string>{
     })
     blobStream.end(buffer)
   })
+}
+
+export async function cropPicture(buffer: Buffer, vals: CropInfoClient, resize: number[] = [1200, 2133]){
+  const cropInfo: CropInfo = {
+    left: parseFloat(vals.x ?? "0"),
+    top: parseFloat(vals.y ?? "0"),
+    width: parseFloat(vals.width ?? "0"),
+    height: parseFloat(vals.height ?? "0"),
+  }
+  const meta = await sharp(buffer).metadata();
+  if(!meta.height || !meta.width) throw new Error("invalid metadata");
+  cropInfo.top = Math.round((cropInfo.top / 100) * meta.height);
+  cropInfo.left = Math.round((cropInfo.left / 100) * meta.width);
+  cropInfo.width = Math.round((cropInfo.width / 100) * meta.width);
+  cropInfo.height = Math.round((cropInfo.height / 100) * meta.height);
+  const imgBuffer = await sharp(buffer).extract(cropInfo).resize(resize[0], resize[1]).jpeg().toBuffer();
+  return imgBuffer;
 }
 
 export { upload }

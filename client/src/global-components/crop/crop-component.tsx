@@ -13,8 +13,9 @@ import { TailSpin } from "react-loader-spinner"
 interface CropProps {
     image: File,
     type: "PFP"|"POST"|"COVER",
-    on_complete: (url: string) => any,
-    on_reject: () => any
+    on_complete: (data: any) => any,
+    on_reject: () => any,
+    aspectRatio?: number
 }
 
 export default function Crop(props: CropProps){
@@ -43,6 +44,9 @@ export default function Crop(props: CropProps){
                 }
                 bannerDispatch(dispatch, error(res.msg))
                 break;
+            case "POST":
+                props.on_complete(cropInfo);
+                break;
         }
         setIsLoading(false)
     }
@@ -59,7 +63,7 @@ export default function Crop(props: CropProps){
                 </header>
                 <Cropper 
                 image={image_url}
-                aspect={9/16}
+                aspect={props.aspectRatio || 9/16}
                 onCropChange = {setCrop}
                 crop = {crop}
                 zoom = {zoom}

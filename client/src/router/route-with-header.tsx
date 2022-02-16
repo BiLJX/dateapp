@@ -8,6 +8,7 @@ import ChatPage from "pages/chat/chat-page"
 import UserProfilePage from "pages/user/user-profile-page"
 import MainContainer from "global-components/containers/container-with-header"
 import SoonPage from "pages/soon/soon-page"
+import PicturePage from "pages/pictures/pictures-page"
 
 
 function RoutesWithHeader(){
@@ -19,7 +20,8 @@ function RoutesWithHeader(){
                 <Route path = "/notifications" element = {<SoonPage /> } />
                 <Route path = "/dates" element = {<DatePage/>} />
                 <Route path = "/message/:uid" element = {<ChatPage />} />
-                <Route path = "/library" element = { <LibraryPage />  }/>
+                <Route path = "/pictures" element = { <PicturePage /> } />
+                <Route path = "/profile" element = { <LibraryPage />  }/>
                 <Route path = "/user/:uid/*" element = {<UserProfilePage />} />
                 <Route path = "/requests/incoming" element = { <DateRequestPage /> } />
                 <Route path = "/requests/sent" element = {<SoonPage /> } />

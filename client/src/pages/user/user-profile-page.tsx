@@ -10,7 +10,7 @@ import EditIcon from '@mui/icons-material/Edit';
 import ImageIcon from '@mui/icons-material/Image';
 import "./user.css";
 import UserProfileAbout from "./user-profile-about";
-import UserProfilePicturesPage from "./user-profile-pictures";
+import UserProfilePicturesPage from "./pictures/user-profile-pictures";
 import FavoriteBorderIcon from '@mui/icons-material/FavoriteBorder';
 import BookmarkBorderIcon from '@mui/icons-material/BookmarkBorder';
 import BookmarkIcon from "@mui/icons-material/Bookmark"
@@ -32,7 +32,7 @@ export default function UserProfilePage(){
     const [opacity, setOpacity] = useState(1)
     const [isLoading, setIsLoading] = useState(true)
     const [blur, setBlur] = useState(0)
-    const [cover_img_url, setCover_img_url] = useState(currentUser?.cover_picture_url ||DefaultBackground )
+    const [cover_img_url, setCover_img_url] = useState("")
     const [cover_img, setCover_img] = useState<File>();
     const [cropper, setCropper] = useState(false)
    
@@ -44,6 +44,7 @@ export default function UserProfilePage(){
         const response = await getUserByUid(uid);
         if(response.success){
             setUser(response.data);
+            setCover_img_url(response.data.cover_picture_url ||DefaultBackground);
         }
         setIsLoading(false)
     }

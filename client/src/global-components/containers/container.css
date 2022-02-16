@@ -37,7 +37,7 @@
   justify-content: center;
   position: fixed;
   top: 0;
-  z-index: 20;
+  z-index: 1;
 }
 
 .main-header span {
@@ -46,7 +46,7 @@
   font-size: 1.2rem;
 }
 
-.main-header .back-arrow-container {
+.back-arrow-container {
   color: var(--text-main);
   position: absolute;
   left: 2%;
