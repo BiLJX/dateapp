@@ -13,6 +13,7 @@
 .picture-component-feed {
   position: relative;
   min-height: 100%;
+  scroll-snap-align: start;
 }
 
 .picture-component-animation {
@@ -50,10 +51,10 @@
 }
 
 .picture-component-pfp {
-  min-width: 40px;
-  min-height: 40px;
-  max-width: 40px;
-  max-height: 40px;
+  min-width: 35px;
+  min-height: 35px;
+  max-width: 35px;
+  max-height: 35px;
   background-color: var(--image-background);
   border-radius: 100%;
   overflow: hidden;
@@ -61,22 +62,25 @@
 }
 
 .picture-component-pfp img {
-  min-width: 40px;
-  min-height: 40px;
-  max-width: 40px;
-  max-height: 40px;
+  min-width: 35px;
+  min-height: 35px;
+  max-width: 35px;
+  max-height: 35px;
 }
 
 .picture-component-username {
   max-width: 100%;
   color: #fff;
-  font-weight: bold;
+  font-weight: 900;
   width: auto;
+  font-size: 1.3rem;
 }
 
 .picture-component-caption {
   color: #fff;
   padding: 1%;
+  font-weight: 500;
+  margin-top: 2%;
 }
 
 .picture-component-right {
@@ -89,6 +93,7 @@
   align-items: center;
   flex-direction: column;
   color: #fff;
+  font-weight: 500;
 }
 
 .picture-component-like-container svg {

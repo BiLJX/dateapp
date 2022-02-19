@@ -26,12 +26,10 @@ export default function PicturePage(){
         )
     }
     return(
-        <div className="pictures-page">
-            <div className = "pictures-container">
+        <div id="home-page">
                 {pictures.map((data, i)=>(
                     <PictureItem data = {data} key = {i} />
                 ))}
-            </div>
         </div>
     )
 }

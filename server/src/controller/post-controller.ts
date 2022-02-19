@@ -74,7 +74,7 @@ export const postPicture = async (req: Request, res: Response) => {
                 height: data.height
             }
             const cropped_img = await cropPicture(picture.buffer, area, [1200, 2133]);
-            const url = await uploadFile(cropped_img, `user/${user.uid}/pictures/`);
+            const url = await uploadFile(cropped_img, `user/${user.uid}/pictures/`, false);
             const post = new PicturePost({
                 caption: data.caption,
                 picture_id,
@@ -120,7 +120,7 @@ export const unLike = async (req: Request, res: Response) => {
     try{
         const post = await PicturePost.findOne({picture_id});
         if(!post) return JSONResponse.notFound()
-        if(!post.liked_by.includes(picture_id)) return JSONResponse.clientError("you havent liked the post");
+        if(!post.liked_by.includes(user.uid)) return JSONResponse.clientError("you havent liked the post");
         await PicturePost.findOneAndUpdate({ picture_id }, { $pull: { liked_by: user.uid } });
         JSONResponse.success()
     }catch(err){

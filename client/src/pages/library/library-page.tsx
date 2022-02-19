@@ -28,7 +28,6 @@ function LibraryPage(){
                         <LibraryItems name = "Saved Users" to = "/saved" noBorder Icon = {BookmarksIcon}/>
                     </div>
                     <div className = "library-items-container">
-                        <LibrarySwitch name = "Enable Snap Scroll" Icon = {WatchLaterIcon} onChange = {toggleSnapScroll} checked = {localStorage.getItem("snapScroll") === "true"} />
                         <LibrarySwitch disabled name = "Enable Dark Mode" noBorder Icon = {WatchLaterIcon} />
                     </div>
                 </div>

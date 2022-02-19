@@ -12,6 +12,7 @@ import { SaveButton, SendDateButton } from './buttons';
 import { HeartLoader } from 'global-components/loaders/loaders';
 import { NavLink } from 'react-router-dom';
 import FeedAd from 'global-components/ads/FeedAd';
+import createSnapScroll from 'utils/createSnapScroll';
 function HomePage(){
     const [loading, setLoading] = useState(true)
     const [feed, setFeed] = useState<UserProfile[]>([])
@@ -30,26 +31,14 @@ function HomePage(){
         loading && setLoading(false)
     }
     useEffect(()=>{
-        console.log("test2")
         hasMore && fetchFeed()
     }, [page])
     const onScroll = (e: any) => {
         const ratio = (e.target.scrollTop / e.target.scrollHeight)*100
         if(ratio > 60 && !isFetching){
-            
             setPage((page)=>page+1)
         }
     }
-    useEffect(()=>{
-        if(loading && !container_ref.current) return;
-        
-        if(localStorage.getItem("snapScroll") === "true") 
-            createScrollSnap(container_ref.current, {
-                snapDestinationY: "100%",
-                duration: 300,
-                threshold: 0.1,
-            },()=>{})
-    }, [container_ref, loading])
     if(loading) return <HeartLoader />
     return(
         <div id="home-page" ref = {container_ref} onScroll = {onScroll} >

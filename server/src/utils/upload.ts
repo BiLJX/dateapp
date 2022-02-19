@@ -47,8 +47,8 @@ async function removeFile(dir: string){
 }
 
 
-export async function uploadFile(buffer: Buffer, dir: string): Promise<string>{
-  await removeFile(dir)
+export async function uploadFile(buffer: Buffer, dir: string, replace = true): Promise<string>{
+  replace && await removeFile(dir)
   const filename = dir+uuid();
   const blob = st.bucket().file(filename);
   const blobStream = blob.createWriteStream();

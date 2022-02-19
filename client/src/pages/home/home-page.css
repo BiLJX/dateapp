@@ -21,6 +21,7 @@
   -webkit-box-align: center;
   -ms-flex-align: center;
   align-items: center;
+  scroll-snap-type: both mandatory;
 }
 
 .profile-item {
@@ -33,6 +34,7 @@
   background-repeat: no-repeat;
   max-width: 450px;
   background-size: 100%;
+  scroll-snap-align: start;
 }
 
 .profile-item-gradient {
