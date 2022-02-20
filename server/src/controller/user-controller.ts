@@ -6,7 +6,7 @@ import { User } from "../models/User";
 import JSONRESPONSE from "../utils/JSONReponse";
 import { upload, uploadFile } from "../utils/upload";
 import { isDescription, isFullName, isUserName } from "../utils/validator";
-
+import admin from "firebase-admin"
 //util
 
 export async function parseUser(_user: any, current_user:UserInterface): Promise<UserProfile>{
@@ -31,7 +31,10 @@ export async function parseCurrentUser(_current_user: UserInterface|undefined){
     const now = moment(new Date());
     const birthday = moment(_current_user.birthday);
     const years = moment.duration(now.diff(birthday)).asYears();
-    const date_requests = (await DateRequest.find({request_sent_to: user.uid}));
+    const task1 = DateRequest.find({request_sent_to: user.uid});
+    const task2 = admin.auth().getUser(_current_user.uid);
+    const [fuser, date_requests] = await Promise.all([task2, task1])
+    user.is_email_verified = fuser.emailVerified
     user.age = years;
     user.library = {
         has_date_requests: date_requests.length > 0,

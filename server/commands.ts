@@ -17,9 +17,9 @@ async function deleteUser(db: Db, uid: any){
 }
 
 client.connect().then(async ()=>{
-    const uid: any = "FrkouvLkANMpqA3HIfQokjn5UP62"
     const db = client.db("Dateapp");
-    await deleteUser(db, uid);
+    // await deleteUser(db, uid);
+    await db.collection("users").updateMany({}, { $unset: {is_email_verified: ""}})
     console.log("done");
 }).catch(err=>console.log(err))
 

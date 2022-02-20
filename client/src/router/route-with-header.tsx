@@ -9,6 +9,7 @@ import UserProfilePage from "pages/user/user-profile-page"
 import MainContainer from "global-components/containers/container-with-header"
 import SoonPage from "pages/soon/soon-page"
 import PicturePage from "pages/pictures/pictures-page"
+import VerifyAccount from "pages/profile/verify-account"
 
 
 function RoutesWithHeader(){
@@ -16,6 +17,7 @@ function RoutesWithHeader(){
         <MainContainer>
             <Routes>
                 <Route path = "/" element = {<HomePage /> } />
+                <Route path = "/profile/verify" element = {<VerifyAccount />} />
                 <Route path = "/search" element = {<SoonPage /> } />
                 <Route path = "/notifications" element = {<SoonPage /> } />
                 <Route path = "/dates" element = {<DatePage/>} />

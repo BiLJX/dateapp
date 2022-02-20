@@ -13,8 +13,9 @@ export interface UserInterface {
     dates: string[],
     is_admin: boolean,
     interests: string[],
-    saved_users: string[]
-    account_setuped: boolean
+    saved_users: string[],
+    account_setuped: boolean,
+    is_email_verified: boolean
 }
 
 

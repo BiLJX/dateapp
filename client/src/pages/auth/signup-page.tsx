@@ -55,7 +55,7 @@ function SignUpPage(){
         }
         dispatch(addCurrentUser(res.data));
         setIsLoading(false)
-        navigate("/profile/setup")
+        navigate("/profile/verify")
     }
     return(
         <AuthPageContainer>

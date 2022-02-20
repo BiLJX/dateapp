@@ -1,0 +1,25 @@
+.verify-account {
+  display: flex;
+  flex-direction: column;
+  padding: 8%;
+  font-size: 1.5rem;
+  color: var(--text-main);
+  height: 90vh;
+}
+
+.verify-text {
+  padding-top: 8%;
+}
+
+.underline {
+  text-decoration: underline;
+  cursor: pointer;
+}
+
+.verify-form {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  align-items: center;
+}

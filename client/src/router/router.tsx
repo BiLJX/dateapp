@@ -53,7 +53,10 @@ function AllRoutes(){
             if(res.redirect && !location.pathname.includes("/signup")){
                 return navigate(res.redirect_url)
             }
-            if(!res.data.account_setuped && !location.pathname.includes("/signup")){
+            if(!res.data.is_email_verified && !location.pathname.includes("/signup")){
+                navigate("/profile/verify")
+            }
+            else if(!res.data.account_setuped && !location.pathname.includes("/signup")){
                 navigate("/profile/setup")
             }
             dispatch(addCurrentUser(res.data))

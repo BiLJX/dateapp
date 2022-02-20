@@ -6,7 +6,7 @@ import { User } from "../models/User";
 export async function AuthMiddleware(req: Request, res: Response, next:NextFunction){
     const JSONResponse = new JSONRESPONSE(res);
     try{
-        const session = req.cookies.session;
+        const session = req.cookies.session || req.headers.session;
         if(!session) return JSONResponse.notAuthorized();
         const decoded = <any>jwt.decode(session);
         const uid = decoded.user_id

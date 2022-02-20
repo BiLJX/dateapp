@@ -4,12 +4,15 @@ import { User } from "../models/User";
 import JSONRESPONSE from "../utils/JSONReponse";
 import { isFullName, isUserName } from "../utils/validator";
 import admin from "firebase-admin"
-import { getAuth, signInWithEmailAndPassword } from "firebase/auth"
+import { getAuth, sendEmailVerification, signInWithEmailAndPassword } from "firebase/auth"
 import { app } from "../fire";
 import moment from "moment"
 import { parseCurrentUser, parseUser } from "./user-controller";
+import jwt from "jsonwebtoken"
+import sendVerificationEmail from "../utils/email";
 
 const auth = getAuth(app);
+
 export async function createAccount(req: Request, res: Response){
     const JSONReponse = new JSONRESPONSE(res)
     const client_data = <SignupData|undefined>req.body;
@@ -45,12 +48,14 @@ export async function createAccount(req: Request, res: Response){
             email: client_data.email?.toString()?.toLocaleLowerCase()?.trim(),
             password: client_data.password
         })
+
         userId = uid;
         data.uid = uid;
         
         const user = new User(data)
         await user.save()
-
+        const link = await admin.auth().generateEmailVerificationLink(user.email);
+        await sendVerificationEmail({name: data.first_name, email: client_data.email, link: link})
         //signing user
         const signed_user = (await signInWithEmailAndPassword(auth, client_data.email, client_data.password)).user;
         const idToken = await signed_user.getIdToken()
@@ -59,9 +64,9 @@ export async function createAccount(req: Request, res: Response){
         const sessionCookie = await admin.auth().createSessionCookie(idToken, {expiresIn});
         const options = {maxAge: expiresIn, httpOnly: false};
         res.cookie("session", sessionCookie, options);
-
         //success
         JSONReponse.success("created account",await parseCurrentUser(user.toJSON()))
+
     } catch (error: any) {
         console.log(error)
         await admin.auth().deleteUser(userId).catch(err=>console.log(err))
@@ -70,7 +75,6 @@ export async function createAccount(req: Request, res: Response){
 }
 
 export async function login(req: Request, res: Response){
-    
     const JSONReponse = new JSONRESPONSE(res)
     try{
         const { user } = await signInWithEmailAndPassword(auth, req.body?.email?.toString()?.trim(), req.body.password);
@@ -85,6 +89,52 @@ export async function login(req: Request, res: Response){
     }catch(err: any){
         console.log(err)
         JSONReponse.clientError("Either email or password does not match");
+    }
+}
+
+
+export const sendVerification = async (req: Request, res: Response) => {
+    const JSONResponse = new JSONRESPONSE(res);
+    try{
+        const session = req.cookies.session || req.headers.session;
+        if(!session) return JSONResponse.notAuthorized();
+        const decoded = <any>jwt.decode(session);
+        const uid = decoded.user_id
+        if(!uid) return JSONResponse.notAuthorized();
+        const user = await User.findOne({uid});
+        if(!user) return JSONResponse.notAuthorized();
+        const { emailVerified } = await admin.auth().getUser(user.uid);
+        if(emailVerified) return JSONResponse.clientError("already verified")
+        const link = await admin.auth().generateEmailVerificationLink(user.email);
+        await sendVerificationEmail({name: user.first_name, email: user.email, link});
+        JSONResponse.success("Verification has been sent to your email")
+    } catch(err){
+        console.log(err);
+        JSONResponse.serverError()
+    }
+}
+
+export const changeEmail = async (req: Request, res: Response) => {
+    const JSONResponse = new JSONRESPONSE(res);
+    try{
+        const session = req.cookies.session || req.headers.session;
+        if(!session) return JSONResponse.notAuthorized();
+        const decoded = <any>jwt.decode(session);
+        const uid = decoded.user_id
+        if(!uid) return JSONResponse.notAuthorized();
+        const user = await User.findOne({uid});
+        if(!user) return JSONResponse.notAuthorized();
+        const { emailVerified } = await admin.auth().getUser(user.uid);
+        if(emailVerified) return JSONResponse.clientError("already verified")
+        const email = req.body?.email?.toLocaleLowerCase().trim();
+        if(!email) return JSONResponse.clientError("no email provided");
+        const task1 = admin.auth().updateUser(user.uid, { email })
+        const task2 = User.findOneAndUpdate({uid}, { $set: { email } })
+        await Promise.all([task1, task2]);
+        JSONResponse.success("Email changed please click on resend verification");
+    } catch(err: any){
+        console.log(err);
+        JSONResponse.clientError(( "email already on use" ))
     }
 }
 

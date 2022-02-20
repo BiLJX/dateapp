@@ -26,6 +26,9 @@ function LoginPage(){
             return setIsLoading(false)
         }
         dispatch(addCurrentUser(res.data))
+        if(!res.data.is_email_verified){
+            return navigate("/profile/verify")
+        }
         if(!res.data.account_setuped){
             return navigate("/profile/setup")
         } 
