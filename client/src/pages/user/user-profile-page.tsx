@@ -1,5 +1,5 @@
 import React from "react"
-import { UserProfile } from "@shared/User";
+import { HobbySchema, UserProfile } from "@shared/User";
 import { getUserByUid } from "api/user-api";
 import { Header } from "global-components/containers/container-with-header";
 import { SpinLoader } from "../../global-components/loaders/loaders"
@@ -24,6 +24,8 @@ import { RootState } from "types/states";
 import DefaultBackground  from "./default.jpeg"
 import Crop from "global-components/crop/crop-component";
 import { addCurrentUser } from "action/user";
+import UserInterestsPage from "./interests/user-interests";
+import { getUserHobby } from "api/hobby-api";
 
 export default function UserProfilePage(){
     const currentUser = useSelector((state: RootState)=>state.current_user);
@@ -35,13 +37,22 @@ export default function UserProfilePage(){
     const [cover_img_url, setCover_img_url] = useState("")
     const [cover_img, setCover_img] = useState<File>();
     const [cropper, setCropper] = useState(false)
-   
+    const [hobbies, setHobbies] = useState<HobbySchema[]>([])
 
     const { uid } = useParams()
     const isViewersProfile = uid === currentUser?.uid;
     const getUser = async () => {
         if(!uid) return
+        if(isViewersProfile && currentUser){
+            setUser(currentUser);
+            setCover_img_url(currentUser.cover_picture_url ||DefaultBackground);
+            return setIsLoading(false)
+        }
         const response = await getUserByUid(uid);
+        const hobbies_res = await getUserHobby(uid);
+        if(hobbies_res.success){
+            setHobbies(hobbies_res.data)
+        }
         if(response.success){
             setUser(response.data);
             setCover_img_url(response.data.cover_picture_url ||DefaultBackground);
@@ -89,7 +100,7 @@ export default function UserProfilePage(){
     return(
         <>
             { cropper && <Crop image={ cover_img as File } type = "COVER" on_reject={()=>setCropper(false)} on_complete = {onUploaded} /> }
-            <Header className="profile-header" name={ user.username } goBackButton />
+            <Header className="profile-header" name={ user.username } goBackButton goBackTo={"/"} />
             <div className="user-profile-page">
                 <div className="user-profile-page-background"style={{backgroundImage: `url("${cover_img_url}")`, opacity: opacity, filter: `blur(${blur}px)`}}>
                     <div className = "user-profile-pfp">
@@ -107,6 +118,9 @@ export default function UserProfilePage(){
                         <NavLink end to = "" className={(state)=>!state.isActive?"user-profile-nav-item":"user-profile-nav-item user-profile-nav-item-active"}>
                             About
                         </NavLink>
+                        <NavLink to = "interests" className={(state)=>!state.isActive?"user-profile-nav-item":"user-profile-nav-item user-profile-nav-item-active"}>
+                            Interests
+                        </NavLink>
                         <NavLink to = "pictures" className={(state)=>!state.isActive?"user-profile-nav-item":"user-profile-nav-item user-profile-nav-item-active"}>
                             Pictures
                         </NavLink>
@@ -114,6 +128,7 @@ export default function UserProfilePage(){
                     <div className = "user-profile-contents-main">
                         <Routes>
                             <Route index={true} element = {<UserProfileAbout user = {user} />} />
+                            <Route path = "interests" element = {<UserInterestsPage user={user} />} />
                             <Route path = "pictures" element =  {<UserProfilePicturesPage />} />
                         </Routes>
                     </div>
@@ -255,9 +270,9 @@ function ChatButton({user}: {user: UserProfile}){
     }
     return(
         <div 
-        className = "user-profile-button" 
-        style = {{ backgroundColor: "var(--blue)" }} 
-        onClick = {()=>user.is_dating && navigate("/message/"+user.uid)}
+            className = "user-profile-button" 
+            style = {{ backgroundColor: "var(--blue)" }} 
+            onClick = {()=>user.is_dating && navigate("/message/"+user.uid)}
         >
             <SendOutlinedIcon />
         </div>

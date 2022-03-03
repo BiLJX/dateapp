@@ -58,13 +58,13 @@ function BottomNav(){
 }
 
 
-export function Header({className, name, goBackButton = false}: {className?: string, name: string, goBackButton?: boolean}){
+export function Header({className, name, goBackButton = false, goBackTo}: {className?: string, name: string, goBackButton?: boolean, goBackTo?: any}){
     const navigate = useNavigate();
     return(
         <header className={`main-header ${className || ""}`}>
             <span>{name}</span>
             {goBackButton && (
-                <div className="back-arrow-container" onClick = {()=>navigate(-1)}>
+                <div className="back-arrow-container" onClick = {()=>navigate(goBackTo||-1)}>
                     <ArrowBackIosIcon/>
                 </div>
             )}

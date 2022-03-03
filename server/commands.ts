@@ -6,6 +6,7 @@ const client = new MongoClient(uri, {
 
 });
 
+
 async function deleteUser(db: Db, uid: any){
     await db.collection("users").findOneAndDelete({uid});
     await admin.auth().deleteUser(uid)
@@ -19,7 +20,7 @@ async function deleteUser(db: Db, uid: any){
 client.connect().then(async ()=>{
     const db = client.db("Dateapp");
     // await deleteUser(db, uid);
-    await db.collection("users").updateMany({}, { $unset: {is_email_verified: ""}})
+    await db.collection("users").updateMany({}, { $rename: {"interests": "hobbies"}})
     console.log("done");
 }).catch(err=>console.log(err))
 

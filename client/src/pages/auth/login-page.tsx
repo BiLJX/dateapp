@@ -31,7 +31,7 @@ function LoginPage(){
         }
         if(!res.data.account_setuped){
             return navigate("/profile/setup")
-        } 
+        }
         navigate("/")
     }
     return(

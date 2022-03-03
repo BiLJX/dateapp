@@ -10,6 +10,7 @@ import MainContainer from "global-components/containers/container-with-header"
 import SoonPage from "pages/soon/soon-page"
 import PicturePage from "pages/pictures/pictures-page"
 import VerifyAccount from "pages/profile/verify-account"
+import HobbySearch from "pages/user/interests/search-hobby"
 
 
 function RoutesWithHeader(){
@@ -24,6 +25,7 @@ function RoutesWithHeader(){
                 <Route path = "/message/:uid" element = {<ChatPage />} />
                 <Route path = "/pictures" element = { <PicturePage /> } />
                 <Route path = "/profile" element = { <LibraryPage />  }/>
+                <Route path = "/hobbies" element = {<HobbySearch />} />
                 <Route path = "/user/:uid/*" element = {<UserProfilePage />} />
                 <Route path = "/requests/incoming" element = { <DateRequestPage /> } />
                 <Route path = "/requests/sent" element = {<SoonPage /> } />

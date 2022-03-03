@@ -12,7 +12,7 @@ export interface UserInterface {
     cover_picture_url: string,
     dates: string[],
     is_admin: boolean,
-    interests: string[],
+    hobbies: string[],
     saved_users: string[],
     account_setuped: boolean,
     is_email_verified: boolean
@@ -42,4 +42,11 @@ export interface UserEditClientData {
     description: string,
     birthday: string,
     gender: "male"|"female"|"other"|"hide",
+}
+
+
+export interface HobbySchema {
+    name: string,
+    type: "HOBBY"|"MUSIC",
+    does_user_have_this_hobby: boolean
 }

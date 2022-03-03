@@ -5,9 +5,20 @@ import { CurrentUserProfile, UserProfile } from "@shared/User";
 export interface RootState {
     banner: BannerState,
     current_user: CurrentUserProfile|null,
-    dates: UserDate[]
+    dates: UserDate[],
+    feed: FeedState,
+    scrollPosition: ScrollState
 }
 
+export interface ScrollState {
+    feed: number,
+    pictures: number
+}
+
+export interface FeedState {
+    data: UserProfile[],
+    current_page: number,
+}
 
 export interface BannerState {
     error_banner: boolean,

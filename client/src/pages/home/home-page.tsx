@@ -5,7 +5,7 @@ import createScrollSnap from 'scroll-snap'
 import PersonOutlineOutlinedIcon from '@mui/icons-material/PersonOutlineOutlined';
 import "./home-page.css"
 import { sendDateRequest } from '../../api/date-api';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import bannerDispatch from '../../dispatcher/banner';
 import  * as bannerActions from "../../action/banner"
 import { SaveButton, SendDateButton } from './buttons';
@@ -13,28 +13,45 @@ import { HeartLoader } from 'global-components/loaders/loaders';
 import { NavLink } from 'react-router-dom';
 import FeedAd from 'global-components/ads/FeedAd';
 import createSnapScroll from 'utils/createSnapScroll';
+import { RootState } from 'types/states';
+import { addFeed } from 'action/feed';
+import { saveFeedPosition } from 'action/scroll';
+import { getScrollPos, saveScrollPos } from 'utils/scrollPos';
 function HomePage(){
-    const [loading, setLoading] = useState(true)
-    const [feed, setFeed] = useState<UserProfile[]>([])
+    const redux = useSelector((state: RootState)=>state.feed);
+    const scrollPosition = getScrollPos("Feed")
+    const feed = redux.data
+    const dispatch = useDispatch()
+    const [loading, setLoading] = useState(feed.length === 0)
     const [hasMore, setHasMore] = useState(true);
-    const [page, setPage] = useState(1);
-    const [isFetching, setIsFetching] = useState(false)
-    const container_ref = useRef<any>(null)
+    const [page, setPage] = useState(redux.current_page);
+    const [isFetching, setIsFetching] = useState(false);
+    const container_ref = useRef<HTMLDivElement>(null)
+
     async function fetchFeed(){
+        
         setIsFetching(true)
         const res = await getUsers(page)
         if(res.success){
-            setFeed((prev)=>[...prev, ...res.data])
-            if(res.data.length < 5) setHasMore(false)
+            dispatch(addFeed([...feed, ...res.data], page+1))
+            if(res.data.length < 10) {
+                setHasMore(false)
+            }
         }
         setIsFetching(false)
         loading && setLoading(false)
+        
+        
     }
+    useEffect(()=>{
+        container_ref.current && container_ref.current.scrollTo({ top: scrollPosition })
+    }, [container_ref])
     useEffect(()=>{
         hasMore && fetchFeed()
     }, [page])
     const onScroll = (e: any) => {
         const ratio = (e.target.scrollTop / e.target.scrollHeight)*100
+        saveScrollPos("Feed", e.target.scrollTop)
         if(ratio > 60 && !isFetching){
             setPage((page)=>page+1)
         }

@@ -43,7 +43,7 @@ const UserSchema = new Schema<UserInterface>({
     birthday: {
         type: String,
     },
-    interests: {
+    hobbies: {
         type: [String],
         default: []
     },

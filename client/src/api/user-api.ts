@@ -7,7 +7,7 @@ export async function getUserByUid(uid: string){
 }
 
 export async function getUsers(page: number){
-    const res = (await axios.get("/api/user/?page="+page)).data;
+    const res = (await axios.get("/api/user/feed?page="+page)).data;
     return <ApiResponse<UserProfile[]>>res
 }
 

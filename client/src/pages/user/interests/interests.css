@@ -1,0 +1,115 @@
+.user-intersts-page {
+  display: flex;
+  flex-direction: column;
+  padding: 0.5rem 1rem;
+}
+
+.user-interests-container-header {
+  padding-bottom: 1rem;
+  color: var(--text-main2);
+}
+
+.user-interests-item-container {
+  width: 100%;
+  display: flex;
+  flex-wrap: wrap;
+  max-width: 100%;
+}
+
+.user-interests-bubble-container {
+  padding: 0rem 1rem;
+  height: 2rem;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: var(--pink);
+  color: #fff;
+  font-weight: 500;
+  border-radius: 20px;
+  margin-right: 2%;
+  margin-bottom: 2%;
+  cursor: pointer;
+}
+
+.user-interests-bubble-container.remove {
+  background-color: transparent;
+  border: 1px solid var(--border1);
+}
+
+.user-interests-bubble-container svg {
+  font-size: 2rem;
+}
+
+.hobby-search-page {
+  display: flex;
+  backdrop-filter: none;
+  background-color: var(--background);
+  flex-direction: column;
+  padding: 2% 5% 0 5%;
+  width: 100%;
+  position: absolute;
+}
+
+.hobby-search-header {
+  display: flex;
+  height: var(--header-height);
+  align-items: center;
+  position: fixed;
+  width: 90%;
+  top: 0;
+  background-color: var(--background);
+  border: none;
+}
+
+.hobby-search-bar {
+  display: flex;
+  width: 80%;
+  height: 75%;
+  background-color: var(--input-background);
+  border-radius: 10px;
+}
+
+.hobby-search-bar-icon {
+  width: 3rem;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  color: var(--input-text-color);
+}
+
+.hobby-search-bar input {
+  flex: 1;
+  background-color: transparent;
+  font-size: 1rem;
+}
+
+.hobby-search-bar input::placeholder {
+  color: var(--input-text-color);
+}
+
+.hobby-search-cancel {
+  flex: 1;
+  text-align: center;
+  color: var(--text-main);
+  font-weight: bold;
+  text-decoration: underline;
+  cursor: pointer;
+}
+
+.hobby-item-container {
+  display: flex;
+  flex-direction: column;
+  padding-top: var(--header-height);
+}
+
+.hobby-search-item {
+  display: flex;
+  color: var(--text-main);
+  font-weight: bold;
+  margin-top: 0.5rem;
+  margin-bottom: 0.5rem;
+}
+
+.hobby-search-item-name {
+  width: 80%;
+}

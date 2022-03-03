@@ -35,7 +35,7 @@ export async function parseCurrentUser(_current_user: UserInterface|undefined){
     const task2 = admin.auth().getUser(_current_user.uid);
     const [fuser, date_requests] = await Promise.all([task2, task1])
     user.is_email_verified = fuser.emailVerified
-    user.age = years;
+    user.age = Math.floor(years);
     user.library = {
         has_date_requests: date_requests.length > 0,
         date_requests_count: date_requests.length,
@@ -75,7 +75,7 @@ export async function getUsers(req: Request, res: Response){
 export async function getCurrentUser(req: Request, res: Response){
     const JSONReponse = new JSONRESPONSE(res)
     const user = res.locals.currentUser;
-    JSONReponse.success("success", await parseCurrentUser(user?.toJSON()))
+    JSONReponse.success("success", await parseCurrentUser(user))
 }
 
 
