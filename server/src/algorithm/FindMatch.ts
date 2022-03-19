@@ -26,7 +26,6 @@ export class Match {
     public calcScore(){
         const users = this.users;
         const current_user = this.currentUser
-        console.log(current_user)
         for(let user of users){
             user.age = this.getAge(user.birthday)
             current_user.age = this.getAge(current_user.birthday)

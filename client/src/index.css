@@ -7,21 +7,22 @@
 
 :root {
   --dark-pink: #553344;
-  --pink: #cc3355;
-  --light-pink: #dd6688;
+  --pink: #e3054b;
+  --light-pink: #e34e69;
   --gray-blue: #ccccdd;
   --blue: #6699aa;
   --blue-disabled: #e7e8e9a2;
-  --black: #121015;
-  --dark-gray: #2e2c34;
-  --dark-gray-alt: #1f1d24;
+  --black: #0d0c10;
+  --dark-gray: #1b191f;
+  --dark-gray-alt: #1d1c22;
   --gray: #59565f;
   --light-gray: #98989d;
   --white-alt: #dcdce7;
   --white: #fff;
   --max-width: 450px;
-  --disabled-bg: #c4949f;
+  --disabled-bg: #f77694;
   --header-height: 8vh;
+  --toastify-color-dark: var(--dark-gray) !important;
 }
 
 .dark-theme {
@@ -55,6 +56,15 @@
 body {
   background: var(--background);
   overflow-x: hidden;
+}
+.Toastify__toast-icon {
+  min-width: 20px;
+  max-width: 50px;
+  width: auto !important;
+}
+
+.Toastify__toast-icon svg {
+  width: 20px;
 }
 
 input,

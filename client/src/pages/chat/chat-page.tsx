@@ -45,6 +45,7 @@ export default function ChatPage(props: any){
     }
     const sendMessage = (text: string) => {
         if(!uid) return;
+        main.current?.scrollTo(0, main.current.scrollHeight);
         const message: TextMessageData = {
             message_id: uuid(),
             is_sent_by_viewer: true,
@@ -62,7 +63,7 @@ export default function ChatPage(props: any){
             setData((prev)=>(prev && {...prev, has_seen: false}))
         })
         
-        scrollDown(true)
+       
     }
 
     const getChatMessages = async (page: number = 1) => {
@@ -121,7 +122,7 @@ export default function ChatPage(props: any){
         <div className = "chat-page">
             <ChatHeader data= {data} uid = {uid||""} />
             <section>
-                <div className='chat-page-messages'  style={ { backgroundImage: `linear-gradient(180deg,rgba(18, 16, 21, 0.79) 0%,#121015 76.91%), url('${data.chat_background}')` } }>
+                <div className='chat-page-messages'  style={ { backgroundImage: `linear-gradient(180deg,rgba(18, 16, 21, 0.79) 0%, var(--background) 76.91%), url('${data.chat_background}')` } }>
                     <div onScroll={handleScroll} ref = {main} style={{display: "flex", maxHeight: "100%", flexDirection: "column", overflowY: "scroll", overflowX: "hidden"}}>
                         <div className='chat-page-message-container'>
                             {hasMore&&<div className='chat-page-messages-loader'><TailSpin height={30} width = {30} color = "var(--text-main2)"/></div>}
@@ -132,7 +133,7 @@ export default function ChatPage(props: any){
                                 </Fragment>
                             ))
                             }
-                            { isTyping&& <span style = {{color: "var(--text-main2)", marginLeft: "1rem"}}>typing...</span> }
+                            { isTyping&& <span style = {{color: "var(--text-main2)", marginLeft: "1rem", marginTop: "1rem"}}>typing...</span> }
                         </div>
                     </div>
                 </div>

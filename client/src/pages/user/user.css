@@ -103,13 +103,15 @@
 }
 
 .user-profile-about-headings {
-  color: var(--text-main2);
-  font-size: 1.2rem;
+  color: var(--light-pink);
+  font-size: 1.1rem;
+  padding: 0.5em 0;
 }
 
 .user-profile-about-text {
-  color: var(--text-secondary);
-  font-weight: 600;
+  color: var(--text-main2);
+  font-weight: 400;
+  font-size: 1.1rem;
 }
 
 .user-profile-button {

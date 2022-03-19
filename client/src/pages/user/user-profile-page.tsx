@@ -220,6 +220,8 @@ function DateButton({user}: {user: UserProfile}){
     }
 
     const unDate = async () => {
+        const user_res = window.confirm("Do you want to unmatch?");
+        if(!user_res) return;
         setIsDating(false);
         const res = await dateApi.unDateUser(user.uid);
         if(!res.success){

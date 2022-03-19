@@ -30,7 +30,7 @@ export default function HobbySearch(){
                         </div>
                         <input type= "text" placeholder="Search for hobbies" onChange={(e)=>search(e.target.value)}/>
                     </div>
-                    <div className="hobby-search-cancel" onClick={()=>navigate("/user/"+user?.uid)}>
+                    <div className="hobby-search-cancel" onClick={()=>navigate(-1)}>
                         Done
                     </div>
                 </header>
@@ -66,7 +66,7 @@ function HobbyItem({hobby}: {hobby: HobbySchema}){
         <div className='hobby-search-item'>
             <div className = "hobby-search-item-name">{hobby.name}</div>
             <div className = "hobby-search-item-button">
-                {added?<Bubble onClick={remove} className='remove'>Remove</Bubble>:<Bubble onClick = {add}>Add</Bubble>}
+                {added?<Bubble  onClick={remove} className='remove'>Remove</Bubble>:<Bubble onClick = {add}>Add</Bubble>}
             </div>
         </div>
     )

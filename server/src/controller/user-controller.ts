@@ -7,6 +7,7 @@ import JSONRESPONSE from "../utils/JSONReponse";
 import { upload, uploadFile } from "../utils/upload";
 import { isDescription, isFullName, isUserName } from "../utils/validator";
 import admin from "firebase-admin"
+import { uuid } from "../utils/idgen";
 //util
 
 export async function parseUser(_user: any, current_user:UserInterface): Promise<UserProfile>{
@@ -15,8 +16,9 @@ export async function parseUser(_user: any, current_user:UserInterface): Promise
     const now = moment(new Date());
     const birthday = moment(_user.birthday);
     const years = moment.duration(now.diff(birthday)).asYears();
-    const has_current_sent_date_request = await DateRequest.findOne({request_sent_by: current_user.uid, request_sent_to: user.uid});
-    const has_this_user_sent_date_request = await DateRequest.findOne({request_sent_by: user.uid, request_sent_to: current_user.uid});
+    const task1 = DateRequest.findOne({request_sent_by: current_user.uid, request_sent_to: user.uid});
+    const task2 = DateRequest.findOne({request_sent_by: user.uid, request_sent_to: current_user.uid});
+    const [has_current_sent_date_request, has_this_user_sent_date_request] = await Promise.all([task1, task2])
     user.age = Math.floor(years);
     user.is_dating = user.dates.includes(current_user.uid);
     user.has_saved = current_user.saved_users.includes(user.uid);
@@ -167,4 +169,15 @@ export const unsaveUser = async(req: Request, res: Response) => {
     }
 }
 
-
+export const changePersonality = async (req: Request, res: Response) => {
+    const JSONReponse = new JSONRESPONSE(res);
+    const currentUser: UserInterface = res.locals.currentUser;
+    try {
+        const type = parseInt(req.body.type||"0");
+        if(type > 17) return JSONReponse.clientError("invalid type");
+        await User.findOneAndUpdate({uid: currentUser.uid}, { $set: { personality_type: type } } );
+        JSONReponse.success()
+    } catch (error) {
+        console.log(error)
+    }
+}

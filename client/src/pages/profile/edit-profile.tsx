@@ -9,11 +9,12 @@ import { FormInput, FormSubmit, FormTextArea, SelectOption } from "../../pages/a
 import { RootState } from "types/states";
 import { useEffect, useState } from "react";
 import { updateProfile } from "../../api/user-api";
-import bannerDispatcher from "../../dispatcher/banner"
+import bannerDispatcher, { toastError } from "../../dispatcher/banner"
 import * as bannerActions from "../../action/banner"
 import { addCurrentUser } from "../../action/user";
-import { useNavigate } from "react-router-dom";
+import { NavLink, useNavigate } from "react-router-dom";
 import { ContainerWithHeader, Header } from "../../global-components/containers/container-with-header"
+import { getPersonalityByType } from "api/personality-api";
 const options = [
     {
         option: "Gender-hidden",
@@ -63,7 +64,7 @@ function EditProfile({isSetup = false}: {isSetup?: boolean}){
             gender
         }, pfp_img)
         if(!res.success) {
-            bannerDispatcher(dispatch, bannerActions.error(res.msg))
+            toastError(res.msg)
             setLoading(false)
             return 
         }
@@ -104,6 +105,7 @@ function EditProfile({isSetup = false}: {isSetup?: boolean}){
                     {isSetup && <FormInput onChange={(val)=>setBirthDay(val)} name = "birthday" placeholder="Birthday" Icon={DateRangeOutlinedIcon} type="date" value={birthday}/>}
                     <SelectOption onChange={(val)=>setGender(val)} data = {options} select_name="gender" Icon = {WcOutlinedIcon} value={gender}/>
                     <FormTextArea onChange={(val)=>setDescription(val)} name = "description" placeholder="Describe yourself (min-10 max-300)" Icon={PersonOutlineIcon} value = {description}/>
+                    <NavLink to = "/personality" className="form-input-container">Change Personality Type ({getPersonalityByType(current_user?.personality_type || 0)?.name})</NavLink>
                     <FormSubmit isLoading={loading} value="SAVE" className="no-margin" disabled = {disabled}/>
                 </form>
             </ContainerWithHeader>

@@ -47,6 +47,10 @@ const UserSchema = new Schema<UserInterface>({
         type: [String],
         default: []
     },
+    personality_type: {
+        type: Number,
+        default: 0
+    },
     saved_users: {
         type: [String],
         default: []
@@ -74,6 +78,6 @@ const UserSchema = new Schema<UserInterface>({
 },
 {timestamps: true}
 )
-
+UserSchema.index({username: "text", description: "text", full_name: "text"})
 const User = model<UserInterface>("User", UserSchema)
 export { User }

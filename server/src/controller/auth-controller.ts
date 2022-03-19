@@ -110,7 +110,7 @@ export const sendVerification = async (req: Request, res: Response) => {
         JSONResponse.success("Verification has been sent to your email")
     } catch(err){
         console.log(err);
-        JSONResponse.serverError()
+        JSONResponse.clientError("verification has been sent, please try later")
     }
 }
 

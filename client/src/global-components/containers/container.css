@@ -93,7 +93,7 @@
 }
 
 .bottom-nav-item-active svg {
-  color: var(--pink);
+  color: var(--text-main);
 }
 
 .nav-profile {

@@ -1,7 +1,6 @@
 import { UserProfile } from '@shared/User'
 import { getUsers } from 'api/user-api'
 import { Fragment, useEffect, useRef, useState } from 'react'
-import createScrollSnap from 'scroll-snap'
 import PersonOutlineOutlinedIcon from '@mui/icons-material/PersonOutlineOutlined';
 import "./home-page.css"
 import { sendDateRequest } from '../../api/date-api';
@@ -12,10 +11,8 @@ import { SaveButton, SendDateButton } from './buttons';
 import { HeartLoader } from 'global-components/loaders/loaders';
 import { NavLink } from 'react-router-dom';
 import FeedAd from 'global-components/ads/FeedAd';
-import createSnapScroll from 'utils/createSnapScroll';
 import { RootState } from 'types/states';
 import { addFeed } from 'action/feed';
-import { saveFeedPosition } from 'action/scroll';
 import { getScrollPos, saveScrollPos } from 'utils/scrollPos';
 function HomePage(){
     const redux = useSelector((state: RootState)=>state.feed);

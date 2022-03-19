@@ -82,6 +82,7 @@
   -webkit-line-clamp: 2;
   line-clamp: 2;
   font-size: 2.5vh;
+  white-space: pre-wrap;
 }
 
 .profile-item-buttons {
@@ -141,7 +142,7 @@
 }
 
 .profile-item-heart {
-  background-color: var(--light-pink);
+  background-color: var(--pink);
   border: none;
   position: relative;
 }

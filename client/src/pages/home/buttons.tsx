@@ -6,12 +6,13 @@ import DoneIcon from '@mui/icons-material/Done';
 import FavoriteBorderOutlinedIcon from '@mui/icons-material/FavoriteBorderOutlined';
 import { cancelDateRequest, sendDateRequest, unDateUser, acceptDateRequest } from '../../api/date-api';
 import { useDispatch } from 'react-redux';
-import bannerDispatch from '../../dispatcher/banner';
+import bannerDispatch, { toastError, toastSuccess } from '../../dispatcher/banner';
 import  * as bannerActions from "../../action/banner";
 import BookmarkBorderIcon from '@mui/icons-material/BookmarkBorder';
 import BookmarkIcon from '@mui/icons-material/Bookmark';
 import { saveUser, unsaveUser } from 'api/user-api';
 import HeartBrokenOutlinedIcon from '@mui/icons-material/HeartBrokenOutlined';
+import { toast } from "react-toastify"
 export function SendDateButton({data}: {data: UserProfile}){
     const [hasSentDate, setHasSentDate] = useState(data.has_current_sent_date_request)
     const [hasUserSentDate, setHasUserSentDate] = useState(data.has_this_user_sent_date_request)
@@ -21,41 +22,43 @@ export function SendDateButton({data}: {data: UserProfile}){
     const sendDate = async () => {
         setHasSentDate(true)
         const res = await sendDateRequest(data.uid);
-        if(res.success) return bannerDispatch(dispatch, bannerActions.success(res.msg));
-        bannerDispatch(dispatch, bannerActions.error(res.msg))
+        if(res.success) return toastSuccess(res.msg);
+        toastError(res.msg)
         setHasSentDate(false)
     }
     const acceptDate = async () => {
         setIsLoading(true)
         const res = await acceptDateRequest(data.uid);
         if(res.success){ 
-            bannerDispatch(dispatch, bannerActions.success(res.msg));
+            toastSuccess(res.msg)
             setIsDating(true)
             return
         }
-        bannerDispatch(dispatch, bannerActions.error(res.msg))
+        toastError(res.msg)
         setIsLoading(false)
     }
     const cancelDate = async () =>{
         setHasSentDate(false)
         const res = await cancelDateRequest(data.uid);
         if(res.success){ 
-            bannerDispatch(dispatch, bannerActions.success(res.msg));
+            toastSuccess(res.msg)
             return
         }
-        bannerDispatch(dispatch, bannerActions.error(res.msg))
+        toastError(res.msg)
         setHasSentDate(true)
     }
     const unDate = async () => {
+        const user_res = window.confirm("Are you sure you want to unmatch this user?")
+        if(!user_res) return;
         setIsDating(false);
         setHasSentDate(false);
         setHasUserSentDate(false);
         const res = await unDateUser(data.uid);
         if(!res.success){
-            bannerDispatch(dispatch, bannerActions.error(res.msg));
+            toastError(res.msg);
             return setIsDating(true);
         }
-        bannerDispatch(dispatch, bannerActions.success(res.msg));
+        toastSuccess(res.msg)
     }
 
     //if they are dating
@@ -109,7 +112,7 @@ export function SaveButton({data}: {data: UserProfile}){
         if(res.success){
             return;
         }
-        bannerDispatch(dispatch, bannerActions.error(res.msg));
+        toastError(res.msg);
         return setHasSaved(false)
     }
     const unSave = async () => {
@@ -118,7 +121,7 @@ export function SaveButton({data}: {data: UserProfile}){
         if(res.success){
             return;
         }
-        bannerDispatch(dispatch, bannerActions.error(res.msg));
+        toastError(res.msg);
         return setHasSaved(true)
     }
     if(hasSaved){

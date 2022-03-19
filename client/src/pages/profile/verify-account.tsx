@@ -17,7 +17,8 @@ export default function VerifyAccount(){
     const navigate = useNavigate()
     const [email, setEmail] = useState(user?.email||"");
     const [disabled, setDisabled] = useState(false);
-    const [loading, setIsLoading] = useState(false)
+    const [loading, setIsLoading] = useState(false);
+    const [sent, setSent] = useState(false)
     const handleSubmit = async (e: any) => {
         e.preventDefault();
         setIsLoading(true)
@@ -31,7 +32,9 @@ export default function VerifyAccount(){
         return setIsLoading(false)
     }
     const resend = async () => {
+        setSent(true);
         const res = await sendVerification();
+        
         if(res.success){
             return bannerDispatch(dispatch, success(res.msg))
         }
@@ -55,9 +58,20 @@ export default function VerifyAccount(){
         <>
             <Header name = "Verify Account" />
             <ContainerWithHeader className="verify-account">
-                <div className = "verify-text">
-                    Your'e email is not verified, please verify it by going on your mail and refresh this page. If you cant find the verification mail, please check your spam inbox. or <span className = "underline" onClick = {resend}>resend</span>
-                </div>
+                {
+                    sent?(
+                        <div className = "verify-text">
+                            Verification has been sent, if you cannot find verification in your mail please check your "spam mails".
+                            Once you verify, refresh this page. 
+                        </div>
+                    ):(
+                        <div className = "verify-text">
+                            Your'e email is not verified, please verify it by going on your mail and refresh this page. If you cant find the verification mail, please check your spam inbox. or 
+                            <span className = "underline" onClick = {resend}> resend</span>
+                        </div>
+                    )
+                }
+
                 <form className = "verify-form" onSubmit={handleSubmit}>
                     <FormInput 
                     Icon={MailOutlineIcon} 

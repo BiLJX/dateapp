@@ -6,7 +6,7 @@ import "./auth-page.css"
 import { loginWithEmailAndPassowrd } from "../../api/auth-api";
 import { useDispatch } from "react-redux"
 import * as bannerActions from "../../action/banner"
-import bannerDispatch from "../../dispatcher/banner";
+import bannerDispatch, { toastError, toastSuccess } from "../../dispatcher/banner";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom"
 import { addCurrentUser } from "../../action/user"
@@ -22,7 +22,7 @@ function LoginPage(){
         const password = input.password.value
         const res = await loginWithEmailAndPassowrd(email, password)
         if(!res.success) {
-            bannerDispatch(dispatch, bannerActions.error(res.msg))
+            toastError(res.msg)
             return setIsLoading(false)
         }
         dispatch(addCurrentUser(res.data))
@@ -32,6 +32,7 @@ function LoginPage(){
         if(!res.data.account_setuped){
             return navigate("/profile/setup")
         }
+        toastSuccess("Logged in as "+res.data.username)
         navigate("/")
     }
     return(

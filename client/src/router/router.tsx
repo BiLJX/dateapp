@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react"
-import { BrowserRouter as Router, Route, Routes, useNavigate, useLocation } from "react-router-dom"
+import { BrowserRouter as Router, Route, Routes, useNavigate, useLocation, NavLink } from "react-router-dom"
 import { getCurrentUser } from "../api/auth-api"
 import { useDispatch, useSelector } from "react-redux"
 import LoginPage from "../pages/auth/login-page"
@@ -13,23 +13,50 @@ import { io } from "socket.io-client"
 import { RootState } from "types/states"
 import bannerDispatch from "dispatcher/banner"
 import { openTextBanner } from "action/banner"
+import { toast } from "react-toastify"
+import { TextMessageData } from "@shared/Chat"
 
 const temp: any = null
+
+const Noti = ({data}:{data: TextMessageData}) =>{ 
+        console.log(data)
+        return (
+            <div style = {{display: "flex", flexDirection: "column"}}>
+                <span>{data?.author_data?.username}</span>
+                <span>{data?.text}</span>
+            </div>
+         )
+}
+
 function AppRouter(){
     const [chat, setChat] = useState<Chat>(temp)
     const currentUser = useSelector((state: RootState)=>state.current_user);
     const location = useLocation()
     const dispatch = useDispatch() 
+    const navigate = useNavigate()
     useEffect(()=>{
         if(currentUser){
             setChat(new Chat(io()))
         }
     }, [currentUser])
     useEffect(()=>{
-        if(chat){
+        if(chat && !location.pathname.includes("message") && !location.pathname.includes("dates")){
             chat.onMessage(data=>{
-                console.log(data)
-                bannerDispatch(dispatch, openTextBanner(data))
+                toast((
+                    <NavLink to = {"/message/"+data.sender_uid} style = {{display: "flex", flexDirection: "column"}}>
+                        <span className="banner-username">{data.author_data?.username}</span>
+                        <span className="banner-message ellipsis">{data.text}</span>
+                    </NavLink>
+                 ), {
+                    icon: () =>  (
+                        <NavLink to = {"/message/"+data.sender_uid} style={{borderRadius: "100%", width: "50px", height: "50px", overflow: "hidden" }}>
+                            <img className="full-img" src={data.author_data?.profile_pic_url}/>
+                        </NavLink>
+                    ),
+                    theme: "dark",
+                    draggable: true,
+                    draggablePercent: 20
+                })
             })
             return(()=>chat.offMessage())
         }

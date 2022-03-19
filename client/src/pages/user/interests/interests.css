@@ -30,6 +30,16 @@
   margin-bottom: 2%;
   cursor: pointer;
 }
+.user-interests-bubble-container-cross {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-left: 0.2rem;
+  cursor: pointer;
+}
+.user-interests-bubble-container-cross svg {
+  font-size: 1.5rem !important;
+}
 
 .user-interests-bubble-container.remove {
   background-color: transparent;

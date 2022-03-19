@@ -28,6 +28,8 @@
   border-radius: 10px;
   display: flex;
   margin: 11px 0;
+  justify-content: center;
+  align-items: center;
 }
 
 .no-margin {

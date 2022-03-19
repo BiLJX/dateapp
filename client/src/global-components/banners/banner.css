@@ -38,13 +38,12 @@
 }
 
 .banner-username {
-  width: 70%;
   color: var(--text-main);
   font-weight: bold;
 }
 
 .banner-message {
-  width: 70%;
+  width: 70vw;
   color: var(--text-main2);
 }
 

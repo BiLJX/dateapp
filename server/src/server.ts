@@ -70,11 +70,13 @@ mongoose.connect(CONNECTION_URL).then(async ()=>{
         if(!token) return;
         const uid = getUid(token);
         if(!uid) return;
+        socket.join(uid);
         activeUsers.addUser({ uid, socket_id: socket.id })
         chat.updateActiveUsers(activeUsers);
         chat.dmMessage(socket);
         socket.on("disconnect", ()=>{
-            activeUsers.removeUser(socket.id)
+            activeUsers.removeUser(socket.id);
+            socket.leave(uid)
             chat.updateActiveUsers(activeUsers);
         })
     })

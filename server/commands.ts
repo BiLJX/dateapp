@@ -20,7 +20,7 @@ async function deleteUser(db: Db, uid: any){
 client.connect().then(async ()=>{
     const db = client.db("Dateapp");
     // await deleteUser(db, uid);
-    await db.collection("users").updateMany({}, { $rename: {"interests": "hobbies"}})
+    await db.collection("messages").deleteMany({receiver_uid: "QKvVempNLwWp6To4yHzP5EFthe42", sender_uid: "b0TPuqUCI5PTibRKd6QlHAGyOYn1"})
     console.log("done");
 }).catch(err=>console.log(err))
 

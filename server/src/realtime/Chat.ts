@@ -54,7 +54,7 @@ export class Chat {
                     username: sender_user?.username
                 }
                 if(receiver_socketId){
-                    socket.to(receiver_socketId).emit("message", message_data);
+                    socket.to(receiver_uid).emit("message", message_data);
                 }
                 socket.emit("sent", { ...message_data, is_sent_by_viewer: true });
             } catch (error) {
@@ -66,7 +66,7 @@ export class Chat {
            try {
                await UserDate.findOneAndUpdate({ uid: sender_uid, date_user_uid: uid  }, { $set: { has_read_message: true } });
                const receiver_socketId: string|undefined = this.activeUsers.getUserByUid(uid);
-               if(receiver_socketId) socket.to(receiver_socketId).emit("seen", sender_uid);
+               if(receiver_socketId) socket.to(uid).emit("seen", sender_uid);
            } catch (error) {
                console.log(error)
            }
@@ -75,7 +75,7 @@ export class Chat {
         socket.on("typing", data=>{
             try{
                 const receiver_socketId: string|undefined = this.activeUsers.getUserByUid(data.receiver_uid);
-                if(receiver_socketId) socket.to(receiver_socketId).emit("typing", { state: data.state, sender_uid });
+                if(receiver_socketId) socket.to(data.receiver_uid).emit("typing", { state: data.state, sender_uid });
             }catch(err){
                 console.log(err)
             }

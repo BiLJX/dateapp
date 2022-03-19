@@ -11,7 +11,7 @@ import { SignupData } from "@shared/Auth";
 import { signUpWithEmailAndPassword } from "api/auth-api";
 import { useDispatch } from "react-redux";
 import * as actionBanner from "../../action/banner"
-import bannerDispatch from "../../dispatcher/banner";
+import bannerDispatch, { toastError, toastSuccess } from "../../dispatcher/banner";
 import { addCurrentUser } from "action/user";
 function SignUpPage(){
     const [isLoading, setIsLoading] = useState(false)
@@ -49,10 +49,11 @@ function SignUpPage(){
         }
         const res = await signUpWithEmailAndPassword(data)
         if(!res.success){
-            bannerDispatch(dispatch, actionBanner.error(res.msg)) 
+            toastError(res.msg)
             setIsLoading(false)
             return 
         }
+        toastSuccess("Created your accout")
         dispatch(addCurrentUser(res.data));
         setIsLoading(false)
         navigate("/profile/verify")

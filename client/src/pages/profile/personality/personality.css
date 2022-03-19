@@ -1,0 +1,55 @@
+.personality-items-container {
+  display: flex;
+  flex-direction: column;
+  width: 100vw;
+  padding: 1rem;
+}
+
+.personality-item {
+  display: flex;
+  margin-bottom: 1rem;
+}
+.personality-item-left {
+  width: 90%;
+}
+
+.personality-item-title {
+  font-size: 1.3rem;
+  font-weight: bold;
+  padding: 0.4em 0;
+  color: var(--text-main2);
+}
+
+.personality-item-description {
+  width: 100%;
+  color: var(--text-secondary);
+}
+.personality-item-right {
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+  width: 3rem;
+  color: var(--text-main2);
+  margin-left: auto;
+}
+
+.personality-item-right svg {
+  font-size: 2rem;
+}
+
+.personality-container {
+  display: flex;
+  flex-direction: column;
+  padding-left: 1rem;
+  padding-right: 1rem;
+}
+
+.personality-container-heading {
+  padding: 2rem 0;
+  color: var(--text-main);
+}
+
+.personality-container-description {
+  color: var(--text-main2);
+  font-size: 1.2rem;
+}

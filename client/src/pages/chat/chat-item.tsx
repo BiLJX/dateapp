@@ -34,7 +34,7 @@ export function CurrentUserChatItem({message_obj, has_seen}: {message_obj: Viewe
     }
     return(
         <article className = "chat-item">
-            <div style={{marginLeft: "auto"}} className = "chat-message-container chat-message-container-right">
+            <div style={{marginLeft: "auto", maxWidth: "80%"}} className = "chat-message-container chat-message-container-right">
                 {message_obj.text}
             </div>
             <span className = "sending"/>

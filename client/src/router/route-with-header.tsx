@@ -11,6 +11,8 @@ import SoonPage from "pages/soon/soon-page"
 import PicturePage from "pages/pictures/pictures-page"
 import VerifyAccount from "pages/profile/verify-account"
 import HobbySearch from "pages/user/interests/search-hobby"
+import PersonalitiesPage from "pages/profile/personality/personalities-page"
+import Personality from "pages/profile/personality/personality"
 
 
 function RoutesWithHeader(){
@@ -31,6 +33,8 @@ function RoutesWithHeader(){
                 <Route path = "/requests/sent" element = {<SoonPage /> } />
                 <Route path = "/profile/edit" element = {<EditProfile />} />
                 <Route path = "/profile/setup" element = {<EditProfile isSetup />} />
+                <Route path = "/personality" element = {<PersonalitiesPage />} />
+                <Route path = "/personality/:type" element = {<Personality />} />
                 <Route path = "/saved" element = {<SoonPage /> } />
             </Routes>
         </MainContainer>

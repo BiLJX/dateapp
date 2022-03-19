@@ -1,7 +1,7 @@
 import { Router } from "express";
 import { getFeed } from "../controller/feed-controller";
 import { uploadCover, uploadPfp } from "../controller/image-controller";
-import { editUserProfile, getCurrentUser, getUserByUid, getUsers, saveUser, unsaveUser } from "../controller/user-controller";
+import { changePersonality, editUserProfile, getCurrentUser, getUserByUid, getUsers, saveUser, unsaveUser } from "../controller/user-controller";
 
 const router = Router()
 
@@ -19,6 +19,7 @@ router.patch("/edit", editUserProfile)
 router.put("/:uid/save", saveUser)
 router.put("/edit/pfp", uploadPfp)
 router.put("/edit/cover", uploadCover)
+router.put("/edit/personality", changePersonality)
 
 
 //delete routes
