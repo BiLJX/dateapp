@@ -25,6 +25,7 @@ import { HobbyRouter } from "./routes/hobby-routes"
 //side effects
 import "./fire"
 import { redis_client } from "./redis-client"
+import Notify from "./realtime/Notify"
 
 //constants
 const CONNECTION_URL = "mongodb+srv://billjesh:Billu456@cluster0.vyegx.mongodb.net/Dateapp?retryWrites=true&w=majority"
@@ -63,6 +64,8 @@ mongoose.connect(CONNECTION_URL).then(async ()=>{
     const io = new Server(server);
     const activeUsers = new ActiveUsers()
     const chat = new Chat(activeUsers)
+    const notification = new Notify(io)
+    app.locals.notification = notification;
     io.on("connection", (socket)=>{
         const cookief = socket.handshake.headers.cookie||"";
         const cookies = cookie.parse(cookief) 
@@ -74,6 +77,7 @@ mongoose.connect(CONNECTION_URL).then(async ()=>{
         activeUsers.addUser({ uid, socket_id: socket.id })
         chat.updateActiveUsers(activeUsers);
         chat.dmMessage(socket);
+
         socket.on("disconnect", ()=>{
             activeUsers.removeUser(socket.id);
             socket.leave(uid)

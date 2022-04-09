@@ -11,10 +11,10 @@ import { chatContext } from "context/Realtime"
 import Chat from "realtime/Chat"
 import { io } from "socket.io-client"
 import { RootState } from "types/states"
-import bannerDispatch from "dispatcher/banner"
-import { openTextBanner } from "action/banner"
+import { NotificationInterface } from "@shared/Notify"
 import { toast } from "react-toastify"
 import { TextMessageData } from "@shared/Chat"
+import { BannerContent, BannerPfpIcon } from "global-components/banners/banner"
 
 const temp: any = null
 
@@ -32,27 +32,25 @@ function AppRouter(){
     const [chat, setChat] = useState<Chat>(temp)
     const currentUser = useSelector((state: RootState)=>state.current_user);
     const location = useLocation()
-    const dispatch = useDispatch() 
-    const navigate = useNavigate()
     useEffect(()=>{
         if(currentUser){
-            setChat(new Chat(io()))
+            const socket = io();
+            setChat(new Chat(socket));
+            socket.on("notification", (data: NotificationInterface)=>{
+                toast((<BannerContent sender_name={data.sender_data.name} text = {data.text} to = "/requests/incoming" type={2} />), {
+                    icon: () =>(<BannerPfpIcon  to = {"/requests/incoming"} pfp = {data.sender_data?.profile_picture_url} />),
+                    theme: "dark",
+                    draggable: true,
+                    draggablePercent: 20
+                })
+            })
         }
     }, [currentUser])
     useEffect(()=>{
         if(chat && !location.pathname.includes("message") && !location.pathname.includes("dates")){
             chat.onMessage(data=>{
-                toast((
-                    <NavLink to = {"/message/"+data.sender_uid} style = {{display: "flex", flexDirection: "column"}}>
-                        <span className="banner-username">{data.author_data?.username}</span>
-                        <span className="banner-message ellipsis">{data.text}</span>
-                    </NavLink>
-                 ), {
-                    icon: () =>  (
-                        <NavLink to = {"/message/"+data.sender_uid} style={{borderRadius: "100%", width: "50px", height: "50px", overflow: "hidden" }}>
-                            <img className="full-img" src={data.author_data?.profile_pic_url}/>
-                        </NavLink>
-                    ),
+                toast(<BannerContent sender_name={data.author_data?.username||""} text = {data.text} to = {"/message/"+data.sender_uid} type={1} />, {
+                    icon: () => <BannerPfpIcon  to = {"/message/"+data.sender_uid} pfp = {data.author_data?.profile_pic_url||""} />,
                     theme: "dark",
                     draggable: true,
                     draggablePercent: 20

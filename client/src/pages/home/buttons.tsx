@@ -22,7 +22,7 @@ export function SendDateButton({data}: {data: UserProfile}){
     const sendDate = async () => {
         setHasSentDate(true)
         const res = await sendDateRequest(data.uid);
-        if(res.success) return toastSuccess(res.msg);
+        if(res.success) return;
         toastError(res.msg)
         setHasSentDate(false)
     }
@@ -30,7 +30,6 @@ export function SendDateButton({data}: {data: UserProfile}){
         setIsLoading(true)
         const res = await acceptDateRequest(data.uid);
         if(res.success){ 
-            toastSuccess(res.msg)
             setIsDating(true)
             return
         }
@@ -41,7 +40,6 @@ export function SendDateButton({data}: {data: UserProfile}){
         setHasSentDate(false)
         const res = await cancelDateRequest(data.uid);
         if(res.success){ 
-            toastSuccess(res.msg)
             return
         }
         toastError(res.msg)
@@ -58,7 +56,6 @@ export function SendDateButton({data}: {data: UserProfile}){
             toastError(res.msg);
             return setIsDating(true);
         }
-        toastSuccess(res.msg)
     }
 
     //if they are dating

@@ -70,15 +70,6 @@ function HomePage(){
 }
 
 export function ProfileItem({data}: {data: UserProfile}){
-    const [hasSentDate, setHasSentDate] = useState(data.has_current_sent_date_request)
-    const dispatch = useDispatch()
-    const sendDate = async () => {
-        setHasSentDate(true)
-        const res = await sendDateRequest(data.uid);
-        if(res.success) return bannerDispatch(dispatch, bannerActions.success(res.msg));
-        bannerDispatch(dispatch, bannerActions.error(res.msg))
-        setHasSentDate(false)
-    }
     return(
         <article className="profile-item" style={{backgroundImage: `url('${data.profile_picture_url}')`}}>
             <div className = "profile-item-gradient">

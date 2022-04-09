@@ -171,7 +171,6 @@ function Input({send, uid}: {send: (text: string,)=>any, uid: string}){
     const chat = useContext(chatContext)
     const container_ref = useRef<any>(null)
     const timeOutFunction = () => {
-        console.log("not typing")
         setTyping(false)
         chat?.sendTyping(uid, false);
     }

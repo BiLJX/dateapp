@@ -1,14 +1,13 @@
+import { NotificationInterface } from "@shared/Notify";
 import { UserInterface } from "@shared/User";
 import { Request, Response } from "express";
 import { DateRequest } from "../models/DateRequest";
 import { UserDate } from "../models/Dates";
 import { User } from "../models/User";
 import { ActiveUsers } from "../realtime/ActiveUsers";
+import Notification from "../realtime/Notify";
 import JSONRESPONSE from "../utils/JSONReponse";
 import { parseUser } from "./user-controller";
-
-
-
 
 async function acceptUser(request_sent_by: string, request_sent_to: string){
     await DateRequest.findOneAndDelete({request_sent_by, request_sent_to});
@@ -77,8 +76,9 @@ export const pendingRequests = async (req: Request, res: Response) => {
 export const requestDate = async (req: Request, res: Response)=>{
     const JSONReponse = new JSONRESPONSE(res)
     const request_sent_to = req.params.uid;
-    const request_sent_by = res.locals.uid
-    const current_user: UserInterface = res.locals.currentUser
+    const request_sent_by = res.locals.uid;
+    const current_user: UserInterface = res.locals.currentUser;
+    const notification: Notification = req.app.locals.notification;
     try{
         if(current_user.dates.includes(request_sent_to)) return JSONReponse.clientError("already dating")
         const hasUserSentBefore = (await DateRequest.findOne({request_sent_to, request_sent_by}))?.toJSON()
@@ -95,7 +95,21 @@ export const requestDate = async (req: Request, res: Response)=>{
         if(!user) return JSONReponse.notFound("user not found");
         const dateRequest = new DateRequest({request_sent_to, request_sent_by});
         await dateRequest.save();
-        JSONReponse.success("date request sent")
+        JSONReponse.success("date request sent");
+        const notification_data: NotificationInterface = {
+            type: "DATE_REQUEST",
+            has_read: false,
+            text: "sent you date request",
+            sender: current_user.uid,
+            receiver: request_sent_to,
+            content: null,
+            sender_data: {
+                name: current_user.username,
+                profile_picture_url: current_user.profile_picture_url,
+                uid: current_user.uid
+            }
+        }
+        notification.dateRequest(notification_data);
     }catch(err){
         console.log(err)
         JSONReponse.serverError()
