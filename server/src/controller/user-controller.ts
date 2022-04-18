@@ -8,6 +8,7 @@ import { upload, uploadFile } from "../utils/upload";
 import { isDescription, isFullName, isUserName } from "../utils/validator";
 import admin from "firebase-admin"
 import { uuid } from "../utils/idgen";
+import { currentUserAggregation } from "../aggregation/user-aggregation";
 //util
 
 export async function parseUser(_user: any, current_user:UserInterface): Promise<UserProfile>{
@@ -33,17 +34,9 @@ export async function parseCurrentUser(_current_user: UserInterface|undefined){
     const now = moment(new Date());
     const birthday = moment(_current_user.birthday);
     const years = moment.duration(now.diff(birthday)).asYears();
-    const task1 = DateRequest.find({request_sent_to: user.uid});
-    const task2 = admin.auth().getUser(_current_user.uid);
-    const [fuser, date_requests] = await Promise.all([task2, task1])
+    const fuser = await admin.auth().getUser(_current_user.uid);
     user.is_email_verified = fuser.emailVerified
     user.age = Math.floor(years);
-    user.library = {
-        has_date_requests: date_requests.length > 0,
-        date_requests_count: date_requests.length,
-        has_notifications: false,
-        notifications_count: 0
-    }
     return user
 }
 
@@ -76,8 +69,8 @@ export async function getUsers(req: Request, res: Response){
 
 export async function getCurrentUser(req: Request, res: Response){
     const JSONReponse = new JSONRESPONSE(res)
-    const user = res.locals.currentUser;
-    JSONReponse.success("success", await parseCurrentUser(user))
+    const user = await User.aggregate(currentUserAggregation(res.locals.uid)).exec();
+    JSONReponse.success("success", await parseCurrentUser(user[0]))
 }
 
 
@@ -139,13 +132,12 @@ export async function editUserProfile(req: Request, res: Response){
 
 export const saveUser = async (req: Request, res: Response) => {
     const JSONReponse = new JSONRESPONSE(res);
-    const currentUser: UserInterface = res.locals.currentUser;
+    const c_uid: string = res.locals.uid;
     const uid = req.params.uid;
-    if(currentUser.saved_users.includes(uid)) return JSONReponse.clientError("you have already saved");
     try{
         const hasUser = await User.findOne({uid});
         if(!hasUser) return JSONReponse.notFound("user not found");
-        await User.findOneAndUpdate({uid: currentUser.uid}, { $push: { saved_users: uid } });
+        await User.findOneAndUpdate({uid: c_uid}, { $push: { saved_users: uid } });
         JSONReponse.success("saved")
     }catch(err){
         console.log(err)
@@ -157,11 +149,10 @@ export const saveUser = async (req: Request, res: Response) => {
 
 export const unsaveUser = async(req: Request, res: Response) => {
     const JSONReponse = new JSONRESPONSE(res);
-    const currentUser: UserInterface = res.locals.currentUser;
+    const c_uid: string = res.locals.uid;
     const uid = req.params.uid;
     try{
-        if(!currentUser.saved_users.includes(uid)) return JSONReponse.clientError("you had not saved the user");
-        await User.findOneAndUpdate({uid: currentUser.uid}, { $pull: { saved_users: uid } });
+        await User.findOneAndUpdate({uid: c_uid}, { $pull: { saved_users: uid } });
         JSONReponse.success("unsaved")
     }catch(err){
         console.log(err)

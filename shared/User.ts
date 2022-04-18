@@ -29,7 +29,7 @@ export interface UserProfile extends UserInterface{
 }
 
 export interface CurrentUserProfile extends UserProfile {
-    library: {
+    badges: {
         has_date_requests: boolean,
         has_notifications: boolean,
         notifications_count: number,

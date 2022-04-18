@@ -10,6 +10,7 @@ import { useDispatch } from "react-redux";
 import * as bannerActions from "../../action/banner";
 import bannerDispatch from "dispatcher/banner";
 import { NavLink } from "react-router-dom";
+import { useBadges } from "hooks/useDateRequest";
 
 function DateRequestPage(){
     const [requests, setRequests] = useState<UserProfile[]>([])
@@ -63,6 +64,7 @@ function DateRequestItem({data}: {data: UserProfile}){
     const [renderNull, setRenderNull] = useState(false)
     const [isLoadingAccept, setIsLoadingAccept] = useState(false);
     const [isLoadingReject, setIsLoadingReject] = useState(false);
+    const badges = useBadges()
     const dispatch = useDispatch()
     const acceptRequest = async () => {
         setIsLoadingAccept(true);
@@ -71,6 +73,7 @@ function DateRequestItem({data}: {data: UserProfile}){
             bannerDispatch(dispatch, bannerActions.success("Accepted"))
             setRenderNull(true)
             setIsLoadingAccept(false)
+            badges.decreaseDateRequest()
             return;
         }
         setIsLoadingAccept(false)
@@ -83,6 +86,7 @@ function DateRequestItem({data}: {data: UserProfile}){
             bannerDispatch(dispatch, bannerActions.success("Rejected"))
             setRenderNull(true)
             setIsLoadingReject(false)
+            badges.decreaseDateRequest()
             return;
         }
         setIsLoadingReject(false)

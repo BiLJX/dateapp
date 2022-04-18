@@ -2,6 +2,7 @@ import { Request, Response, NextFunction } from "express";
 import JSONRESPONSE from "../utils/JSONReponse";
 import jwt from "jsonwebtoken"
 import { User } from "../models/User";
+import { addBagesCond, addBagesCount, addDateRequest } from "../aggregation/user-aggregation";
 
 export async function AuthMiddleware(req: Request, res: Response, next:NextFunction){
     const JSONResponse = new JSONRESPONSE(res);
@@ -11,7 +12,9 @@ export async function AuthMiddleware(req: Request, res: Response, next:NextFunct
         const decoded = <any>jwt.decode(session);
         const uid = decoded.user_id
         if(!uid) return JSONResponse.notAuthorized();
+        
         const user = await User.findOne({uid})
+        
         if(!user) return JSONResponse.notAuthorized();
         req.app.locals.currentUser = user;
         req.app.locals.uid = uid;

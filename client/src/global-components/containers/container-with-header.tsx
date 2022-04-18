@@ -47,10 +47,11 @@ function BottomNav(){
                 <FavoriteIcon />
             </NavLink>
             <NavLink to = "/pictures" className={(navData)=>"bottom-nav-item " + (navData.isActive?"bottom-nav-item-active":"")}>
-                { /*currentUser?.library?.has_date_requests || currentUser?.library.has_notifications ? <span className = "alert-icon"></span> : null*/}
+                
                 <AutoAwesomeMotionIcon />
             </NavLink>
             <NavLink to = {"/profile"} className={(navData)=>"bottom-nav-item " + (navData.isActive?"bottom-nav-item-active":"")}>
+                {currentUser?.badges?.has_date_requests || currentUser?.badges.has_notifications ? <span className = "alert-icon"></span> : null}
                 <PersonIcon />
             </NavLink>
         </nav>

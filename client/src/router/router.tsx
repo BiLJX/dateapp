@@ -15,6 +15,7 @@ import { NotificationInterface } from "@shared/Notify"
 import { toast } from "react-toastify"
 import { TextMessageData } from "@shared/Chat"
 import { BannerContent, BannerPfpIcon } from "global-components/banners/banner"
+import { useBadges } from "hooks/useDateRequest"
 
 const temp: any = null
 
@@ -32,6 +33,8 @@ function AppRouter(){
     const [chat, setChat] = useState<Chat>(temp)
     const currentUser = useSelector((state: RootState)=>state.current_user);
     const location = useLocation()
+    const dispatch = useDispatch()
+    const badges = useBadges()
     useEffect(()=>{
         if(currentUser){
             const socket = io();
@@ -43,6 +46,7 @@ function AppRouter(){
                     draggable: true,
                     draggablePercent: 20
                 })
+                badges.increaseDateRequest()
             })
         }
     }, [currentUser])

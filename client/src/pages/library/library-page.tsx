@@ -23,13 +23,14 @@ function LibraryPage(){
                     <div className = "library-items-container">
                         <LibraryItems name="Your Profile" to = {"/user/"+user?.uid} Icon={PersonIcon} />
                         <LibraryItems name="Notifications" to = "/notifications" Icon={NotificationsIcon} />
-                        <LibraryItems name = "Date Requests" to = "/requests/incoming" Icon = {PersonAddAlt1Icon} />
+                        <LibraryItems name = "Date Requests" to = "/requests/incoming" Icon = {PersonAddAlt1Icon} active_count = {user?.badges.date_requests_count} />
                         <LibraryItems name = "Sent Date Requests" to = "/requests/sent" Icon = {WatchLaterIcon} />
                         <LibraryItems name = "Saved Users" to = "/saved" noBorder Icon = {BookmarksIcon}/>
-                    </div>
-                    <div className = "library-items-container">
                         <LibrarySwitch disabled name = "Enable Dark Mode" noBorder Icon = {WatchLaterIcon} />
                     </div>
+                    </div>
+                    <div className = "library-items-container">
+                        
                 </div>
             </ContainerWithHeader>
         </>
@@ -61,15 +62,24 @@ function LibrarySwitch({disabled = false, noBorder = false, name, Icon, onChange
     )
 }
 
-function LibraryItems({noBorder = false, name, Icon, to}: {noBorder?: boolean, name: string, Icon: any, to: string}){
+interface LibraryItemsProps {
+    noBorder?: boolean, 
+    name: string, 
+    Icon: any, 
+    to: string, 
+    active_count?: number
+}
+
+function LibraryItems({noBorder = false, name, Icon, to, active_count}: LibraryItemsProps){
     return(
-        <NavLink to = {to} className="library-item" style={noBorder?{borderBottom: "none" }:{}}>
+        <NavLink to = {to} className={active_count? "library-item library-item-active" :"library-item"} style={noBorder?{borderBottom: "none" }:{}}>
             <div className = "library-item-icon">
                 { <Icon /> }
             </div>
             <div className = "library-item-title">
                 { name }
             </div>
+            <div className="library-item-count">{active_count?active_count:null}</div>
             <div className = "library-item-forward">
                 <ArrowForwardIosIcon />
             </div>
