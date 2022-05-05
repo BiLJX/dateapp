@@ -40,13 +40,25 @@ function AppRouter(){
             const socket = io();
             setChat(new Chat(socket));
             socket.on("notification", (data: NotificationInterface)=>{
-                toast((<BannerContent sender_name={data.sender_data.name} text = {data.text} to = "/requests/incoming" type={2} />), {
-                    icon: () =>(<BannerPfpIcon  to = {"/requests/incoming"} pfp = {data.sender_data?.profile_picture_url} />),
-                    theme: "dark",
-                    draggable: true,
-                    draggablePercent: 20
-                })
-                badges.increaseDateRequest()
+                switch(data.type){
+                    case "DATE_REQUEST":
+                        toast((<BannerContent sender_name={data.sender_data.name} text = {data.text} to = "/requests/incoming" type={2} />), {
+                            icon: () =>(<BannerPfpIcon  to = {"/requests/incoming"} pfp = {data.sender_data?.profile_picture_url} />),
+                            theme: "dark",
+                            draggable: true,
+                            draggablePercent: 20
+                        })
+                        badges.increaseDateRequest();
+                        break;
+                    case "DATE_ACCEPTED":
+                        toast((<BannerContent sender_name={data.sender_data.name} text = {data.text} to = "/notifications" type={2} />), {
+                            icon: () =>(<BannerPfpIcon  to = {"/notifications"} pfp = {data.sender_data?.profile_picture_url} />),
+                            theme: "dark",
+                            draggable: true,
+                            draggablePercent: 20
+                        })
+                }
+               
             })
         }
     }, [currentUser])

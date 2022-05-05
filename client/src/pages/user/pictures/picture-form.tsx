@@ -48,7 +48,7 @@ export default function PictureForm(props: PictureFormProps){
     }
     return(
         <>
-            { showCrop && <Crop aspectRatio={9/16} type='POST' image={img as File} on_reject = {()=>setShowCrop(false)} on_complete = {onComplete} /> }
+            { showCrop && <Crop aspectRatio={1/1} type='POST' image={img as File} on_reject = {()=>setShowCrop(false)} on_complete = {onComplete} /> }
             <div className="overlay picture-form-overlay">
                 <header className = "picture-form-header">
                     <CloseIcon onClick = {props.close} />

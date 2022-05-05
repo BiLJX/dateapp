@@ -13,6 +13,7 @@ import VerifyAccount from "pages/profile/verify-account"
 import HobbySearch from "pages/user/interests/search-hobby"
 import PersonalitiesPage from "pages/profile/personality/personalities-page"
 import Personality from "pages/profile/personality/personality"
+import NotificationPage from "pages/notifications/notification-page"
 
 
 function RoutesWithHeader(){
@@ -22,7 +23,7 @@ function RoutesWithHeader(){
                 <Route path = "/" element = {<HomePage /> } />
                 <Route path = "/profile/verify" element = {<VerifyAccount />} />
                 <Route path = "/search" element = {<SoonPage /> } />
-                <Route path = "/notifications" element = {<SoonPage /> } />
+                <Route path = "/notifications" element = {<NotificationPage /> } />
                 <Route path = "/dates" element = {<DatePage/>} />
                 <Route path = "/message/:uid" element = {<ChatPage />} />
                 <Route path = "/pictures" element = { <PicturePage /> } />

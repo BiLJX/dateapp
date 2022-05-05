@@ -10,7 +10,7 @@ import moment from "moment"
 import { parseCurrentUser, parseUser } from "./user-controller";
 import jwt from "jsonwebtoken"
 import sendVerificationEmail from "../utils/email";
-
+import {currentUserAggregation} from "../aggregation/user-aggregation"
 const auth = getAuth(app);
 
 export async function createAccount(req: Request, res: Response){
@@ -83,9 +83,10 @@ export async function login(req: Request, res: Response){
         const expiresIn = 60*60*24*14*1000;
         const sessionCookie = await admin.auth().createSessionCookie(idToken, {expiresIn});
         const options = {maxAge: expiresIn, httpOnly: false};
-        const currentUser = <any>(await User.findOne({uid: user.uid }))?.toJSON();
+        const uid = user.uid;
+        const currentUser = await User.aggregate(currentUserAggregation(uid)).exec();
         res.cookie("session", sessionCookie, options);
-        JSONReponse.success("logged in", await parseCurrentUser(currentUser));
+        JSONReponse.success("logged in", await parseCurrentUser(currentUser[0]));
     }catch(err: any){
         console.log(err)
         JSONReponse.clientError("Either email or password does not match");

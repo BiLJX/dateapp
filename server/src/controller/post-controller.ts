@@ -73,7 +73,7 @@ export const postPicture = async (req: Request, res: Response) => {
                 width: data.width,
                 height: data.height
             }
-            const cropped_img = await cropPicture(picture.buffer, area, [1200, 2133]);
+            const cropped_img = await cropPicture(picture.buffer, area, [1080, 1080]);
             const url = await uploadFile(cropped_img, `user/${user.uid}/pictures/`, false);
             const post = new PicturePost({
                 caption: data.caption,

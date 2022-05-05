@@ -1,6 +1,7 @@
 
 type NotificationTypes = "DATE_REQUEST"|"LIKED_POST"|"DATE_ACCEPTED"
 export interface NotificationInterface<T = null>{
+    notification_id: string
     sender: string,
     receiver: string,
     type:NotificationTypes,

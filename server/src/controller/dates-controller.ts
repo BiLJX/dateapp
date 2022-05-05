@@ -6,6 +6,7 @@ import { UserDate } from "../models/Dates";
 import { User } from "../models/User";
 import { ActiveUsers } from "../realtime/ActiveUsers";
 import Notification from "../realtime/Notify";
+import { uuid } from "../utils/idgen";
 import JSONRESPONSE from "../utils/JSONReponse";
 import { parseUser } from "./user-controller";
 
@@ -97,6 +98,7 @@ export const requestDate = async (req: Request, res: Response)=>{
         await dateRequest.save();
         JSONReponse.success("date request sent");
         const notification_data: NotificationInterface = {
+            notification_id: uuid(),
             type: "DATE_REQUEST",
             has_read: false,
             text: "sent you date request",
@@ -138,12 +140,28 @@ export const acceptDate = async (req:  Request, res: Response) => {
     const JSONReponse = new JSONRESPONSE(res);
     const currentUser: UserInterface = res.locals.currentUser;
     const uid = req.params.uid;
+    const notify: Notification = req.app.locals.notification;
     try {
         if(!uid) return JSONReponse.clientError("something went wrong");
         const date_req = await DateRequest.findOne({ request_sent_by:uid, request_sent_to: currentUser.uid });
         if(!date_req) return JSONReponse.clientError("user has not send request")
         await acceptUser(uid, currentUser.uid);
-        JSONReponse.success("accepted date")
+        JSONReponse.success("accepted date");
+        const notificationData: NotificationInterface = {
+            notification_id: uuid(),
+            type: "DATE_ACCEPTED",
+            text: `accepted your date request`,
+            receiver: uid,
+            sender: uid,
+            has_read: false,
+            content: null,
+            sender_data: {
+                name: currentUser.username,
+                profile_picture_url: currentUser.profile_picture_url,
+                uid: currentUser.uid
+            }
+        }
+        await notify.dateAccept(notificationData);
     } catch (error) {
         console.log(error)
         JSONReponse.serverError()
