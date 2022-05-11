@@ -8,7 +8,7 @@ import DoneIcon from '@mui/icons-material/Done';
 import "./date-request.css";
 import { useDispatch } from "react-redux";
 import * as bannerActions from "../../action/banner";
-import bannerDispatch from "dispatcher/banner";
+import bannerDispatch, { toastError, toastSuccess } from "dispatcher/banner";
 import { NavLink } from "react-router-dom";
 import { useBadges } from "hooks/useDateRequest";
 
@@ -70,27 +70,27 @@ function DateRequestItem({data}: {data: UserProfile}){
         setIsLoadingAccept(true);
         const res = await acceptDateRequest(data.uid);
         if(res.success){
-            bannerDispatch(dispatch, bannerActions.success("Accepted"))
+            toastSuccess("Accepted");
             setRenderNull(true)
             setIsLoadingAccept(false)
             badges.decreaseDateRequest()
             return;
         }
         setIsLoadingAccept(false)
-        bannerDispatch(dispatch, bannerActions.error(res.msg))
+        toastError(res.msg)
     }
     const rejectRequest = async () => {
         setIsLoadingReject(true);
         const res = await rejectDateRequest(data.uid);
         if(res.success){
-            bannerDispatch(dispatch, bannerActions.success("Rejected"))
+            toastSuccess("Success");
             setRenderNull(true)
             setIsLoadingReject(false)
             badges.decreaseDateRequest()
             return;
         }
-        setIsLoadingReject(false)
-        bannerDispatch(dispatch, bannerActions.error(res.msg))
+        setIsLoadingReject(false);
+        toastError(res.msg);
     }
     if(renderNull) return <></>
     return(

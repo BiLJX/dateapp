@@ -1,5 +1,5 @@
 
-type NotificationTypes = "DATE_REQUEST"|"LIKED_POST"|"DATE_ACCEPTED"
+type NotificationTypes = "DATE_REQUEST"|"LIKED_POST"|"DATE_ACCEPTED"|"UNMATCHED"
 export interface NotificationInterface<T = null>{
     notification_id: string
     sender: string,
@@ -12,5 +12,6 @@ export interface NotificationInterface<T = null>{
         name: string,
         profile_picture_url: string,
         uid: string
-    }
+    },
+    createdAt?: Date
 }

@@ -152,7 +152,7 @@ export const acceptDate = async (req:  Request, res: Response) => {
             type: "DATE_ACCEPTED",
             text: `accepted your date request`,
             receiver: uid,
-            sender: uid,
+            sender: currentUser.uid,
             has_read: false,
             content: null,
             sender_data: {
@@ -174,9 +174,11 @@ export const rejectDate = async (req: Request, res: Response) => {
     const JSONReponse = new JSONRESPONSE(res);
     const currentUser: UserInterface = res.locals.currentUser;
     const uid = req.params.uid;
+
     try{
         await DateRequest.findOneAndDelete({request_sent_by: uid, request_sent_to: currentUser.uid});
-        JSONReponse.success()
+        JSONReponse.success();
+        
     }catch(error){
         console.log(error)
         JSONReponse.serverError()
@@ -189,6 +191,7 @@ export const unDate = async (req: Request, res: Response) => {
     const JSONReponse = new JSONRESPONSE(res);
     const currentUser: UserInterface = res.locals.currentUser;
     const uid = req.params.uid;
+    const notify: Notification = req.app.locals.notification;
     if(!currentUser.dates.includes(uid)) return JSONReponse.clientError("the user does not include in your dates")
     try{
         const task1 = User.findOneAndUpdate({uid}, { $pull: { dates: currentUser.uid } });
@@ -197,6 +200,21 @@ export const unDate = async (req: Request, res: Response) => {
         const task4 = UserDate.deleteMany({uid: currentUser.uid, date_user_uid: uid})
         await Promise.allSettled([task1, task2, task3, task4])
         JSONReponse.success("removed from date");
+        const notificationData: NotificationInterface = {
+            notification_id: uuid(),
+            type: "UNMATCHED",
+            text: `removed you from date`,
+            receiver: uid,
+            sender: currentUser.uid,
+            has_read: false,
+            content: null,
+            sender_data: {
+                name: currentUser.username,
+                profile_picture_url: currentUser.profile_picture_url,
+                uid: currentUser.uid
+            }
+        }
+        await notify.unMatch(notificationData);
     } catch (error){
         console.log(error)
         JSONReponse.serverError()

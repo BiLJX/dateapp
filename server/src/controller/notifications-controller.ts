@@ -23,7 +23,25 @@ export const NotificationsController = async (req: Request, res: Response) => {
             },
             { 
                 $addFields: {
-                     "sender_data.name": "$sender_data.username"
+                     "sender_data.name": "$sender_data.username",
+                     "text": { 
+                            $switch: { 
+                                branches: [
+                                    { 
+                                        case: { $eq: ["$type", "UNMATCHED"] },
+                                        then: "removed you from date"
+                                    },
+                                    { 
+                                        case: { $eq: ["$type", "DATE_ACCEPTED"] },
+                                        then: "accepted your date"
+                                    },
+                                    { 
+                                        case: { $eq: ["$type", "DATE_REQUEST"] },
+                                        then: "requested to date"
+                                    },
+                                ]
+                            } 
+                        }
                  }
             },
             { 
@@ -32,18 +50,33 @@ export const NotificationsController = async (req: Request, res: Response) => {
                     type: 1,
                     has_read: 1,
                     text: 1,
+                    sender: 1,
+                    receiver: 1,
+                    createdAt: 1,
                     sender_data: {
                         profile_picture_url: 1,
                         uid: 1,
                         name: 1
-                    }
+                    },
                 }
             }
           
         ]).exec()
-        JSONResponse.success("success", notifications)
+        JSONResponse.success("success", notifications);
+        await Notifications.updateMany({ receiver: currentUid }, { $set: { has_read: true } });
     } catch (error) {
         console.log(error)
+        JSONResponse.serverError()
+    }
+}
+
+export const seeNotifications = async (req: Request, res: Response) => {
+    const currentUid: string = res.locals.uid;
+    const JSONResponse = new JSONRESPONSE(res);
+    try {
+        await Notifications.updateMany({ receiver: currentUid }, { $set: { has_read: true } });
+        JSONResponse.success()
+    } catch (error) {
         JSONResponse.serverError()
     }
 }

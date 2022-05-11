@@ -6,13 +6,12 @@ import DoneIcon from '@mui/icons-material/Done';
 import FavoriteBorderOutlinedIcon from '@mui/icons-material/FavoriteBorderOutlined';
 import { cancelDateRequest, sendDateRequest, unDateUser, acceptDateRequest } from '../../api/date-api';
 import { useDispatch } from 'react-redux';
-import bannerDispatch, { toastError, toastSuccess } from '../../dispatcher/banner';
+import { toastError, toastSuccess } from '../../dispatcher/banner';
 import  * as bannerActions from "../../action/banner";
 import BookmarkBorderIcon from '@mui/icons-material/BookmarkBorder';
 import BookmarkIcon from '@mui/icons-material/Bookmark';
 import { saveUser, unsaveUser } from 'api/user-api';
 import HeartBrokenOutlinedIcon from '@mui/icons-material/HeartBrokenOutlined';
-import { toast } from "react-toastify"
 export function SendDateButton({data}: {data: UserProfile}){
     const [hasSentDate, setHasSentDate] = useState(data.has_current_sent_date_request)
     const [hasUserSentDate, setHasUserSentDate] = useState(data.has_this_user_sent_date_request)

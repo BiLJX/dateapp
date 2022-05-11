@@ -22,7 +22,7 @@ function LibraryPage(){
                 <div className="library-page">
                     <div className = "library-items-container">
                         <LibraryItems name="Your Profile" to = {"/user/"+user?.uid} Icon={PersonIcon} />
-                        <LibraryItems name="Notifications" to = "/notifications" Icon={NotificationsIcon} />
+                        <LibraryItems name="Notifications" to = "/notifications" Icon={NotificationsIcon} active_count = {user?.badges.notifications_count} />
                         <LibraryItems name = "Date Requests" to = "/requests/incoming" Icon = {PersonAddAlt1Icon} active_count = {user?.badges.date_requests_count} />
                         <LibraryItems name = "Sent Date Requests" to = "/requests/sent" Icon = {WatchLaterIcon} />
                         <LibraryItems name = "Saved Users" to = "/saved" noBorder Icon = {BookmarksIcon}/>

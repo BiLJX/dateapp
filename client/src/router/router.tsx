@@ -57,6 +57,15 @@ function AppRouter(){
                             draggable: true,
                             draggablePercent: 20
                         })
+                        break;
+                    case "UNMATCHED":
+                        toast((<BannerContent sender_name={data.sender_data.name} text = {data.text} to = "/notifications" type={2} />), {
+                            icon: () =>(<BannerPfpIcon  to = {"/notifications"} pfp = {data.sender_data?.profile_picture_url} />),
+                            theme: "dark",
+                            draggable: true,
+                            draggablePercent: 20
+                        })
+                        break;
                 }
                
             })

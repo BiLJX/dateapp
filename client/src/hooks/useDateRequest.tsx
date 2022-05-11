@@ -20,6 +20,13 @@ export function useBadges(){
             badges.has_date_requests = badges.date_requests_count !== 0;
             dispatch(addCurrentUser({...user, badges}));
         }
+        public static readNotifications(){
+            if(!user) return;
+            const badges = {...user.badges}
+            badges.notifications_count = 0;
+            badges.has_notifications = false;
+            dispatch(addCurrentUser({...user, badges}));
+        }
     }
     return Badge;
 }
