@@ -49,7 +49,7 @@ async function removeFile(dir: string){
 
 export async function uploadFile(buffer: Buffer, dir: string, replace = true): Promise<string>{
   replace && await removeFile(dir)
-  const filename = dir+uuid();
+  const filename = replace?dir+uuid():dir;
   const blob = st.bucket().file(filename);
   const blobStream = blob.createWriteStream();
   return new Promise(async (res, rej)=>{

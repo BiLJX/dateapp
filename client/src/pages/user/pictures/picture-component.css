@@ -2,12 +2,16 @@
   height: 100vh;
   width: 100vw;
   position: fixed;
-  z-index: 999;
+  z-index: 700;
   display: flex;
   flex-direction: column;
   background-color: var(--dark-gray);
   background-size: cover;
   justify-content: flex-end;
+  background-position: center;
+  background-size: contain;
+  background-repeat: no-repeat;
+  background-color: var(--background);
 }
 
 .picture-component-feed {
@@ -43,6 +47,7 @@
   width: 80%;
   display: flex;
   flex-direction: column;
+  justify-content: center;
 }
 
 .picture-component-user {
@@ -85,6 +90,8 @@
 
 .picture-component-right {
   flex: 1;
+  display: flex;
+  flex-direction: column;
 }
 
 .picture-component-like-container {
@@ -103,6 +110,61 @@
 .like-active {
   color: var(--pink);
 }
+
+.picture-component-options {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 5px 0;
+  cursor: pointer;
+}
+.picture-component-options svg {
+  font-size: 1.5rem;
+  color: #fff;
+}
+
+.picture-options-modal {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  right: auto;
+  bottom: auto;
+  margin-right: -50%;
+  transform: translate(-50%, -50%);
+  background-color: var(--modal-background);
+  z-index: 890;
+  width: 90%;
+  border-radius: 20px;
+  display: flex;
+  flex-direction: column;
+
+}
+
+.picture-options-modal:focus {
+  outline: none;
+}
+
+.picture-options-overlay {
+  z-index: 889;
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: #111111bb;
+}
+
+.picture-option {
+  color: var(--text-main);
+  padding: 1em;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-weight: 500;
+  text-decoration: underline;
+  font-size: 1.2rem;
+}
+
 
 @keyframes openAnimation {
   0% {

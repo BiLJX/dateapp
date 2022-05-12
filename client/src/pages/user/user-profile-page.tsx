@@ -100,7 +100,7 @@ export default function UserProfilePage(){
     return(
         <>
             { cropper && <Crop image={ cover_img as File } type = "COVER" on_reject={()=>setCropper(false)} on_complete = {onUploaded} /> }
-            <Header className="profile-header" name={ user.username } goBackButton goBackTo={"/"} />
+            <Header className="profile-header" name={ user.username } goBackButton />
             <div className="user-profile-page">
                 <div className="user-profile-page-background"style={{backgroundImage: `url("${cover_img_url}")`, opacity: opacity, filter: `blur(${blur}px)`}}>
                     <div className = "user-profile-pfp">

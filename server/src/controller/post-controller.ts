@@ -6,7 +6,7 @@ import { PicturePost } from "../models/PicturePost";
 import { uuid } from "../utils/idgen";
 import JSONRESPONSE from "../utils/JSONReponse";
 import { cropPicture, upload, uploadFile } from "../utils/upload";
-
+import admin from "firebase-admin"
 const parsePicture = async (post: PicturePostSchema, currentUser: UserInterface) => {
     post.has_liked = post.liked_by.includes(currentUser.uid);
     post.like_count = post.liked_by.length;
@@ -74,7 +74,7 @@ export const postPicture = async (req: Request, res: Response) => {
                 height: data.height
             }
             const cropped_img = await cropPicture(picture.buffer, area, [1080, 1080]);
-            const url = await uploadFile(cropped_img, `user/${user.uid}/pictures/`, false);
+            const url = await uploadFile(cropped_img, `user/${user.uid}/pictures/${picture_id}`, false);
             const post = new PicturePost({
                 caption: data.caption,
                 picture_id,
@@ -123,6 +123,22 @@ export const unLike = async (req: Request, res: Response) => {
         if(!post.liked_by.includes(user.uid)) return JSONResponse.clientError("you havent liked the post");
         await PicturePost.findOneAndUpdate({ picture_id }, { $pull: { liked_by: user.uid } });
         JSONResponse.success()
+    }catch(err){
+        console.log(err);
+        JSONResponse.serverError()
+    }
+}
+
+export const deletePost = async (req: Request, res: Response) => {
+    const JSONResponse = new JSONRESPONSE(res);
+    const picture_id: string = req.params.id;
+    const uid: string = res.locals.uid;
+    try{
+        const post = await PicturePost.findOne({picture_id});
+        if(post?.posted_by_uid !== uid) return JSONResponse.notAuthorized();
+        await PicturePost.findOneAndDelete({picture_id});
+        await admin.storage().bucket().file(`user/${uid}/pictures/${picture_id}`).delete()
+        JSONResponse.success();
     }catch(err){
         console.log(err);
         JSONResponse.serverError()

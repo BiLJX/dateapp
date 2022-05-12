@@ -4,7 +4,9 @@ import { useSelector } from "react-redux"
 import { RootState } from "./types/states"
 import { BrowserRouter as Router} from "react-router-dom"
 import { ToastContainer } from "react-toastify"
+import Modal from "react-modal"
 import 'react-toastify/dist/ReactToastify.css';
+Modal.setAppElement("#root")
 function App(){
   const { banner } = useSelector((state: RootState)=>state);
   return(

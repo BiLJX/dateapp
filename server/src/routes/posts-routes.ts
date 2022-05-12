@@ -1,5 +1,5 @@
 import { Router } from "express";
-import { getFeedPictures, getUsersPictures, like, postPicture, unLike } from "../controller/post-controller";
+import { deletePost, getFeedPictures, getUsersPictures, like, postPicture, unLike } from "../controller/post-controller";
 
 const router = Router();
 
@@ -13,4 +13,7 @@ router.post("/picture/post", postPicture)
 router.put("/picture/like/:id", like);
 router.put("/picture/unLike/:id", unLike);
 
+
+//delete
+router.delete("/picture/delete/:id", deletePost)
 export { router as PostRoutes }
