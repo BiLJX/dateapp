@@ -7,6 +7,8 @@ import { uuid } from "../utils/idgen";
 import JSONRESPONSE from "../utils/JSONReponse";
 import { cropPicture, upload, uploadFile } from "../utils/upload";
 import admin from "firebase-admin"
+import { NotificationInterface } from "@shared/Notify";
+import Notification from "../realtime/Notify";
 const parsePicture = async (post: PicturePostSchema, currentUser: UserInterface) => {
     post.has_liked = post.liked_by.includes(currentUser.uid);
     post.like_count = post.liked_by.length;
@@ -100,13 +102,32 @@ export const like = async (req: Request, res: Response) => {
     const JSONResponse = new JSONRESPONSE(res);
     const user: UserInterface = res.locals.currentUser;
     const picture_id: string = req.params.id;
-    if(!picture_id) return JSONResponse.notFound()
+    const notify: Notification = req.app.locals.notification;
+    if(!picture_id) return JSONResponse.notFound();
     try{
         const post = await PicturePost.findOne({picture_id});
         if(!post) return JSONResponse.notFound()
         if(post.liked_by.includes(picture_id)) return JSONResponse.clientError("you have already liked this post");
         await PicturePost.findOneAndUpdate({ picture_id }, { $push: { liked_by: user.uid } });
-        JSONResponse.success()
+        JSONResponse.success();
+        const notification_data: NotificationInterface<{picture_url: string}> = {
+            type: "LIKED_POST",
+            content: {
+                picture_url: post.picture_url
+            },
+            has_read: false,
+            notification_id: uuid(),
+            receiver: post.posted_by_uid,
+            sender: user.uid,
+            content_id: post.picture_id,
+            text: "liked your post",
+            sender_data: {
+                name: user.username,
+                profile_picture_url: user.profile_picture_url,
+                uid: user.uid
+            }
+        }
+        await notify.likePost(notification_data)
     }catch(err){
         console.log(err);
         JSONResponse.serverError()

@@ -22,6 +22,10 @@ const schema = new Schema<NotificationInterface>({
     has_read: {
         required: true,
         type: Boolean
+    },
+    content_id: {
+        required: false,
+        type: String
     }
 }, {timestamps: true, toJSON: {
     virtuals: true

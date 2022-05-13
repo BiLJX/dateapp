@@ -2,7 +2,7 @@ import CloseIcon from '@mui/icons-material/Close';
 import { FormInput, FormSubmit } from 'pages/auth/components/form-components';
 import TitleIcon from '@mui/icons-material/Title';
 import FileUploadOutlinedIcon from '@mui/icons-material/FileUploadOutlined';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import Crop from 'global-components/crop/crop-component';
 import { Area } from 'react-easy-crop/types';
 import { postPicture } from 'api/post-api';
@@ -46,6 +46,10 @@ export default function PictureForm(props: PictureFormProps){
         }
         bannerDispatch(dispatch, error(res.msg))
     }
+    useEffect(()=>{
+        document.body.style.overflow = "hidden"
+        return(()=>{document.body.style.overflow = "unset"})
+    }, [])
     return(
         <>
             { showCrop && <Crop aspectRatio={1/1} type='POST' image={img as File} on_reject = {()=>setShowCrop(false)} on_complete = {onComplete} /> }

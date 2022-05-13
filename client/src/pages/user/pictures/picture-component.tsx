@@ -10,7 +10,7 @@ import Modal from "react-modal"
 import { useSelector } from "react-redux";
 import { RootState } from "types/states";
 import { toastError, toastSuccess } from "dispatcher/banner";
-export function PictureComponentWithHeader({data, close}: {data: PicturePostSchema, close: ()=>any}){
+export function PictureComponentWithHeader({data, close, onPictureRemove}: {data: PicturePostSchema, close: ()=>any, onPictureRemove?: (pic_id: string)=>any}){
     const [className, setClassName] = useState("")
     const handClose = ()=> {
         setTimeout(()=>{
@@ -29,7 +29,7 @@ export function PictureComponentWithHeader({data, close}: {data: PicturePostSche
                     <ArrowBackIosIcon/>
                 </div>
             </div>
-            <PictureComponent data = {data} close = {close} />
+            <PictureComponent data = {data} close = {close} onPictureRemove = {onPictureRemove} />
         </div>
     )
 }
@@ -43,7 +43,7 @@ export function PictureItem({data}: {data: PicturePostSchema}){
 }
 
 
-function PictureComponent({data, close}: {data: PicturePostSchema, close?:any}){
+function PictureComponent({data, close, onPictureRemove}: {data: PicturePostSchema, close?:any, onPictureRemove?:(pic_id: string)=>any}){
     const [hasLiked, setHasLiked] = useState(data.has_liked);
     const [likeCount, setLikeCount] = useState(data.like_count);
     const [isOpen, setIsOpen] = useState(false);
@@ -68,6 +68,7 @@ function PictureComponent({data, close}: {data: PicturePostSchema, close?:any}){
             toastSuccess("successfully deleleted")
             setDeleted(true)
             setIsDeleting(false)
+            onPictureRemove?.(data.picture_id);
             close()
             return;
         }

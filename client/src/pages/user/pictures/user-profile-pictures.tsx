@@ -27,7 +27,7 @@ export default function UserProfilePicturesPage(){
 
     return(
         <>
-            {currentPicture && <PictureComponentWithHeader data= {currentPicture} close = {()=>setCurrentPicture(null)} />}
+            {currentPicture && <PictureComponentWithHeader data= {currentPicture} close = {()=>setCurrentPicture(null)} onPictureRemove = {(id)=>{setPictures((pictures)=>pictures.filter(pic=>pic.picture_id !== id))}} />}
             {showForm && <PictureForm onData={(data)=>setPictures((prev)=>[data, ...prev])} close = {()=>setShowForm(false)} />}
             <div className="user-profile-picture-grid">
                 {user?.uid === uid && <AddPicture onClick = {()=>setShowForm(true)} /> }

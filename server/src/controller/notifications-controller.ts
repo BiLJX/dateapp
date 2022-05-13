@@ -1,3 +1,4 @@
+import { NotificationInterface } from "@shared/Notify";
 import { Request, Response } from "express"
 import { Notifications } from "../models/Notification";
 import JSONRESPONSE from "../utils/JSONReponse";
@@ -19,12 +20,26 @@ export const NotificationsController = async (req: Request, res: Response) => {
                 }
             },
             {
+                $lookup: {
+                    from: "pictures",
+                    foreignField: "picture_id",
+                    localField: "content_id",
+                    as: "picture",
+                }
+            },
+            {
                 $unwind: '$sender_data'
+            },
+            {
+                $unwind: {
+                    path: "$picture",
+                    preserveNullAndEmptyArrays: true
+                }
             },
             { 
                 $addFields: {
-                     "sender_data.name": "$sender_data.username",
-                     "text": { 
+                    "sender_data.name": "$sender_data.username",
+                    "text": { 
                             $switch: { 
                                 branches: [
                                     { 
@@ -39,11 +54,25 @@ export const NotificationsController = async (req: Request, res: Response) => {
                                         case: { $eq: ["$type", "DATE_REQUEST"] },
                                         then: "requested to date"
                                     },
+                                    { 
+                                        case: { $eq: ["$type", "LIKED_POST"] },
+                                        then: "liked your post"
+                                    },
                                 ]
                             } 
+                    },
+                    "content": {
+                        $cond: {
+                            if:  { $eq: ["$type", "LIKED_POST"] },
+                            then : { 
+                                picture_url: "$picture.picture_url"
+                            },
+                            else: null
                         }
-                 }
+                    }
+                }
             },
+            
             { 
                 $project: {
                     notification_id: 1,
@@ -53,6 +82,7 @@ export const NotificationsController = async (req: Request, res: Response) => {
                     sender: 1,
                     receiver: 1,
                     createdAt: 1,
+                    content: 1,
                     sender_data: {
                         profile_picture_url: 1,
                         uid: 1,
@@ -66,17 +96,6 @@ export const NotificationsController = async (req: Request, res: Response) => {
         await Notifications.updateMany({ receiver: currentUid }, { $set: { has_read: true } });
     } catch (error) {
         console.log(error)
-        JSONResponse.serverError()
-    }
-}
-
-export const seeNotifications = async (req: Request, res: Response) => {
-    const currentUid: string = res.locals.uid;
-    const JSONResponse = new JSONRESPONSE(res);
-    try {
-        await Notifications.updateMany({ receiver: currentUid }, { $set: { has_read: true } });
-        JSONResponse.success()
-    } catch (error) {
         JSONResponse.serverError()
     }
 }

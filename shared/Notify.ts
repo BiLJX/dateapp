@@ -8,6 +8,7 @@ export interface NotificationInterface<T = null>{
     has_read: boolean,
     text: string,
     content: T,
+    content_id: string,
     sender_data: {
         name: string,
         profile_picture_url: string,

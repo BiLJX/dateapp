@@ -60,3 +60,9 @@
 .notification-time {
     color: var(--text-secondary);
 }
+
+.notification-content-container {
+    height: 50px;
+    width: 50px;
+    overflow: hidden;
+}

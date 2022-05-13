@@ -104,6 +104,7 @@ export const requestDate = async (req: Request, res: Response)=>{
             text: "sent you date request",
             sender: current_user.uid,
             receiver: request_sent_to,
+            content_id: "",
             content: null,
             sender_data: {
                 name: current_user.username,
@@ -154,6 +155,7 @@ export const acceptDate = async (req:  Request, res: Response) => {
             receiver: uid,
             sender: currentUser.uid,
             has_read: false,
+            content_id: "",
             content: null,
             sender_data: {
                 name: currentUser.username,
@@ -208,6 +210,7 @@ export const unDate = async (req: Request, res: Response) => {
             sender: currentUser.uid,
             has_read: false,
             content: null,
+            content_id: "",
             sender_data: {
                 name: currentUser.username,
                 profile_picture_url: currentUser.profile_picture_url,

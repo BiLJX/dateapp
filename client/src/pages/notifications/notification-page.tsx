@@ -13,23 +13,6 @@ const NotificationPage: FC = () => {
     const badges = useBadges()
     const [notifications, setNotifications] = useState<NotificationInterface<any>[]>();
     useEffect(()=>{
-        moment.locale('en', {
-            relativeTime : {
-                future: "in %s",
-                past:   "%s",
-                s:  "s",
-                m:  "1m",
-                mm: "%dm",
-                h:  "1h",
-                hh: "%dh",
-                d:  "1d",
-                dd: "%dd",
-                M:  "1mth",
-                MM: "%dmth",
-                y:  "1y",
-                yy: "%dy"
-            }
-        });
         getNotifications().then(data=>setNotifications(data.data.reverse()));
         badges.readNotifications()
     }, [])
@@ -66,7 +49,7 @@ const NotificationPage: FC = () => {
     )
 }
 
-const NotificationComponent: FC<{data: NotificationInterface}> = ({data}) => {
+const NotificationComponent: FC<{data: NotificationInterface<any>}> = ({data}) => {
     return(
         <div className="notification-component">
             <div className = "notification-left">
@@ -82,11 +65,19 @@ const NotificationComponent: FC<{data: NotificationInterface}> = ({data}) => {
                 
             </div>
             <div className = "notification-right">
-                {   data.type === "DATE_ACCEPTED"?(
+                {
+                    (()=>{
+                        if(data.type === "DATE_ACCEPTED") return ( 
                             <NavLink to = {"/message/"+data.sender_data.uid} className = "notification-button">
                                 Chat Now
                             </NavLink>
-                        ):null
+                        )
+                        else if (data.type === "LIKED_POST") return (
+                            <div className = "notification-content-container">
+                                <img src = {data.content.picture_url} className = "full-img" />
+                            </div>
+                        )
+                    })()
                 }
             </div>
         </div>
