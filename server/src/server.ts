@@ -27,6 +27,7 @@ import "./fire"
 import { redis_client } from "./redis-client"
 import Notify from "./realtime/Notify"
 import { NotificationsRouter } from "./routes/notification-routes"
+import { SettingsRouter } from "./routes/settings-routes"
 
 //constants
 const CONNECTION_URL = "mongodb+srv://billjesh:Billu456@cluster0.vyegx.mongodb.net/Dateapp?retryWrites=true&w=majority"
@@ -52,6 +53,8 @@ app.use("/api/chat", AuthMiddleware, ChatRoutes)
 app.use("/api/posts", AuthMiddleware, PostRoutes)
 app.use("/api/hobbies", AuthMiddleware, HobbyRouter)
 app.use("/api/notifications", AuthMiddleware, NotificationsRouter)
+app.use("/api/settings", AuthMiddleware, SettingsRouter)
+
 app.get("/*", (req, res) => {
 	res.sendFile(path.join(__dirname,"..", "build", "index.html"));
 });

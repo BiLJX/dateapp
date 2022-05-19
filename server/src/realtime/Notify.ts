@@ -24,6 +24,7 @@ export default class Notification {
         socket.to(notification_data.receiver).emit("notification", notification_data);
     }
     public async likePost(notification_data: NotificationInterface<{picture_url: string}>){
+        if(notification_data.sender === notification_data.receiver) return;
         const socket = this.socket;
         const has_notifications = await Notifications.findOne({sender: notification_data.sender, receiver: notification_data.receiver, type: notification_data.type, content_id: notification_data.content_id})
         if(has_notifications) return;

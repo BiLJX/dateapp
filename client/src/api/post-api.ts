@@ -13,6 +13,11 @@ export const getFeedPictures = async () =>  {
     return res.data as ApiResponse<PicturePostSchema[]>
 }
 
+export const getPictureById = async (id: string) => {
+    const res = await axios.get("/api/posts/picture/"+id);
+    return res.data as ApiResponse<PicturePostSchema>;
+}
+
 export const postPicture = async (caption: string, picture: File, area: Area) => {
     const formdata = new FormData();
     formdata.append("caption", caption);

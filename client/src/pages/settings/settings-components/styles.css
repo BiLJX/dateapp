@@ -1,0 +1,73 @@
+.settings-container {
+    padding: 20px 20px;
+}
+
+.settings-item {
+    padding: 10px;
+    border-radius: 10px;
+    background-color: var(--input-background);
+    display: flex;
+    flex-direction: column;
+    margin-bottom: 20px;
+}
+
+.settings-item h2 {
+    color: var(--light-pink);
+}
+
+.settings-item-select-container {
+    display: flex;
+}
+
+.settings-item-select {
+    flex: 1;
+    padding: 20px 0;
+    font-size: 1.1rem;
+    background-color: var(--input-background);
+}
+.settings-item-select-down {
+    width: 35px;
+    padding: 10px 0;
+    display: flex;
+    justify-content: center;
+    color: var(--text-main);
+    
+}
+.settings-item-select-down option {
+    background-color: var(--input-background);
+    font-size: 1rem;
+}
+.settings-item-select:active, :focus {
+    outline: none;
+    border: none;
+}
+
+.css-adeloa-MuiSlider-root {
+    color: var(--text-main) !important;
+}
+
+.css-1eoe787-MuiSlider-markLabel {
+    color: var(--text-main) !important;
+}
+
+.css-5ryogn-MuiButtonBase-root-MuiSwitch-switchBase.Mui-checked {
+    color: var(--text-main) !important;
+}
+
+.css-5ryogn-MuiButtonBase-root-MuiSwitch-switchBase.Mui-checked+.MuiSwitch-track {
+    background-color: var(--text-main) !important;
+}
+
+.settings-save-button {
+    display: flex;
+    padding: .8em .7em;
+    font-size: 1.2rem;
+    color: var(--text-main);
+    font-weight: bold;
+    background-color: var(--pink);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border-radius: 10px;
+    cursor: pointer;
+}

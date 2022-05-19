@@ -1,5 +1,5 @@
 import { useSelector } from "react-redux"
-import { useParams } from "react-router-dom";
+import { Route, Routes, useNavigate, useParams } from "react-router-dom";
 import { RootState } from "types/states"
 import AddAPhotoIcon from '@mui/icons-material/AddAPhoto';
 import "./user-pictures.css"
@@ -11,7 +11,6 @@ import {PictureComponentWithHeader} from "./picture-component";
 export default function UserProfilePicturesPage(){
     const [showForm, setShowForm] = useState(false);
     const [pictures, setPictures] = useState<PicturePostSchema[]>([]);
-    const [currentPicture, setCurrentPicture] = useState<PicturePostSchema|null>(null);
     const user = useSelector((state: RootState)=>state.current_user);
     const { uid } = useParams()
     const getPictures = async () => {
@@ -27,14 +26,13 @@ export default function UserProfilePicturesPage(){
 
     return(
         <>
-            {currentPicture && <PictureComponentWithHeader data= {currentPicture} close = {()=>setCurrentPicture(null)} onPictureRemove = {(id)=>{setPictures((pictures)=>pictures.filter(pic=>pic.picture_id !== id))}} />}
             {showForm && <PictureForm onData={(data)=>setPictures((prev)=>[data, ...prev])} close = {()=>setShowForm(false)} />}
             <div className="user-profile-picture-grid">
                 {user?.uid === uid && <AddPicture onClick = {()=>setShowForm(true)} /> }
                 {pictures.map((x, i)=>(
-                    <Picture openPicture={(data)=>setCurrentPicture(data)} data =  {x} key = {i}/>
+                    <Picture data =  {x} key = {i}/>
                 ))}
-            </div>
+            </div>               
         </>
     )
 }
@@ -50,12 +48,11 @@ function AddPicture({onClick}: {onClick: ()=>any}){
     )
 }
 
-function Picture({data, openPicture}: {data: PicturePostSchema, openPicture: (data: PicturePostSchema)=>any}){
+function Picture({data}: {data: PicturePostSchema}){
+    const navigate = useNavigate()
     return(
-        
-            <div className = "user-profile-picture" onClick={()=>openPicture(data)}>
-                <img className="full-img user-profile-picture-img" src = {data.picture_url}/>
-            </div>
-        
+        <div className = "user-profile-picture" onClick={()=>navigate("/pictures/"+data.picture_id)}>
+            <img className="full-img user-profile-picture-img" src = {data.picture_url}/>
+        </div>
     )
 }

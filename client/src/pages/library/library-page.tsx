@@ -6,6 +6,7 @@ import PersonAddAlt1Icon from '@mui/icons-material/PersonAddAlt1';
 import WatchLaterIcon from '@mui/icons-material/WatchLater';
 import BookmarksIcon from '@mui/icons-material/Bookmarks';
 import PersonIcon from '@mui/icons-material/Person';
+import DynamicFeedIcon from '@mui/icons-material/DynamicFeed';
 import "./library-page.css"
 import { Switch } from "@mui/material";
 import { useSelector } from "react-redux";
@@ -26,6 +27,7 @@ function LibraryPage(){
                         <LibraryItems name = "Date Requests" to = "/requests/incoming" Icon = {PersonAddAlt1Icon} active_count = {user?.badges.date_requests_count} />
                         <LibraryItems name = "Sent Date Requests" to = "/requests/sent" Icon = {WatchLaterIcon} />
                         <LibraryItems name = "Saved Users" to = "/saved" noBorder Icon = {BookmarksIcon}/>
+                        <LibraryItems name = "Feed Settings" to = "/settings/feed" noBorder Icon = {DynamicFeedIcon}/>
                         <LibrarySwitch disabled name = "Enable Dark Mode" noBorder Icon = {WatchLaterIcon} />
                     </div>
                     </div>

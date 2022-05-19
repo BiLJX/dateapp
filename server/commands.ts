@@ -1,10 +1,13 @@
 import { Db, MongoClient } from "mongodb"
 import admin from "firebase-admin"
+import mongoose from "mongoose"
 import "./src/fire"
+import { FeedSettings } from "./src/models/FeedSettings"
+import { User } from "./src/models/User"
 const uri = "mongodb+srv://billjesh:Billu456@cluster0.vyegx.mongodb.net/Dateapp?retryWrites=true&w=majority";
-const client = new MongoClient(uri, {
+// const client = new MongoClient(uri, {
 
-});
+// });
 
 
 async function deleteUser(db: Db, uid: any){
@@ -17,12 +20,21 @@ async function deleteUser(db: Db, uid: any){
     await db.collection("users").updateMany({}, {  $pull: { saved_users: uid } })
 }
 
-client.connect().then(async ()=>{
-    const db = client.db("Dateapp");
-    // await deleteUser(db, uid);
-    await db.collection("messages").deleteMany({receiver_uid: "QKvVempNLwWp6To4yHzP5EFthe42", sender_uid: "b0TPuqUCI5PTibRKd6QlHAGyOYn1"})
-    console.log("done");
-}).catch(err=>console.log(err))
+mongoose.connect(uri).then(async ()=>{
+    const users = await User.find({});
+    for await(let user of users){
+        const feedsettings = new FeedSettings({uid: user.uid});
+        await feedsettings.save()
+    }
+    console.log("done")
+})
+
+// client.connect().then(async ()=>{
+//     const db = client.db("Dateapp");
+//     // await deleteUser(db, uid);
+//     await db.collection("feedsettings").insertOne()
+//     console.log("done");
+// }).catch(err=>console.log(err))
 
 
 

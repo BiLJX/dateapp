@@ -3,33 +3,41 @@ import ArrowBackIosIcon from '@mui/icons-material/ArrowBackIos';
 import LocalFireDepartmentIcon from '@mui/icons-material/LocalFireDepartment';
 import "./picture-component.css"
 import { useEffect, useState } from "react";
-import { deletePicture, likePicture, unLikePicture } from "api/post-api";
-import { NavLink, useNavigate } from "react-router-dom";
+import { deletePicture, getPictureById, likePicture, unLikePicture } from "api/post-api";
+import { NavLink, useLocation, useNavigate, useParams } from "react-router-dom";
 import MoreHorizIcon from '@mui/icons-material/MoreHoriz';
 import Modal from "react-modal"
 import { useSelector } from "react-redux";
 import { RootState } from "types/states";
 import { toastError, toastSuccess } from "dispatcher/banner";
-export function PictureComponentWithHeader({data, close, onPictureRemove}: {data: PicturePostSchema, close: ()=>any, onPictureRemove?: (pic_id: string)=>any}){
-    const [className, setClassName] = useState("")
-    const handClose = ()=> {
-        setTimeout(()=>{
-            close()
-        }, 150)
-        setClassName("picture-component-close");
-    }
+export function PictureComponentWithHeader(){
+    const location = useLocation();
+    const [data, setData] = useState<PicturePostSchema>(location.state as PicturePostSchema);
+    const params = useParams();
+    const navigate = useNavigate()
+    
     useEffect(()=>{
-        document.body.style.overflow = 'hidden';
-        return(()=>{document.body.style.overflow = 'unset'})
-    }, [])
-    return(
-        <div className={`picture-component picture-component-animation ${className}`} style = {{backgroundImage: `url("${data.picture_url}")`}}>
+        if(!data) getPictureById(params.id||"").then(data=>setData(data.data));
+        return(()=>{location.state = null});
+    }, []);
+    if(!data) return(
+        <div className={`picture-component picture-component-animation`}>
             <div className = "picture-component-header">
-                <div className="back-arrow-container" onClick = {handClose}>
+                <div className="back-arrow-container" onClick = {()=>navigate(-1)}>
                     <ArrowBackIosIcon/>
                 </div>
             </div>
-            <PictureComponent data = {data} close = {close} onPictureRemove = {onPictureRemove} />
+
+        </div>
+    )
+    return(
+        <div className={`picture-component ${!location.state?"":"picture-component-animation"}`} style = {{backgroundImage: `url("${data.picture_url}")`}}>
+            <div className = "picture-component-header">
+                <div className="back-arrow-container" onClick = {()=>navigate(-1)}>
+                    <ArrowBackIosIcon/>
+                </div>
+            </div>
+            <PictureComponent data = {data}/>
         </div>
     )
 }
@@ -65,11 +73,11 @@ function PictureComponent({data, close, onPictureRemove}: {data: PicturePostSche
         setIsDeleting(true);
         const res = await deletePicture(data.picture_id);
         if(res.success) {
-            toastSuccess("successfully deleleted")
-            setDeleted(true)
-            setIsDeleting(false)
-            onPictureRemove?.(data.picture_id);
-            close()
+            toastSuccess("successfully deleleted");
+            setDeleted(true);
+            setIsDeleting(false);
+            navigate(-1);
+            close();
             return;
         }
         toastError(res.msg)

@@ -28,7 +28,7 @@
   display: -webkit-box;
   display: -ms-flexbox;
   display: flex;
-  height: 100%;
+  height: 91%;
   width: 100%;
   min-height: 100%;
   background-repeat: no-repeat;
@@ -148,7 +148,7 @@
 }
 
 .profile-item-heart svg {
-  font-size: 2em;
+  font-size: 1em;
 }
 
 .profile-item-button-container-heart {
@@ -166,7 +166,7 @@
 .profile-item-heart-break svg,
 .profile-item-accept svg,
 .profile-item-heart svg {
-  font-size: 2em;
+  font-size: 1.7em;
 }
 
 @media (min-width: 500px) {

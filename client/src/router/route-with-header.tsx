@@ -14,6 +14,8 @@ import HobbySearch from "pages/user/interests/search-hobby"
 import PersonalitiesPage from "pages/profile/personality/personalities-page"
 import Personality from "pages/profile/personality/personality"
 import NotificationPage from "pages/notifications/notification-page"
+import { PictureComponentWithHeader } from "pages/user/pictures/picture-component"
+import FeedSettings from "pages/settings/feedsettings/feedsettings"
 
 
 function RoutesWithHeader(){
@@ -22,11 +24,13 @@ function RoutesWithHeader(){
             <Routes>
                 <Route path = "/" element = {<HomePage /> } />
                 <Route path = "/profile/verify" element = {<VerifyAccount />} />
+                
                 <Route path = "/search" element = {<SoonPage /> } />
                 <Route path = "/notifications" element = {<NotificationPage /> } />
                 <Route path = "/dates" element = {<DatePage/>} />
                 <Route path = "/message/:uid" element = {<ChatPage />} />
                 <Route path = "/pictures" element = { <PicturePage /> } />
+                <Route path = "/pictures/:id" element = { <PictureComponentWithHeader /> } />
                 <Route path = "/profile" element = { <LibraryPage />  }/>
                 <Route path = "/hobbies" element = {<HobbySearch />} />
                 <Route path = "/user/:uid/*" element = {<UserProfilePage />} />
@@ -36,6 +40,10 @@ function RoutesWithHeader(){
                 <Route path = "/profile/setup" element = {<EditProfile isSetup />} />
                 <Route path = "/personality" element = {<PersonalitiesPage />} />
                 <Route path = "/personality/:type" element = {<Personality />} />
+                
+
+                <Route path = "/settings/feed" element = {<FeedSettings />} />
+
                 <Route path = "/saved" element = {<SoonPage /> } />
             </Routes>
         </MainContainer>

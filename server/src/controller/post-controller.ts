@@ -54,6 +54,23 @@ export const getFeedPictures = async (req: Request, res: Response) => {
     }
 }
 
+export const getPictureById = async (req: Request, res: Response) => {
+    const JSONResponse = new JSONRESPONSE(res);
+    const user: UserInterface = res.locals.currentUser;
+    try{
+        const picture = (await PicturePost
+                            .findOne({ picture_id: req.params.id })
+                            .populate("uploader_data", "uid username profile_picture_url")
+                            .exec())?.toJSON()
+        if(!picture) return JSONResponse.notFound();
+        const parsed_picture = await parsePicture(picture, user);
+        JSONResponse.success("success", parsed_picture);
+    }catch(err){
+        console.log(err)
+        JSONResponse.serverError()
+    }
+}
+
 export const postPicture = async (req: Request, res: Response) => {
     const JSONResponse = new JSONRESPONSE(res);
     const user: UserInterface = res.locals.currentUser
