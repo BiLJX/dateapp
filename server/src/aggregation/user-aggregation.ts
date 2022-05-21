@@ -51,7 +51,7 @@ export const addBagesCond = {
 const projection = {
     $project: {
         date_requests: 0,
-        notifications: 0
+        notifications: 0,
     }
 }
 

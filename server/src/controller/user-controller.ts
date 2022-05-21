@@ -17,14 +17,9 @@ export async function parseUser(_user: any, current_user:UserInterface): Promise
     const now = moment(new Date());
     const birthday = moment(_user.birthday);
     const years = moment.duration(now.diff(birthday)).asYears();
-    const task1 = DateRequest.findOne({request_sent_by: current_user.uid, request_sent_to: user.uid});
-    const task2 = DateRequest.findOne({request_sent_by: user.uid, request_sent_to: current_user.uid});
-    const [has_current_sent_date_request, has_this_user_sent_date_request] = await Promise.all([task1, task2])
     user.age = Math.floor(years);
     user.is_dating = user.dates.includes(current_user.uid);
     user.has_saved = current_user.saved_users.includes(user.uid);
-    user.has_current_sent_date_request = has_current_sent_date_request?true:false
-    user.has_this_user_sent_date_request = has_this_user_sent_date_request?true:false
     return user
 }
 
@@ -82,8 +77,55 @@ export async function getUserByUid(req: Request, res: Response){
     const uid = req.params.uid
     if(!uid) return JSONReponse.notFound("User Not Found :(")
     try{
-        const user = await User.findOne({uid});
-        JSONReponse.success("success", await parseUser(user?.toJSON(), res.locals.currentUser));
+        const user = await User.aggregate([
+            {$match: { uid }},
+            {
+                $lookup: {
+                    from: "daterequests",
+                    as: "current_user_daterequests",
+                    let: { user_id: "$uid" },
+                    foreignField: "request_sent_to",
+                    localField: "uid",
+                    pipeline: [
+                        {
+                            $match: { 
+                                $and: [
+                                    
+                                    {request_sent_by: uid}
+                                ]
+                            }
+                        }
+                    ]
+                }
+            },
+            {
+                $lookup: {
+                    from: "daterequests",
+                    as: "user_daterequests",
+                    let: { user_id: "$uid" },
+                    foreignField: "request_sent_by",
+                    localField: "uid",
+                    pipeline: [
+                        {
+                            $match: { 
+                                $and: [
+                                    
+                                    {request_sent_to: uid}
+                                ]
+                            }
+                        }
+                    ]
+                }
+            },
+            {
+                $addFields: {
+                    is_dating: { $in: [uid, "$dates"] },
+                    has_current_sent_date_request: { $cond: [ { $eq: [{ $size: "$current_user_daterequests" }, 0]}, false, true ] },
+                    has_this_user_sent_date_request: { $cond: [ { $eq: [{ $size: "$user_daterequests" }, 0]}, false, true ] }
+                }
+            },
+        ]);
+        JSONReponse.success("success", await parseUser(user[0], res.locals.currentUser));
     }catch(err){
         console.log(err)
         JSONReponse.serverError()

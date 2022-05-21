@@ -5,7 +5,8 @@ import { useEffect, useState } from "react"
 import { getFeedSettings, updateFeedSettings } from "api/settings-api"
 import { useNavigate } from "react-router-dom"
 import { toastError, toastSuccess } from "dispatcher/banner"
-
+import { useDispatch } from "react-redux";
+import { addFeed } from "../../../action/feed"
 const genderFilterData = [
     {
         value: "male",
@@ -44,6 +45,7 @@ export default function FeedSettings(){
     const [loading, setIsLoading] = useState(true);
     const [showYourDates, setShowYourDates] = useState(true);
 
+    const dispatch = useDispatch()
     const navigate = useNavigate()
 
     const getSettings = async () => {
@@ -71,8 +73,9 @@ export default function FeedSettings(){
             show_your_dates: showYourDates
         })
         if(res.success){
+            dispatch(addFeed([], 1))
             toastSuccess("saved settings");
-            navigate(-1)
+            navigate(-1);
             return
         }
         toastError(res.msg)
