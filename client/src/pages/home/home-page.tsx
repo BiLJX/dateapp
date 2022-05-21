@@ -60,7 +60,7 @@ function HomePage(){
                 feed.map((x, i)=>(
                     <Fragment key= {i}>
                         <ProfileItem data = {x} />
-                        {(i+1) % 10 === 0 && <FeedAd />}
+                        {/* {(i+1) % 10 === 0 && <FeedAd />} */}
                     </Fragment>
                     
                 ))

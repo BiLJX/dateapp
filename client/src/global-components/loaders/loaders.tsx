@@ -13,7 +13,7 @@ export function SplashSceenLoader(){
     return(
         <div className="loader-full">
             <Hearts color="var(--pink)" height={160} width={160} />
-            <h2 className = "spash-heading">Kura Kani</h2>
+            <h1 className = "spash-heading">Affexon</h1>
         </div>
     )
 }

@@ -37,7 +37,7 @@ function LoginPage(){
     }
     return(
         <AuthPageContainer>
-            <AuthHeader heading="Login To KuraKani" />
+            <AuthHeader heading="Login To Affexon" />
             <form className="auth-form-container" onSubmit={login}>
                 <FormInput name = "email" placeholder="Email" Icon={MailOutlineIcon}/>
                 <FormInput name = "password" placeholder="Password" Icon={HttpsOutlinedIcon} type="password"/>
