@@ -6,7 +6,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "types/states";
 import { useEffect, useState } from "react";
 import { changeUserEmail, sendVerification, signOut } from "api/auth-api";
-import bannerDispatch from "dispatcher/banner";
+import bannerDispatch, { toastError, toastSuccess } from "dispatcher/banner";
 import { error, success } from "action/banner";
 import { addCurrentUser } from "action/user";
 import { useNavigate } from "react-router-dom";
@@ -18,17 +18,18 @@ export default function VerifyAccount(){
     const [email, setEmail] = useState(user?.email||"");
     const [disabled, setDisabled] = useState(false);
     const [loading, setIsLoading] = useState(false);
-    const [sent, setSent] = useState(false)
+    const [sent, setSent] = useState(false);
+    const [is_verification_sending, setIs_verification_sending] = useState(false)
     const handleSubmit = async (e: any) => {
         e.preventDefault();
         setIsLoading(true)
         const res = await changeUserEmail(email||"");
         if(res.success){
-             bannerDispatch(dispatch, success(res.msg))
+             toastSuccess(res.msg)
              if(user) dispatch(addCurrentUser({...user, email}))
              return setIsLoading(false)
             }
-        bannerDispatch(dispatch, error(res.msg))
+        toastError(res.msg)
         return setIsLoading(false)
     }
     const resend = async () => {
@@ -36,9 +37,10 @@ export default function VerifyAccount(){
         const res = await sendVerification();
         
         if(res.success){
-            return bannerDispatch(dispatch, success(res.msg))
+            return toastSuccess(res.msg)
         }
-        return bannerDispatch(dispatch, error(res.msg))
+        setSent(false)
+        return toastError(res.msg)
     }
     const signout = async () => {
         await signOut();
@@ -67,7 +69,7 @@ export default function VerifyAccount(){
                     ):(
                         <div className = "verify-text">
                             Your'e email is not verified, please verify it by going on your mail and refresh this page. If you cant find the verification mail, please check your spam inbox. or 
-                            <span className = "underline" onClick = {resend}> resend</span>
+                            { <span className = "underline" onClick = {resend}> resend</span>}
                         </div>
                     )
                 }

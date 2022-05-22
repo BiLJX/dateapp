@@ -16,7 +16,7 @@ export interface ScrollState {
 }
 
 export interface FeedState {
-    data: UserProfile[],
+    data: UserProfile[]|UserProfile,
     current_page: number,
 }
 

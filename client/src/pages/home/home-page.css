@@ -45,8 +45,8 @@
     color-stop(32.51%, rgba(0, 0, 0, 0)),
     color-stop(78%, #121015)
   );
-  background: -o-linear-gradient(top, rgba(0, 0, 0, 0) 32.51%, #121015 78%);
-  background: linear-gradient(180deg, rgba(0, 0, 0, 0) 32.51%, #121015 78%);
+  background: -o-linear-gradient(top, rgba(0, 0, 0, 0) 32.51%, var(--background) 78%);
+  background: linear-gradient(180deg, rgba(0, 0, 0, 0) 32.51%, var(--background) 78%);
   height: 100%;
   width: 100%;
   padding: 0 5% 0 5%;

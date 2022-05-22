@@ -9,6 +9,7 @@ import { isDescription, isFullName, isUserName } from "../utils/validator";
 import admin from "firebase-admin"
 import { uuid } from "../utils/idgen";
 import { currentUserAggregation } from "../aggregation/user-aggregation";
+import { redis_client } from "../redis-client";
 //util
 
 export async function parseUser(_user: any, current_user:UserInterface): Promise<UserProfile>{
@@ -29,9 +30,15 @@ export async function parseCurrentUser(_current_user: UserInterface|undefined){
     const now = moment(new Date());
     const birthday = moment(_current_user.birthday);
     const years = moment.duration(now.diff(birthday)).asYears();
-    const fuser = await admin.auth().getUser(_current_user.uid);
-    user.is_email_verified = fuser.emailVerified
     user.age = Math.floor(years);
+    const cached_state = await redis_client.get(_current_user.uid + "_email_verified");
+    if(cached_state === "true"){
+        user.is_email_verified = true;
+        return user
+    }
+    const fuser = await admin.auth().getUser(_current_user.uid);
+    if(fuser.emailVerified) redis_client.set(_current_user.uid + "_email_verified", fuser.emailVerified.toString())
+    user.is_email_verified = fuser.emailVerified
     return user
 }
 
@@ -74,7 +81,8 @@ export async function getCurrentUser(req: Request, res: Response){
 
 export async function getUserByUid(req: Request, res: Response){
     const JSONReponse = new JSONRESPONSE(res)
-    const uid = req.params.uid
+    const uid = req.params.uid;
+    const currentUser_uid = res.locals.currentUser.uid
     if(!uid) return JSONReponse.notFound("User Not Found :(")
     try{
         const user = await User.aggregate([
@@ -91,7 +99,7 @@ export async function getUserByUid(req: Request, res: Response){
                             $match: { 
                                 $and: [
                                     
-                                    {request_sent_by: uid}
+                                    {request_sent_by: currentUser_uid}
                                 ]
                             }
                         }
@@ -110,7 +118,7 @@ export async function getUserByUid(req: Request, res: Response){
                             $match: { 
                                 $and: [
                                     
-                                    {request_sent_to: uid}
+                                    {request_sent_to: currentUser_uid}
                                 ]
                             }
                         }
@@ -119,7 +127,7 @@ export async function getUserByUid(req: Request, res: Response){
             },
             {
                 $addFields: {
-                    is_dating: { $in: [uid, "$dates"] },
+                    is_dating: { $in: [currentUser_uid, "$dates"] },
                     has_current_sent_date_request: { $cond: [ { $eq: [{ $size: "$current_user_daterequests" }, 0]}, false, true ] },
                     has_this_user_sent_date_request: { $cond: [ { $eq: [{ $size: "$user_daterequests" }, 0]}, false, true ] }
                 }

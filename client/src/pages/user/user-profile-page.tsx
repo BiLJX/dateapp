@@ -26,6 +26,7 @@ import Crop from "global-components/crop/crop-component";
 import { addCurrentUser } from "action/user";
 import UserInterestsPage from "./interests/user-interests";
 import { getUserHobby } from "api/hobby-api";
+import { acceptDateRequestFeed, changeDateRequestChangeFeed, unMatchFeed } from "action/feed";
 
 export default function UserProfilePage(){
     const currentUser = useSelector((state: RootState)=>state.current_user);
@@ -196,26 +197,38 @@ function DateButton({user}: {user: UserProfile}){
     const [hasViewerSentDate, setHasViewerSentDate] = useState(user.has_current_sent_date_request);
     const [hasUserSentDate, setHasUserSentDate] = useState(user.has_this_user_sent_date_request);
     const [isDating, setIsDating] = useState(user.is_dating);
-    
+    const dispatch = useDispatch()
     const sendDateRequest = async () => {
         setHasViewerSentDate(true);
+        dispatch(changeDateRequestChangeFeed(user, true));
         const res = await dateApi.sendDateRequest(user.uid);
-        if(!res.success) return setHasViewerSentDate(false)
+        if(!res.success) {
+            setHasViewerSentDate(false);
+            dispatch(changeDateRequestChangeFeed(user, false));
+            return 
+        }
     }
 
     const cancelDateRequest = async () => {
         setHasViewerSentDate(false);
+        dispatch(changeDateRequestChangeFeed(user, false));
         const res = await dateApi.cancelDateRequest(user.uid);
-        if(!res.success) return setHasViewerSentDate(true)
+        if(!res.success) {
+            setHasViewerSentDate(true);
+            dispatch(changeDateRequestChangeFeed(user, true));
+            return 
+        }
     }
 
     const acceptDateRequest = async () => {
         setHasUserSentDate(false);
         setIsDating(true);
+        dispatch(acceptDateRequestFeed(user))
         const res = await dateApi.acceptDateRequest(user.uid);
         if(!res.success){
             setHasUserSentDate(true)
-            setIsDating(false)
+            setIsDating(false);
+            dispatch(unMatchFeed(user));
         }
     }
 
@@ -223,9 +236,11 @@ function DateButton({user}: {user: UserProfile}){
         const user_res = window.confirm("Do you want to unmatch?");
         if(!user_res) return;
         setIsDating(false);
+        dispatch(unMatchFeed(user));
         const res = await dateApi.unDateUser(user.uid);
         if(!res.success){
-            setIsDating(true)
+            setIsDating(true);
+            dispatch(acceptDateRequestFeed(user))
         }
     }
 

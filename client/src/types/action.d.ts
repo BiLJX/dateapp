@@ -1,7 +1,7 @@
 type BannerActions = "OPEN_BANNER_ERROR"|"OPEN_BANNER_INFO"|"OPEN_BANNER_SUCESS"|"OPEN_BANNER_TEXT_MESSAGE"|"CLOSE_BANNER"
 type UserActions = "ADD_CURRENT_USER"
 type DateActions = "INIT_DATES"|"ADD_DATE"
-type FeedActions = "ADD_FEED"
+type FeedActions = "ADD_FEED"|"SEND_DATE_REQUEST_FEED"|"CHANGE_DATE_REQUEST_CHANGE_FEED"|"ACCEPT_DATE_REQUEST_FEED"|"UNMATCH_FEED"
 type ScrollPositionAction = "SAVE_FEED_POSITION"|"SAVE_PICTURES_POSITION"
 declare type ActionTypes = BannerActions|UserActions|DateActions|FeedActions|ScrollPositionAction
 

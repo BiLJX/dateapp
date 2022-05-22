@@ -17,7 +17,7 @@ import { getScrollPos, saveScrollPos } from 'utils/scrollPos';
 function HomePage(){
     const redux = useSelector((state: RootState)=>state.feed);
     const scrollPosition = getScrollPos("Feed")
-    const feed = redux.data
+    const feed = redux.data as UserProfile[]
     const dispatch = useDispatch()
     const [loading, setLoading] = useState(feed.length === 0)
     const [hasMore, setHasMore] = useState(true);
@@ -30,7 +30,7 @@ function HomePage(){
         setIsFetching(true)
         const res = await getUsers(page)
         if(res.success){
-            dispatch(addFeed([...feed, ...res.data], page+1))
+            dispatch(addFeed([...feed as UserProfile[], ...res.data], page+1))
             if(res.data.length < 10) {
                 setHasMore(false)
             }

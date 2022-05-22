@@ -11,6 +11,7 @@ import { parseCurrentUser, parseUser } from "./user-controller";
 import jwt from "jsonwebtoken"
 import sendVerificationEmail from "../utils/email";
 import {currentUserAggregation} from "../aggregation/user-aggregation"
+import { FeedSettings } from "../models/FeedSettings"
 const auth = getAuth(app);
 
 export async function createAccount(req: Request, res: Response){
@@ -64,12 +65,15 @@ export async function createAccount(req: Request, res: Response){
         const sessionCookie = await admin.auth().createSessionCookie(idToken, {expiresIn});
         const options = {maxAge: expiresIn, httpOnly: false};
         res.cookie("session", sessionCookie, options);
+        //additional collections
+        const settings = new FeedSettings({uid});
+        await settings.save()
         //success
         JSONReponse.success("created account",await parseCurrentUser(user.toJSON()))
-
     } catch (error: any) {
         console.log(error)
-        await admin.auth().deleteUser(userId).catch(err=>console.log(err))
+        await admin.auth().deleteUser(userId).catch(err=>console.log(err));
+        await User.findOneAndDelete({uid: userId}).catch(err=>console.log(err))
         JSONReponse.clientError(( error.message || "Some Thing Went Wrong" ))
     }
 }

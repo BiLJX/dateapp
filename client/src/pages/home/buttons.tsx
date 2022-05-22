@@ -12,6 +12,7 @@ import BookmarkBorderIcon from '@mui/icons-material/BookmarkBorder';
 import BookmarkIcon from '@mui/icons-material/Bookmark';
 import { saveUser, unsaveUser } from 'api/user-api';
 import HeartBrokenOutlinedIcon from '@mui/icons-material/HeartBrokenOutlined';
+import { acceptDateRequestFeed, changeDateRequestChangeFeed, unMatchFeed } from 'action/feed';
 export function SendDateButton({data}: {data: UserProfile}){
     const [hasSentDate, setHasSentDate] = useState(data.has_current_sent_date_request)
     const [hasUserSentDate, setHasUserSentDate] = useState(data.has_this_user_sent_date_request)
@@ -19,14 +20,17 @@ export function SendDateButton({data}: {data: UserProfile}){
     const [isDating, setIsDating] = useState(data.is_dating)
     const dispatch = useDispatch()
     const sendDate = async () => {
-        setHasSentDate(true)
+        setHasSentDate(true);
+        dispatch(changeDateRequestChangeFeed(data, true))
         const res = await sendDateRequest(data.uid);
         if(res.success) return;
         toastError(res.msg)
+        dispatch(changeDateRequestChangeFeed(data, false))
         setHasSentDate(false)
     }
     const acceptDate = async () => {
         setIsLoading(true)
+        dispatch(acceptDateRequestFeed(data))
         const res = await acceptDateRequest(data.uid);
         if(res.success){ 
             setIsDating(true)
@@ -36,12 +40,14 @@ export function SendDateButton({data}: {data: UserProfile}){
         setIsLoading(false)
     }
     const cancelDate = async () =>{
-        setHasSentDate(false)
+        setHasSentDate(false);
+        dispatch(changeDateRequestChangeFeed(data, false))
         const res = await cancelDateRequest(data.uid);
         if(res.success){ 
             return
         }
         toastError(res.msg)
+        dispatch(changeDateRequestChangeFeed(data, true))
         setHasSentDate(true)
     }
     const unDate = async () => {
@@ -50,6 +56,7 @@ export function SendDateButton({data}: {data: UserProfile}){
         setIsDating(false);
         setHasSentDate(false);
         setHasUserSentDate(false);
+        dispatch(unMatchFeed(data));
         const res = await unDateUser(data.uid);
         if(!res.success){
             toastError(res.msg);
