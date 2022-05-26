@@ -33,12 +33,15 @@ export default function VerifyAccount(){
         return setIsLoading(false)
     }
     const resend = async () => {
-        setSent(true);
+        setIs_verification_sending(true)
         const res = await sendVerification();
         
         if(res.success){
+            setSent(true);
+            setIs_verification_sending(false)
             return toastSuccess(res.msg)
         }
+        setIs_verification_sending(false)
         setSent(false)
         return toastError(res.msg)
     }
@@ -69,7 +72,7 @@ export default function VerifyAccount(){
                     ):(
                         <div className = "verify-text">
                             Your'e email is not verified, please verify it by going on your mail and refresh this page. If you cant find the verification mail, please check your spam inbox. or 
-                            { <span className = "underline" onClick = {resend}> resend</span>}
+                            { is_verification_sending?<span> sending...</span> :<span className = "underline" onClick = {resend}> resend</span>}
                         </div>
                     )
                 }

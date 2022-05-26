@@ -72,6 +72,7 @@ mongoose.connect(CONNECTION_URL).then(async ()=>{
     const notification = new Notify(io)
     app.locals.notification = notification;
     io.on("connection", (socket)=>{
+
         const cookief = socket.handshake.headers.cookie||"";
         const cookies = cookie.parse(cookief) 
         const token = <string>socket.handshake.query.session || cookies.session || "";

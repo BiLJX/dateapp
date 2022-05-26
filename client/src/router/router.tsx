@@ -39,6 +39,7 @@ function AppRouter(){
         if(currentUser){
             const socket = io();
             setChat(new Chat(socket));
+            console.log("connected")
             socket.on("notification", (data: NotificationInterface)=>{
                 switch(data.type){
                     case "DATE_REQUEST":
@@ -82,7 +83,7 @@ function AppRouter(){
                
             })
         }
-    }, [currentUser])
+    }, [currentUser?.uid])
     useEffect(()=>{
         if(chat && !location.pathname.includes("message") && !location.pathname.includes("dates")){
             chat.onMessage(data=>{
