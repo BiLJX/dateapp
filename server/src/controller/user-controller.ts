@@ -152,8 +152,11 @@ export async function editUserProfile(req: Request, res: Response){
         const current_user = <UserInterface>res.locals.currentUser
         try{
             //validation
-            let url: string|undefined;
-            if(!url && !current_user.account_setuped) return JSONReponse.clientError("You need to add a profile picture")
+            //url = false
+            //pfp = false
+            //true && true
+            let url: string|undefined = current_user.profile_picture_url;
+            if(!url) return JSONReponse.clientError("You need to add a profile picture")
             if(!isUserName(username)) return JSONReponse.clientError("invalid username or username is less than 3 charecter");
             if(!isFullName(full_name)) return JSONReponse.clientError("invalid name");
             if(!isDescription(description)) return JSONReponse.clientError("description is less than 10 or more than 100 charecters")
@@ -168,8 +171,8 @@ export async function editUserProfile(req: Request, res: Response){
                 last_name: splited_name?.length > 2 ? splited_name[1]?.trim() + " " + splited_name[2]?.trim() : splited_name[1]?.trim()||"",
             }
             await User.findOneAndUpdate({uid}, {$set: data})
-            const updatedUser = await User.findOne({uid})
-            return JSONReponse.success("success", await parseCurrentUser(updatedUser?.toJSON()))
+            const updatedUser = await User.aggregate(currentUserAggregation(res.locals.uid)).exec();
+            return JSONReponse.success("success", await parseCurrentUser(updatedUser[0]))
         }catch(err: any){
             console.log(err)
             JSONReponse.serverError()
