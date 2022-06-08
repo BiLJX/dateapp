@@ -146,7 +146,6 @@ export const getFeed = async (req: Request, res: Response) => {
                                         has_this_user_sent_date_request: { $cond: [ { $eq: [{ $size: "$user_daterequests" }, 0]}, false, true ] }
                                     }
                                 },
-                                
                                 projection
                             ])
                             .exec()

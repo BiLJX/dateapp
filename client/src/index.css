@@ -43,7 +43,9 @@
   --profile-container-bg: var(--dark-gray-alt);
   --banner-background: var(--dark-gray);
   --input-text-color: var(--light-gray);
-  --modal-background: var(--dark-gray-alt)
+  --modal-background: var(--dark-gray-alt);
+  --explore-card-background: var(--dark-gray);
+  --explore-card-image: var(--gray);
 }
 
 * {

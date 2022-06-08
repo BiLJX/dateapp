@@ -1,0 +1,56 @@
+.explore-page {
+    display: flex;
+    flex-direction: column;
+    padding-bottom: 15vh;
+}
+
+.explore-container {
+    display: flex;
+    flex-direction: column;
+    padding: 0 20px;
+    margin-bottom: 20px;
+}
+
+.explore-container-header {
+    padding: 20px 0;
+}
+
+.explore-container-header h1 {
+    font-size: 1.2rem;
+    color: var(--text-main);
+}
+
+.explore-cards-container {
+    display: grid;
+    grid-template-columns: 41.07vw 41.07vw;
+    grid-gap: 20px;
+}
+
+.explore-card {
+    display: flex;
+    height: 41.07vw;
+    background-color: var(--explore-card-background);
+    padding: 10px;
+    flex-direction: column;
+}
+
+.explore-card-image-container {
+    height: 75%;
+    background-color: var(--explore-card-image);
+}
+
+.explore-card-main-container {
+    flex: 1;
+    display: flex;
+    margin-top: 5px;
+}
+
+.explore-card-username {
+    color: var(--text-main);
+    font-weight: bold;
+}
+
+.explore-card-age {
+    color: var(--text-secondary);
+    font-size: 0.8rem;
+}

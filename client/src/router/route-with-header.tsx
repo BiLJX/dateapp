@@ -16,6 +16,7 @@ import Personality from "pages/profile/personality/personality"
 import NotificationPage from "pages/notifications/notification-page"
 import { PictureComponentWithHeader } from "pages/user/pictures/picture-component"
 import FeedSettings from "pages/settings/feedsettings/feedsettings"
+import ExplorePage from "pages/explore/explore-page"
 
 
 function RoutesWithHeader(){
@@ -23,8 +24,7 @@ function RoutesWithHeader(){
         <MainContainer>
             <Routes>
                 <Route path = "/" element = {<HomePage /> } />
-                <Route path = "/profile/verify" element = {<VerifyAccount />} />
-                
+                <Route path = "/search" element = {<ExplorePage />} />
                 <Route path = "/search" element = {<SoonPage /> } />
                 <Route path = "/notifications" element = {<NotificationPage /> } />
                 <Route path = "/dates" element = {<DatePage/>} />
@@ -38,6 +38,7 @@ function RoutesWithHeader(){
                 <Route path = "/requests/sent" element = {<SoonPage /> } />
                 <Route path = "/profile/edit" element = {<EditProfile />} />
                 <Route path = "/profile/setup" element = {<EditProfile isSetup />} />
+                <Route path = "/profile/verify" element = {<VerifyAccount />} />
                 <Route path = "/personality" element = {<PersonalitiesPage />} />
                 <Route path = "/personality/:type" element = {<Personality />} />
                 

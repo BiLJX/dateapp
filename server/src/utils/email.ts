@@ -4,23 +4,23 @@ export default async function sendVerificationEmail({name, email, link}: {name: 
     const mail = nodemailer.createTransport({
         service: "gmail",
         auth: {
-            user: "kuraakani.noreply",
-            pass: "4252760b"
+            user: "billjeshbaidya",
+            pass: "fiituogkwsmobtet"
         }
     })
     await mail.sendMail({
-        from: "kuraakani.noreply@gmail.com",
+        from: "billjeshbaidya@gmail.com",
         to: email,
-        subject: "Verify Your Account for Kuraakani",
+        subject: "Verify Your Account for Affexon",
         html:
         `
             <h1>Hi ${name},</h1>
             <br>
-            <p>You registered an account on Kuraa Kani before being able to use your account you need to verify that this is your email address by copying and pasting the url to browser: 
+            <p>You registered an account on Affexon before being able to use your account you need to verify that this is your email address by copying and pasting the url to browser: 
             <br>
             <a href = ${link}}>${link}</a></p>
             <br>
-            <p>kind regards, kuraakani</p>
+            <p>kind regards, Affexon</p>
         `
     })
 }
