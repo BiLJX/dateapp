@@ -78,14 +78,20 @@ function AppRouter(){
                         })
                         badges.increaseNotifications()
                         break;
-                    
                 }
-               
             })
         }
     }, [currentUser?.uid])
     useEffect(()=>{
         if(chat && !location.pathname.includes("message") && !location.pathname.includes("dates")){
+            chat.QuickChat.onMessage(data=>{
+                toast(<BannerContent sender_name={data.author_data?.username||""} text = {data.text} to = {"/quick/message/"+data.sender_uid} type={1} />, {
+                    icon: () => <BannerPfpIcon  to = {"/quick/message/"+data.sender_uid} pfp = {data.author_data?.profile_pic_url||""} />,
+                    theme: "dark",
+                    draggable: true,
+                    draggablePercent: 20
+                })
+            })
             chat.onMessage(data=>{
                 toast(<BannerContent sender_name={data.author_data?.username||""} text = {data.text} to = {"/message/"+data.sender_uid} type={1} />, {
                     icon: () => <BannerPfpIcon  to = {"/message/"+data.sender_uid} pfp = {data.author_data?.profile_pic_url||""} />,

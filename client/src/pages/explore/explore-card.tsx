@@ -1,9 +1,9 @@
 import { UserProfile } from "@shared/User";
 import { NavLink } from "react-router-dom";
 
-export default function ExploreCard({data}: {data: UserProfile}){
+export default function ExploreCard({data, to}: {data: UserProfile, to: string}){
     return(
-        <NavLink to = {"/user/"+data.uid} className="explore-card">
+        <NavLink to = {to} className="explore-card">
             <div className = "explore-card-image-container">
                 <img className = "full-img" src = {data.profile_picture_url} />
             </div>

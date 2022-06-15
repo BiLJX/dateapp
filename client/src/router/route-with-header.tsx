@@ -4,6 +4,7 @@ import HomePage from "pages/home/home-page"
 import LibraryPage from "pages/library/library-page"
 import DateRequestPage from "pages/date-requests/date-request-page"
 import DatePage from "pages/dates/date-page"
+import QuickChatPage from "pages/chat/quick-chat-page"
 import ChatPage from "pages/chat/chat-page"
 import UserProfilePage from "pages/user/user-profile-page"
 import MainContainer from "global-components/containers/container-with-header"
@@ -24,11 +25,12 @@ function RoutesWithHeader(){
         <MainContainer>
             <Routes>
                 <Route path = "/" element = {<HomePage /> } />
-                <Route path = "/search" element = {<ExplorePage />} />
-                <Route path = "/search" element = {<SoonPage /> } />
+                <Route path = "/search/*" element = {<ExplorePage />} />
                 <Route path = "/notifications" element = {<NotificationPage /> } />
                 <Route path = "/dates" element = {<DatePage/>} />
-                <Route path = "/message/:uid" element = {<ChatPage />} />
+                <Route path = "/message/:uid" element = {<ChatPage/>} />
+                <Route path = "/quick/message/:uid" element = {<QuickChatPage />} />
+                
                 <Route path = "/pictures" element = { <PicturePage /> } />
                 <Route path = "/pictures/:id" element = { <PictureComponentWithHeader /> } />
                 <Route path = "/profile" element = { <LibraryPage />  }/>

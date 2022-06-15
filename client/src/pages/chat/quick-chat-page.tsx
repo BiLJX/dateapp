@@ -1,16 +1,16 @@
-import ArrowBackIosIcon from '@mui/icons-material/ArrowBackIos';
+
 import { ChatData, TextMessageData } from '@shared/Chat';
-import { getChatData, getMessages } from 'api/chat-api';
 import { Header } from 'global-components/containers/container-with-header';
-import React, { Fragment, useContext, useEffect, useRef, useState } from 'react';
-import { NavLink, useNavigate, useParams } from 'react-router-dom';
+import { Fragment, useContext, useEffect, useRef, useState } from 'react';
+import { useParams } from 'react-router-dom';
 
 import { ChatItem, CurrentUserChatItem } from './chat-item';
 import SendIcon from '@mui/icons-material/Send';
 import "./chat-page.css"
 import { chatContext } from 'context/Realtime';
-import { TailSpin } from "react-loader-spinner"
 import { ViewerTextMessageData } from 'realtime/Chat';
+import { ChatHeader } from './chat-page';
+import { getUserByUid } from 'api/user-api';
 function uuid(){
     return (Math.floor(Math.random() * Math.pow(10, 15))).toString(16)
 }
@@ -18,29 +18,30 @@ export default function ChatPage(){
     const { uid } = useParams()
     const [data, setData] = useState<ChatData>()
     const [messages, setMessages] = useState<TextMessageData[]|ViewerTextMessageData[]>([])
-    const [counter, setCounter] = useState(1);
-    const [hasMore, setHasMore] = useState(true);
     const [isTyping, setIsTyping] = useState(false)
     const main = useRef<HTMLDivElement>(null);
-    const chat = useContext(chatContext)
+    const chat = useContext(chatContext)?.QuickChat;
+    const d_chat = useContext(chatContext);
     const scrollDown = (flag: boolean = false) => {
         if(!main.current) return;
         const ratio = main.current.scrollTop / main.current.scrollHeight;
         if(flag) return main.current.scrollTo(0, main.current.scrollHeight);
         if(ratio > 0.5) return main.current.scrollTo(0, main.current.scrollHeight);
-        
     }
     const fetchData = async () => {
         if(!uid) return;
-        const data = await getChatData(uid.trim());
+        const data = await getUserByUid(uid.trim());
         if(data.success){
-            setData(data.data)
-        }
-    }
-    const handleScroll = (e:React.UIEvent<HTMLElement>)=>{
-        if(e.currentTarget.scrollTop === 0) {
-            hasMore && getChatMessages(counter + 1)
-            hasMore && setCounter(counter + 1);
+            const user = data.data
+            setData({
+                chat_background: user.profile_picture_url,
+                has_seen: false,
+                user_data: {
+                    profile_pic_url: user.profile_picture_url,
+                    full_name: user.full_name,
+                    username: user.username
+                }
+            })
         }
     }
     const sendMessage = (text: string) => {
@@ -62,28 +63,8 @@ export default function ChatPage(){
             })
             setData((prev)=>(prev && {...prev, has_seen: false}))
         })
-        
-       
     }
 
-    const getChatMessages = async (page: number = 1) => {
-        if(!uid) return;
-        const response = await getMessages(uid, page)
-        if(response.success){
-            if(response.data.length >= 10) {
-                if(page === 1) chat?.seen(uid)
-                setMessages((prev_state) => [...response.data, ...prev_state]);
-                if(page > 1) main.current?.scrollTo(0, main.current.clientHeight)
-                return
-            }
-            setMessages((prev_state) => [...response.data, ...prev_state]);
-            setHasMore(false)
-        }
-    }
-
-    useEffect(()=>{
-        getChatMessages()
-    }, [])
 
     useEffect(()=>{
         if(chat){
@@ -98,15 +79,17 @@ export default function ChatPage(){
                 if(seen_by === uid) setData((prev)=>(prev && {...prev, has_seen: true}))
             })
             chat.isTyping(data=>{
+                
                 if(data.sender_uid === uid) setIsTyping(data.state);
             })
             chat.seen(uid||"")
+            
         }
         return(()=>{
             chat?.offMessage()
             chat?.offSeen()
         })
-    }, [chat])
+    }, [d_chat])
 
     useEffect(()=>{
         scrollDown(true)
@@ -123,9 +106,8 @@ export default function ChatPage(){
             <ChatHeader data= {data} uid = {uid||""} />
             <section>
                 <div className='chat-page-messages'  style={ { backgroundImage: `linear-gradient(180deg,rgba(18, 16, 21, 0.79) 0%, var(--background) 76.91%), url('${data.chat_background}')` } }>
-                    <div onScroll={handleScroll} ref = {main} style={{display: "flex", maxHeight: "100%", flexDirection: "column", overflowY: "scroll", overflowX: "hidden"}}>
+                    <div ref = {main} style={{display: "flex", maxHeight: "100%", flexDirection: "column", overflowY: "scroll", overflowX: "hidden"}}>
                         <div className='chat-page-message-container'>
-                            {hasMore&&<div className='chat-page-messages-loader'><TailSpin height={30} width = {30} color = "var(--text-main2)"/></div>}
                             {
                             messages.map((x, i)=>(
                                 <Fragment key = {i}>
@@ -144,31 +126,11 @@ export default function ChatPage(){
     )
 }
 
-export function ChatHeader({data, uid}: {data: ChatData, uid: string}){
-    const navigate = useNavigate()
-    return(
-        <header className="chat-page-header">
-            <div className = "chat-page-header-back" onClick={()=>navigate(-1)}>
-                <ArrowBackIosIcon />
-            </div>
-            <NavLink to = {"/user/"+uid} className = "chat-page-header-pfp-container">
-                <div className='chat-page-header-pfp'>
-                    <img className='full-img' src = {data.user_data.profile_pic_url} />
-                </div>
-            </NavLink>
-            <NavLink to = {"/user/"+uid} className = "chat-page-header-info-container">
-                <h2 className='chat-page-header-name ellipsis'>{data.user_data.full_name}</h2>
-                <span className = "chat-page-header-username">{data.user_data.username}</span>
-            </NavLink>
-        </header>
-    )
-}
-
-export function Input({send, uid}: {send: (text: string,)=>any, uid: string}){
+function Input({send, uid}: {send: (text: string,)=>any, uid: string}){
     const [text, setText] = useState("");
     const [typing, setTyping] = useState(false);
     const [_timeout, set_Timeout] = useState<any>();
-    const chat = useContext(chatContext)
+    const chat = useContext(chatContext)?.QuickChat
     const container_ref = useRef<any>(null)
     const timeOutFunction = () => {
         setTyping(false)

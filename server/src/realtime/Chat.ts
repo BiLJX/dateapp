@@ -22,6 +22,7 @@ export class Chat {
         const cookies = cookie.parse(cookief) 
         const token = <string>socket.handshake.query.session || cookies.session || "";
         const sender_uid = getUid(token);
+
         socket.on("message", async (message_obj: TextMessageSocketData)=>{
             try {
                 //getting client data
@@ -82,6 +83,74 @@ export class Chat {
         })
 
     }
+
+    public quickMessage(socket: Socket){
+        //getting uid
+        const cookief = socket.handshake.headers.cookie||"";
+        const cookies = cookie.parse(cookief) 
+        const token = <string>socket.handshake.query.session || cookies.session || "";
+        const sender_uid = getUid(token);
+        socket.on("quick-message", async (message_obj: TextMessageSocketData)=>{
+            try {
+                //getting client data
+                const { text, type, receiver_uid } = message_obj;
+                const receiver_user = await getUser(receiver_uid);
+                
+                //validating
+                if(!sender_uid) return;
+                if(!receiver_user) return;
+                const sender_user = await getUser(sender_uid);
+                if(!sender_user) return;
+
+                //getting active user
+                const receiver_socketId: string|undefined = this.activeUsers.getUserByUid(receiver_uid);
+                
+
+                if(!receiver_socketId) return;
+
+                //making data
+                const message_data: TextMessageData = {
+                    message_id: uuid(),
+                    type,
+                    text,
+                    receiver_uid,
+                    sender_uid,
+                    is_sent_by_viewer: false,
+                }
+
+                //adding authors data
+                message_data.author_data = {
+                    profile_pic_url: sender_user.profile_picture_url,
+                    username: sender_user.username
+                }
+                
+                socket.to(receiver_uid).emit("quick-message", message_data);
+                socket.emit("quick-sent", { ...message_data, is_sent_by_viewer: true });
+            } catch (error) {
+                console.log(error)
+            }
+        })
+        //seen
+        socket.on("quick-seen", async (uid)=>{
+           try {
+               const receiver_socketId: string|undefined = this.activeUsers.getUserByUid(uid);
+               if(receiver_socketId) socket.to(uid).emit("quick-seen", sender_uid);
+           } catch (error) {
+               console.log(error)
+           }
+        })
+        //typing
+        socket.on("quick-typing", data=>{
+            try{
+                const receiver_socketId: string|undefined = this.activeUsers.getUserByUid(data.receiver_uid);
+                if(receiver_socketId) socket.to(data.receiver_uid).emit("quick-typing", { state: data.state, sender_uid });
+            }catch(err){
+                console.log(err)
+            }
+        })
+
+    }
+
     public updateActiveUsers(activeUsers: ActiveUsers){
         this.activeUsers = activeUsers;
     }

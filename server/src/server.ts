@@ -87,7 +87,7 @@ mongoose.connect(CONNECTION_URL).then(async ()=>{
         activeUsers.addUser({ uid, socket_id: socket.id })
         chat.updateActiveUsers(activeUsers);
         chat.dmMessage(socket);
-
+        chat.quickMessage(socket);
         socket.on("disconnect", ()=>{
             activeUsers.removeUser(socket.id);
             socket.leave(uid)

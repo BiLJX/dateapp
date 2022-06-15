@@ -30,9 +30,10 @@ export function ContainerWithHeader({className, children}: {className?: string, 
 }
 
 function BottomNav(){
-    const urls = ["/", "/search", "/dates", "/pictures", "/profile"]
+    const urls = ["/", "/search", "/dates", "/pictures", "/profile", "/search/quickchats"]
     const location = useLocation();
     const currentUser = useSelector((state: RootState)=>state.current_user);
+    // /search/aaa
     const found = urls.find(x=>x===location.pathname);
     if(!found) return <></>
     return(
