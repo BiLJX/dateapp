@@ -60,9 +60,9 @@
   position: absolute;
   height: 1rem;
   width: 1rem;
-  background-color: #14ff00;
+  background-color: #28c91a;
   border-radius: 100%;
-  border: 1px solid var(--background);
+  border: 2px solid var(--background);
   bottom: 20%;
   right: 20%;
 }

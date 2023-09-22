@@ -24,7 +24,6 @@ import { HobbyRouter } from "./routes/hobby-routes"
 
 //side effects
 import "./fire"
-import { redis_client } from "./redis-client"
 import Notify from "./realtime/Notify"
 import { NotificationsRouter } from "./routes/notification-routes"
 import { SettingsRouter } from "./routes/settings-routes"
@@ -66,7 +65,6 @@ app.get("/*", (req, res) => {
 //connecting to database and starting server
 
 mongoose.connect(CONNECTION_URL).then(async ()=>{
-    await redis_client.connect();
     const server = app.listen(PORT, ()=>{
         console.log("listening on port "+PORT+"...")
     })

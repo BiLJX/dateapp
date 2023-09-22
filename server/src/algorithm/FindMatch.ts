@@ -14,7 +14,7 @@ const weights = {
 
 /*
     FORMULA: 
-    score = matching_interest X interest_weight - age_diff - age_weight
+    score = matching_interest X interest_weight - age_diff X age_weight
 */
 export class Match {
     private currentUser: MatchUser;

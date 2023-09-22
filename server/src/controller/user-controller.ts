@@ -9,7 +9,6 @@ import { isDescription, isFullName, isUserName } from "../utils/validator";
 import admin from "firebase-admin"
 import { uuid } from "../utils/idgen";
 import { currentUserAggregation } from "../aggregation/user-aggregation";
-import { redis_client } from "../redis-client";
 //util
 
 export async function parseUser(_user: any, current_user:UserInterface): Promise<UserProfile>{
@@ -31,13 +30,7 @@ export async function parseCurrentUser(_current_user: UserInterface|undefined){
     const birthday = moment(_current_user.birthday);
     const years = moment.duration(now.diff(birthday)).asYears();
     user.age = Math.floor(years);
-    const cached_state = await redis_client.get(_current_user.uid + "_email_verified");
-    if(cached_state === "true"){
-        user.is_email_verified = true;
-        return user
-    }
     const fuser = await admin.auth().getUser(_current_user.uid);
-    if(fuser.emailVerified) redis_client.set(_current_user.uid + "_email_verified", fuser.emailVerified.toString())
     user.is_email_verified = fuser.emailVerified
     return user
 }
@@ -134,6 +127,30 @@ export async function getUserByUid(req: Request, res: Response){
             },
         ]);
         JSONReponse.success("success", await parseUser(user[0], res.locals.currentUser));
+    }catch(err){
+        console.log(err)
+        JSONReponse.serverError()
+    }
+}
+
+//get saved use
+
+export const getSavedUsers = async (req: Request, res: Response) => {
+    const JSONReponse = new JSONRESPONSE(res)
+    const uid = res.locals.uid;
+    const currentUser: UserInterface = res.locals.currentUser
+    try{
+        const uids = currentUser.saved_users;
+        let users = await User.find({uid: { $in: uids }}).select({ username: 1, uid: 1, full_name: 1, first_name: 1, profile_picture_url: 1, birthday: 1 }).lean().exec();
+        users = users.map((user: any)=>{
+            const now = moment(new Date());
+            const birthday = moment(user.birthday);
+            const years = moment.duration(now.diff(birthday)).asYears();
+            user.age = Math.floor(years);
+            return user;
+        })
+        
+        JSONReponse.success("successfully got users", users)
     }catch(err){
         console.log(err)
         JSONReponse.serverError()

@@ -106,6 +106,9 @@
 }
 
 .bottom-nav-item .alert-icon {
-  top: 22%;
-  right: 30%;
+  top: 25%;
+  right: 35%;
+  border: 2px solid var(--header-background);
+  height: 0.7rem;
+  width: 0.7rem;
 }

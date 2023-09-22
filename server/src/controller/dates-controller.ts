@@ -1,6 +1,7 @@
 import { NotificationInterface } from "@shared/Notify";
 import { UserInterface } from "@shared/User";
 import { Request, Response } from "express";
+import moment from "moment";
 import { DateRequest } from "../models/DateRequest";
 import { UserDate } from "../models/Dates";
 import { User } from "../models/User";
@@ -50,9 +51,15 @@ export const getRequestDate = async (req: Request, res: Response) => {
     try{
         const requests = await DateRequest.find({request_sent_to: uid})
         const uids = requests.map(x=>x.request_sent_by);
-        const users = await User.find({uid: { $in: uids }}).select({ account_setuped: 0, is_admin: 0, email: 0 }).exec();
-        const parsed_users = await Promise.all(users.map(async x=>parseUser(x.toJSON(), res.locals.currentUser))) 
-        JSONReponse.success("successfully got users", parsed_users)
+        let users = await User.find({uid: { $in: uids }}).select({ username: 1, uid: 1, full_name: 1, first_name: 1, profile_picture_url: 1, birthday: 1 }).lean().exec();
+        users = users.map((user: any)=>{
+            const now = moment(new Date());
+            const birthday = moment(user.birthday);
+            const years = moment.duration(now.diff(birthday)).asYears();
+            user.age = Math.floor(years);
+            return user;
+        })
+        JSONReponse.success("successfully got users", users)
     }catch(err){
         console.log(err)
         JSONReponse.serverError()
@@ -65,9 +72,15 @@ export const pendingRequests = async (req: Request, res: Response) => {
     try{
         const requests = await DateRequest.find({request_sent_by: uid})
         const uids = requests.map(x=>x.request_sent_to);
-        const users = await User.find({uid: { $in: uids }}).select({ account_setuped: 0, is_admin: 0, email: 0 }).exec();
-        const parsed_users = await Promise.all(users.map(async x=>parseUser(x.toJSON(), res.locals.currentUser))) 
-        JSONReponse.success("successfully got users", parsed_users)
+        let users = await User.find({uid: { $in: uids }}).select({ username: 1, uid: 1, full_name: 1, first_name: 1, profile_picture_url: 1, birthday: 1 }).lean().exec();
+        users = users.map((user: any)=>{
+            const now = moment(new Date());
+            const birthday = moment(user.birthday);
+            const years = moment.duration(now.diff(birthday)).asYears();
+            user.age = Math.floor(years);
+            return user;
+        })
+        JSONReponse.success("successfully got users", users)
     }catch(err){
         console.log(err)
         JSONReponse.serverError()

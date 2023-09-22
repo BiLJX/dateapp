@@ -1,11 +1,12 @@
 import { Router } from "express";
-import { acceptDate, cancelDateRequest, getRequestDate, getUserDates, rejectDate, requestDate, unDate } from "../controller/dates-controller";
+import { acceptDate, cancelDateRequest, getRequestDate, getUserDates, pendingRequests, rejectDate, requestDate, unDate } from "../controller/dates-controller";
 
 const router = Router()
 
 //get requests
 router.get("/", getUserDates)
 router.get("/requests/incoming", getRequestDate)
+router.get("/requests/sent", pendingRequests)
 
 //post requests
 router.post("/request/:uid", requestDate)

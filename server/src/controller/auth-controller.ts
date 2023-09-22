@@ -47,7 +47,8 @@ export async function createAccount(req: Request, res: Response){
 
         const { uid } = await admin.auth().createUser({
             email: client_data.email?.toString()?.toLocaleLowerCase()?.trim(),
-            password: client_data.password
+            password: client_data.password,
+            emailVerified: true
         })
 
         userId = uid;
@@ -62,8 +63,8 @@ export async function createAccount(req: Request, res: Response){
         const idToken = await signed_user.getIdToken()
         if(!idToken) return res.status(401).end();
         const expiresIn = 60*60*24*14*1000;
-        const sessionCookie = await admin.auth().createSessionCookie(idToken, {expiresIn});
         const options = {maxAge: expiresIn, httpOnly: false};
+        const sessionCookie = await admin.auth().createSessionCookie(idToken, {expiresIn});
         res.cookie("session", sessionCookie, options);
         //additional collections
         const settings = new FeedSettings({uid});

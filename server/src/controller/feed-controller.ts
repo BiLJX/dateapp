@@ -6,7 +6,6 @@ import { Match } from "../algorithm/FindMatch";
 import { DateRequest } from "../models/DateRequest";
 import { FeedSettings } from "../models/FeedSettings";
 import { User } from "../models/User";
-import { redis_client } from "../redis-client";
 import JSONRESPONSE from "../utils/JSONReponse"
 import { parseUser } from "./user-controller";
 
@@ -49,14 +48,12 @@ export const getFeed = async (req: Request, res: Response) => {
     try {
         if(page<1) return JSONReponse.clientError("page cannot be leses than 1");
         
-        const items: number = 10;
+        const items: number = 15;
         const total_items = page * items;
-        let cached_feed: FeedCache = JSON.parse(await redis_client.get(REDIX_KEY) || "[]")
-        let matches = cached_feed.feed||[];
+        let matches: string[] = [];
         
         if(matches.length === 0) matches = await findMatches()
-        let settings: FeedSettingsInterface = JSON.parse( await redis_client.get(currentUser.uid+"_feed_settings") || "{}" );
-        if(!settings.uid) settings = <FeedSettingsInterface>(await FeedSettings.findOne({uid: currentUser.uid}))?.toJSON()
+        const settings: FeedSettingsInterface= <FeedSettingsInterface>(await FeedSettings.findOne({uid: currentUser.uid}))?.toJSON()
         
         const matching_users = await User
                             .aggregate([
@@ -152,14 +149,9 @@ export const getFeed = async (req: Request, res: Response) => {
                       
         const tasks = matching_users.map(async x=>parseUser(x, res.locals.currentUser))
         const parsed_users: UserProfile[] = await Promise.all(tasks) 
-        let final_users = settings.show_your_dates?parsed_users.filter(x=>!x.is_dating):parsed_users
+        let final_users = settings.show_your_dates?parsed_users:parsed_users.filter(x=>!x.is_dating)
         final_users = final_users.filter(x=>x.age>=settings.age_range.min && x.age<=settings.age_range.max)
         JSONReponse.success("success", final_users)
-        const cached_feed_data: FeedCache = {
-            feed: await findMatches(),
-            is_finding: false
-        }
-        await redis_client.set(REDIX_KEY, JSON.stringify(cached_feed_data))
     } catch (error) {
         console.log(error);
         JSONReponse.serverError()

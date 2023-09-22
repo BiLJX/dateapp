@@ -1,7 +1,7 @@
 import { Router } from "express";
 import { getFeed } from "../controller/feed-controller";
 import { uploadCover, uploadPfp } from "../controller/image-controller";
-import { changePersonality, editUserProfile, getCurrentUser, getUserByUid, getUsers, saveUser, unsaveUser } from "../controller/user-controller";
+import { changePersonality, editUserProfile, getCurrentUser, getSavedUsers, getUserByUid, getUsers, saveUser, unsaveUser } from "../controller/user-controller";
 
 const router = Router()
 
@@ -10,6 +10,7 @@ const router = Router()
 router.get("/", getUsers)
 router.get("/feed", getFeed)
 router.get("/current", getCurrentUser)
+router.get("/saved", getSavedUsers)
 router.get("/:uid", getUserByUid)
 
 //patch routes

@@ -9,6 +9,11 @@ export const getIncomingRequests = async ()=>{
     return res.data;
 }
 
+export const getSentRequests = async () => {
+    const res = await axios.get<ApiResponse<UserProfile[]>>("/api/date/requests/sent");
+    return res.data;
+}
+
 export const sendDateRequest = async (uid: string) => {
     const res = await axios.post<ApiResponse<{}>>("/api/date/request/"+uid);
     return res.data;

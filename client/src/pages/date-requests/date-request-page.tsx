@@ -7,8 +7,7 @@ import CloseIcon from '@mui/icons-material/Close';
 import DoneIcon from '@mui/icons-material/Done';
 import "./date-request.css";
 import { useDispatch } from "react-redux";
-import * as bannerActions from "../../action/banner";
-import bannerDispatch, { toastError, toastSuccess } from "dispatcher/banner";
+import { toastError, toastSuccess } from "dispatcher/banner";
 import { NavLink } from "react-router-dom";
 import { useBadges } from "hooks/useDateRequest";
 
@@ -95,22 +94,21 @@ function DateRequestItem({data}: {data: UserProfile}){
     if(renderNull) return <></>
     return(
         <div className="date-request-item">
-            <div className="date-request-left">
-                <NavLink to = {"/user/"+data.uid} className = "date-request-pfp">
+            <NavLink to = {"/user/"+data.uid} className="date-request-left">
+                <div className = "date-request-pfp">
                     <img className="full-img" src = {data.profile_picture_url}/>
-                </NavLink>
-            </div>
-            <div className="date-request-right">
+                </div>
+            </NavLink>
+            <NavLink to = {"/user/"+data.uid} className="date-request-middle">
                 <div className="date-request-name">{data.first_name}</div>
                 <div className="date-request-age">{data.age} years old</div>
-                <div className="date-request-description ellipsis-clamp">{data.description}</div>
-                <div className="date-request-buttons-container">
-                    <div className="date-request-button date-request-reject" onClick={rejectRequest}>
-                        {isLoadingReject?<SpinLoader color = "black" size = {20} />:<CloseIcon />}
-                    </div>
-                    <div className="date-request-button date-request-accept" onClick={acceptRequest}>
-                        {isLoadingAccept?<SpinLoader size = {20} />:<DoneIcon />}
-                    </div>
+            </NavLink>
+             <div className="date-request-buttons-container">
+                <div className="date-request-button date-request-reject" onClick={rejectRequest}>
+                    {isLoadingReject?<SpinLoader color = "black" size = {20} />:<CloseIcon />}
+                </div>
+                <div className="date-request-button date-request-accept" onClick={acceptRequest}>
+                    {isLoadingAccept?<SpinLoader size = {20} />:<DoneIcon />}
                 </div>
             </div>
         </div>

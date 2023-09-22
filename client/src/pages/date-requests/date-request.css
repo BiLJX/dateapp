@@ -7,13 +7,17 @@
 }
 .date-request-item {
   display: flex;
-  background-color: var(--date-request-item-bg);
-  height: 13rem;
-  width: 90%;
   padding: 0.5rem 1rem;
-  border-radius: 20px;
   max-width: var(--max-width);
-  margin-bottom: 2rem;
+  border-bottom: 1px solid var(--border1);
+}
+
+.date-request-item-sent {
+  display: flex;
+  padding: 0.5rem 1rem;
+  max-width: var(--max-width);
+  border-bottom: 1px solid var(--border1);
+  width: 90%;
 }
 
 .date-request-left {
@@ -24,20 +28,20 @@
 
 .date-request-pfp {
   background-color: var(--image-background-alt);
-  width: 4rem;
-  height: 4rem;
-  border-radius: 10px;
+  width: 47px;
+  height: 47px;
+  border-radius: 20px;
   overflow: hidden;
 }
 
-.date-request-right {
+.date-request-middle {
   padding: 0.5rem 0;
   display: flex;
   flex-direction: column;
 }
 
 .date-request-name {
-  font-size: 1.5rem;
+  font-size: 20px;
   color: var(--text-main);
   font-weight: 500;
   margin-bottom: 3%;
@@ -61,14 +65,14 @@
 .date-request-buttons-container {
   display: flex;
   align-items: center;
-  padding: 0.8rem 0.8rem 0 0.8rem;
-  margin-top: auto;
   font-size: 1.5rem;
+  width: 5em;
+  margin-left: 1.2rem;
 }
 
 .date-request-button {
-  height: 1.5em;
-  width: 1.5em;
+  height: 40px;
+  width: 40px;
   border-radius: 100%;
   display: flex;
   justify-content: center;
@@ -78,7 +82,7 @@
 }
 
 .date-request-reject {
-  margin-right: 30%;
+  margin-right: 1.2rem;
   background-color: #fcddec;
 }
 

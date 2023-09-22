@@ -11,6 +11,11 @@ export async function getUsers(page: number){
     return <ApiResponse<UserProfile[]>>res
 }
 
+export async function getSavedUser(){
+    const res = await axios.get("/api/user/saved");
+    return res.data as ApiResponse<UserProfile[]>
+}
+
 export async function updateProfile(data: UserEditClientData, pfp?: File){
     const formdata = new FormData()
     formdata.append("username", data.username);
