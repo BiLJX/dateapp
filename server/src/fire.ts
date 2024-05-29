@@ -16,7 +16,6 @@ const params = {
     clientC509CertUrl: serviceAccount.client_x509_cert_url
 }
 const firebaseConfig = {
-    apiKey: "AIzaSyCw3IImYYhTOMy2sJ9PZk1AoJuXhr8FXcA",
     authDomain: "dateapp-1e651.firebaseapp.com",
     projectId: "dateapp-1e651",
     storageBucket: "dateapp-1e651.appspot.com",
