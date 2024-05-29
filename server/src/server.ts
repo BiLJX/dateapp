@@ -30,7 +30,7 @@ import { SettingsRouter } from "./routes/settings-routes"
 import { ExploreRouter } from "./routes/explore-routes"
 
 //constants
-const CONNECTION_URL = "mongodb+srv://billjesh:Billu456@cluster0.vyegx.mongodb.net/Dateapp?retryWrites=true&w=majority"
+const CONNECTION_URL = ""
 const PORT = process.env.PORT || 5000
 
 //initializing app
