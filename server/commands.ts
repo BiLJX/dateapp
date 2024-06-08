@@ -4,7 +4,7 @@ import mongoose from "mongoose"
 import "./src/fire"
 import { FeedSettings } from "./src/models/FeedSettings"
 import { User } from "./src/models/User"
-const uri = "mongodb+srv://billjesh:Billu456@cluster0.vyegx.mongodb.net/Dateapp?retryWrites=true&w=majority";
+const uri = "";
 // const client = new MongoClient(uri, {
 
 // });
